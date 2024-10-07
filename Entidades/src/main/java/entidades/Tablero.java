@@ -45,11 +45,19 @@ public class Tablero implements Serializable {
         return false;
     }
     
-    public Ficha obtenerFichaExtremoDerecho() {
-        return this.fichas.obtenerFichaExtremoDerecho();
+    public List<Ficha> obtenerJuegoFichas(int cantidadFichas) {
+        return this.pozo.obtenerJuegoFichas(cantidadFichas);
     }
     
-    public Ficha obtenerFichaExtremoIzquierdo() {
-        return this.fichas.obtenerFichaExtremoIzquierdo();
+    public Ficha sacarFicha() {
+        return this.pozo.sacarFicha();
+    }
+    
+    public void meterFicha(Ficha ficha) {
+        this.pozo.meterFicha(ficha);
+    }
+    
+    public void meterListaFichas(List<Ficha> listaFichas) {
+        this.pozo.meterListaFichas(listaFichas);
     }
 }
