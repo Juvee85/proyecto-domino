@@ -52,4 +52,8 @@ public class Tablero implements Serializable {
     public Ficha obtenerFichaExtremoIzquierdo() {
         return this.fichas.obtenerFichaExtremoIzquierdo();
     }
+
+    public List<Ficha> obtenerJuegoDeDominos(int cantidadFichas) {
+        return this.pozo.obtenerJuegoDeDominos(cantidadFichas);
+    }
 }
