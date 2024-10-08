@@ -1,49 +1,34 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
 package entidades;
 
 import java.io.Serializable;
 
 /**
- * Clase la cual representa una Domino de Domino
+ *
  * @author neri
  */
-public class Ficha implements Serializable {
-
-    private boolean esMula;
-    private int puntosCabeza;
-    private int puntosCola;
-    
-    public Ficha(int puntosCabeza, int puntosCola) {
-        this.puntosCabeza = puntosCabeza;
-        this.puntosCola = puntosCola;
-        
-        this.esMula =  puntosCabeza == puntosCola;
-    }
-
-    public void flip() {
-        int tmpCabeza = this.puntosCabeza;
-        this.puntosCabeza = this.puntosCola;
-        this.puntosCola = tmpCabeza;
-    }
+public interface Ficha extends Serializable {
+    /**
+     * Voltea los valores de los extremos de la ficha
+     */
+    public void flip();
     
     /**
-     * @return the esMula
+     * @return true si es mula
      */
-    public boolean isEsMula() {
-        return esMula;
-    }
+    public boolean esMula();
 
     /**
-     * @return the puntosCabeza
+     * @return puntos de la cabeza de la ficha
      */
-    public int getPuntosCabeza() {
-        return puntosCabeza;
-    }
+    public int getPuntosCabeza();
 
     /**
-     * @return the puntosCola
+     * Regresa los puntos de la cola de la ficha
+     * @return puntos de la cola
      */
-    public int getPuntosCola() {
-        return puntosCola;
-    }
+    public int getPuntosCola();
 }

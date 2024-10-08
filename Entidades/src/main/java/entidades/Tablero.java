@@ -10,11 +10,9 @@ import java.io.Serializable;
  */
 public class Tablero implements Serializable {
     private final TrenFichas fichas;
-    private final Pozo pozo;
     
     public Tablero() {
         this.fichas = new TrenFichas();
-        this.pozo = Pozo.getInstance();
     }
 
     public boolean agregarFichaExtremoDerecho(Ficha ficha) {
@@ -43,21 +41,5 @@ public class Tablero implements Serializable {
             return true;
         }
         return false;
-    }
-    
-    public List<Ficha> obtenerJuegoFichas(int cantidadFichas) {
-        return this.pozo.obtenerJuegoFichas(cantidadFichas);
-    }
-    
-    public Ficha sacarFicha() {
-        return this.pozo.sacarFicha();
-    }
-    
-    public void meterFicha(Ficha ficha) {
-        this.pozo.meterFicha(ficha);
-    }
-    
-    public void meterListaFichas(List<Ficha> listaFichas) {
-        this.pozo.meterListaFichas(listaFichas);
     }
 }
