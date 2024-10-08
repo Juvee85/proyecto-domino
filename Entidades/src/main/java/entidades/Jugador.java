@@ -3,9 +3,11 @@ package entidades;
 import java.io.Serializable;
 import java.util.List;
 
+import entidades.Pozo.Ficha;
+
 /**
  *
- * @author Saul Neri
+ * @author 
  */
 public class Jugador implements Serializable {
     private String nombre;

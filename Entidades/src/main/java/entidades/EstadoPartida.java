@@ -3,7 +3,7 @@ package entidades;
 
 /**
  *
- * @author neri
+ * @author 
  */
 public enum EstadoPartida {
     EN_CURSO,

@@ -5,18 +5,20 @@ import java.util.List;
 
 /**
  *
- * @author Saul Neri
+ * @author 
  */
 public class Partida {
     private List<Jugador> jugadores;
     private Tablero tablero;
     private ConfiguracionJuego configuracion;
     private EstadoPartida estado;
+    private Pozo pozo;
     
     public Partida(Jugador anfitrion) {
         this.jugadores = new ArrayList<>();
         this.jugadores.add(anfitrion);
         this.estado = EstadoPartida.EN_ESPERA;
+        this.pozo = new Pozo();
     }
     
     /**

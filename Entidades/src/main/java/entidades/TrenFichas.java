@@ -3,6 +3,7 @@
  */
 package entidades;
 
+import entidades.Pozo.Ficha;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
@@ -31,7 +32,7 @@ public class TrenFichas implements Iterable<Ficha> {
         }
     }
 
-    public class IteradorFichas implements Iterator<Ficha> {
+    private class IteradorFichas implements Iterator<Ficha> {
 
         private Stack<Nodo> pilaNodos;
         private Nodo nodoActual;
@@ -98,6 +99,7 @@ public class TrenFichas implements Iterable<Ficha> {
         this.nodo = new Nodo(primeraMula);
     }
 
+    
     public TrenFichas() {
 
     }

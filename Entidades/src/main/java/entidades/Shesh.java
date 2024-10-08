@@ -5,9 +5,11 @@
 
 package entidades;
 
+import entidades.Pozo.Ficha;
+
 /**
  *
- * @author Saul Neri
+ * @author 
  */
 public class Shesh {
     public static void main(String[] args) {
@@ -16,6 +18,7 @@ public class Shesh {
         System.out.println("Fichas en pozo: " + pozo.fichasRestantes());
         
         Ficha f = pozo.sacarFicha();
+               
         while (pozo.fichasRestantes() > 0) {
             System.out.println(f);
             f = pozo.sacarFicha();

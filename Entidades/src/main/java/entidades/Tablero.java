@@ -3,10 +3,11 @@ package entidades;
 
 import java.io.Serializable;
 
+import entidades.Pozo.Ficha;
 
 /**
  *
- * @author neri
+ * @author
  */
 public class Tablero implements Serializable {
     private final TrenFichas fichas;
