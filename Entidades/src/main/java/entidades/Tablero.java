@@ -43,4 +43,12 @@ public class Tablero implements Serializable {
         }
         return false;
     }
+    
+    public Ficha obtenerFichaExtremoDerecho() {
+        return this.fichas.obtenerFichaExtremoDerecho();
+    }
+    
+    public Ficha obtenerFichaExtremoIzquierdo() {
+        return this.fichas.obtenerFichaExtremoIzquierdo();
+    }
 }

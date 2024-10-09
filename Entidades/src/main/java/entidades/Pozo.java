@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Representa al pozo en el juego de domino, el cual tambien es el encargado de generar las fichas
@@ -12,7 +11,6 @@ import java.util.stream.Collectors;
  */
 public class Pozo {
 
-    private static Pozo instance;
     private final List<Ficha> fichas;
     
     /**
@@ -48,6 +46,7 @@ public class Pozo {
             return puntosCola;
         }
         
+        @Override
         public String toString() {
             return String.format("[%d|%d]", this.puntosCabeza, this.puntosCola);
         }
@@ -57,15 +56,6 @@ public class Pozo {
         this.fichas = new ArrayList<>();
         this.inicializarFichas();
     }
-
-    public static Pozo getInstance() {
-        if (instance == null) {
-            instance = new Pozo();
-        }
-
-        return instance;
-    }
-
     
     private void inicializarFichas() {
         for (int i=0; i < 7; i++) {
@@ -82,10 +72,17 @@ public class Pozo {
         Collections.shuffle(this.fichas);
     }
     
-    public List<Ficha> obtenerJuegoDeFichas(int cantidadFichas) {  
-        List<Ficha> juegoFichas = this.fichas.stream()
-                .limit(cantidadFichas)
-                .collect(Collectors.toList());
+    public List<Ficha> obtenerJuegoDeFichas(int cantidadFichas) { 
+        
+        if (cantidadFichas < 0) {
+            return new ArrayList<>();
+        }
+           
+        List<Ficha> juegoFichas = new ArrayList<>();
+        while (cantidadFichas > 0 && this.fichasRestantes() > 0) {
+            juegoFichas.add(this.fichas.remove(this.fichas.size() - 1));
+            cantidadFichas--;
+        }
         
         return juegoFichas;
     }

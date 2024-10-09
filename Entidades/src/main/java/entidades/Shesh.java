@@ -13,6 +13,7 @@ import entidades.Pozo.Ficha;
  */
 public class Shesh {
     public static void main(String[] args) {
+        
         Pozo pozo = new Pozo();
         
         System.out.println("Fichas en pozo: " + pozo.fichasRestantes());
@@ -25,5 +26,8 @@ public class Shesh {
         }
         
         System.out.println("Fichas en pozo: " + pozo.fichasRestantes());
+        
+        
+        
     }
 }

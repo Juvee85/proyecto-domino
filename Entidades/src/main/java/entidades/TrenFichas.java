@@ -95,16 +95,34 @@ public class TrenFichas implements Iterable<Ficha> {
 
     }
 
+    /*
     public TrenFichas(Ficha primeraMula) {
         this.nodo = new Nodo(primeraMula);
-    }
+    }*/
 
-    
     public TrenFichas() {
 
     }
 
+    
+    private boolean ponerMulaEnCentro(Ficha ficha) {
+        if (ficha.esMula()) {
+            this.nodo = new Nodo(ficha);
+            return true;
+        }
+        
+        return false;
+    }
+    
     public void agregarFichaExtremoIzquierdo(Ficha ficha) {
+        
+        if (this.nodo == null) {
+            boolean fichaAgregada = this.ponerMulaEnCentro(ficha);
+            if (fichaAgregada) {
+                return;
+            }
+        }
+        
         Nodo actual = nodo;
         while (actual.hijoIzq != null) {
             actual = actual.hijoIzq;
@@ -113,6 +131,13 @@ public class TrenFichas implements Iterable<Ficha> {
     }
 
     public void agregarFichaExtremoDerecho(Ficha ficha) {
+        if (this.nodo == null) {
+            boolean fichaAgregada = this.ponerMulaEnCentro(ficha);
+            if (fichaAgregada) {
+                return;
+            }
+        }
+        
         Nodo actual = nodo;
         while (actual.hijoDer != null) {
             actual = actual.hijoDer;
