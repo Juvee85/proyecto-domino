@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>domino</groupId>
-    <artifactId>Juego</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>com.equipo1</groupId>
+    <artifactId>juego</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
-    <modules>
-        <module>LogicaDomino</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.domino</groupId>
+            <artifactId>Entidades</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.domino</groupId>
+            <artifactId>Presentacion</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <exec.mainClass>domino.juego.Juego</exec.mainClass>
+        <exec.mainClass>com.equipo1.juego.LogicaDomino</exec.mainClass>
     </properties>
 </project>

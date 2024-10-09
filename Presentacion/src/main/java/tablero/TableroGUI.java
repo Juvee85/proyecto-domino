@@ -11,35 +11,35 @@ import java.util.List;
 public class TableroGUI extends javax.swing.JFrame {
 
     private Partida partida;
-    
+
     /**
      * Creates new form TableroGUI
+     *
      * @param partida
      */
     public TableroGUI(Partida partida) {
         this.partida = partida;
+        initComponents();
         //this.tableroDomino.setTablero(partida.getTablero());
         /*
         this.player1.setEnabled(false);
         this.player2.setEnabled(false);
         this.player3.setEnabled(false);
         this.player4.setEnabled(false);
-        */
-        
+         */
+
         this.player1.setVisible(false);
         this.player2.setVisible(false);
         this.player3.setVisible(false);
         this.player4.setVisible(false);
-        
-        initComponents();
-        
+
         this.mostrarJugadores();
     }
-    
+
     private void mostrarJugadores() {
         List<Jugador> jugadores = this.partida.getJugadores();
-        
-        for (Jugador j: jugadores) {
+
+        for (Jugador j : jugadores) {
             /*
             if (j.esAnfitrion())
                 this.player1.setEnabled(true);
@@ -49,17 +49,18 @@ public class TableroGUI extends javax.swing.JFrame {
                 this.player3.setEnabled(true);
             else if (j.getNumero() == 4)
                 this.player4.setEnabled(true);
-            */
-            if (j.esAnfitrion())
+             */
+            if (j.esAnfitrion()) {
                 this.player1.setVisible(true);
-            else if (j.getNumero() == 2)
+            } else if (j.getNumero() == 2) {
                 this.player2.setVisible(true);
-            else if (j.getNumero() == 3)
+            } else if (j.getNumero() == 3) {
                 this.player3.setVisible(true);
-            else if (j.getNumero() == 4)
+            } else if (j.getNumero() == 4) {
                 this.player4.setVisible(true);
+            }
         }
-        
+
     }
 
     /**
