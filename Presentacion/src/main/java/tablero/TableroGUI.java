@@ -1,7 +1,7 @@
 package tablero;
 
-import entidades.Jugador;
-import entidades.Partida;
+import DTOS.JugadorDTO;
+import DTOS.PartidaDTO;
 import java.util.List;
 
 /**
@@ -10,16 +10,26 @@ import java.util.List;
  */
 public class TableroGUI extends javax.swing.JFrame {
 
-    private Partida partida;
+    private PartidaDTO partida;
+    private TableroModelo modelo;
+    private PanelTablero panelTablero;
 
     /**
      * Creates new form TableroGUI
      *
      * @param partida
      */
-    public TableroGUI(Partida partida) {
-        this.partida = partida;
+    public TableroGUI(PartidaDTO partida, TableroModelo modelo) {
         initComponents();
+        this.modelo = modelo;
+        this.partida = partida;
+        panelTablero = new PanelTablero(modelo);
+        tableroDomino.add(panelTablero);
+        panelTablero.setSize(tableroDomino.getSize());
+        panelTablero.setOpaque(false);
+        
+        
+        
         //this.tableroDomino.setTablero(partida.getTablero());
         /*
         this.player1.setEnabled(false);
@@ -37,9 +47,9 @@ public class TableroGUI extends javax.swing.JFrame {
     }
 
     private void mostrarJugadores() {
-        List<Jugador> jugadores = this.partida.getJugadores();
+        List<JugadorDTO> jugadores = this.partida.getJugadores();
 
-        for (Jugador j : jugadores) {
+        for (JugadorDTO j : jugadores) {
             /*
             if (j.esAnfitrion())
                 this.player1.setEnabled(true);

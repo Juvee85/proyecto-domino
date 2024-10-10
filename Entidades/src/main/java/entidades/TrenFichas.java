@@ -41,7 +41,7 @@ public class TrenFichas implements Iterable<Ficha> {
         /**
          * Inicializa los atributos de la clase
          */
-        public IteradorFichas() {
+        private IteradorFichas() {
             // Pila para almacenar los nodos izquierdos
             pilaNodos = new Stack<>();
             nodoActual = nodo;
@@ -100,8 +100,8 @@ public class TrenFichas implements Iterable<Ficha> {
         this.nodo = new Nodo(primeraMula);
     }*/
 
-    public TrenFichas() {
-
+    public TrenFichas(Ficha ficha) {
+        nodo = new Nodo(ficha);
     }
 
     
