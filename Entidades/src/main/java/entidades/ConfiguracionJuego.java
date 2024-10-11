@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Saul Neri
+ * @author
  */
 public class ConfiguracionJuego implements Serializable {
     private int maximoJugadores;
