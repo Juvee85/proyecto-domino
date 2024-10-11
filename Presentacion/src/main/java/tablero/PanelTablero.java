@@ -13,6 +13,9 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import javax.swing.JPanel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.SwingUtilities;
 
 /**
  *
