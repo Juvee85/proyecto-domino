@@ -1,32 +1,61 @@
 package entidades;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 /**
- *
- * @author neri
+ * Representa al pozo en el juego de domino, el cual tambien es el encargado de generar las fichas
+ * @author 
  */
 public class Pozo {
 
-    private static Pozo instance;
-
     private final List<Ficha> fichas;
+    
+    /**
+     * Clase de ficha de domino concreta
+     */
+    public class Ficha implements Serializable {
+        private boolean esMula;
+        private int puntosCabeza;
+        private int puntosCola;
 
-    private Pozo() {
-        this.fichas = new Stack<>();
-        this.inicializarFichas();
-    }
+        private Ficha(int puntosCabeza, int puntosCola) {
+            this.puntosCabeza = puntosCabeza;
+            this.puntosCola = puntosCola;
 
-    public static Pozo getInstance() {
-        if (instance == null) {
-            instance = new Pozo();
+            this.esMula = puntosCabeza == puntosCola;
         }
 
-        return instance;
-    }
+        public void flip() {
+            int tmpCabeza = this.puntosCabeza;
+            this.puntosCabeza = this.puntosCola;
+            this.puntosCola = tmpCabeza;
+        }
 
+        public boolean esMula() {
+            return esMula;
+        }
+
+        public int getPuntosCabeza() {
+            return puntosCabeza;
+        }
+
+        public int getPuntosCola() {
+            return puntosCola;
+        }
+        
+        @Override
+        public String toString() {
+            return String.format("[%d|%d]", this.puntosCabeza, this.puntosCola);
+        }
+    }
+    
+    public Pozo() {
+        this.fichas = new ArrayList<>();
+        this.inicializarFichas();
+    }
     
     private void inicializarFichas() {
         for (int i=0; i < 7; i++) {
@@ -43,8 +72,19 @@ public class Pozo {
         Collections.shuffle(this.fichas);
     }
     
-    public List<Ficha> obtenerJuegoDeDominos(int cantidadFichas) {
-        return null;
+    public List<Ficha> obtenerJuegoDeFichas(int cantidadFichas) { 
+        
+        if (cantidadFichas < 0) {
+            return new ArrayList<>();
+        }
+           
+        List<Ficha> juegoFichas = new ArrayList<>();
+        while (cantidadFichas > 0 && this.fichasRestantes() > 0) {
+            juegoFichas.add(this.fichas.remove(this.fichas.size() - 1));
+            cantidadFichas--;
+        }
+        
+        return juegoFichas;
     }
     
     public Ficha sacarFicha() {
@@ -53,9 +93,15 @@ public class Pozo {
     
     public void meterFicha(Ficha ficha) {
         this.fichas.add(ficha);
+        this.revolverFichas();
     }
     
     public void meterListaFichas(List<Ficha> listaFichas) {
         this.fichas.addAll(listaFichas);
+        this.revolverFichas();
+    }
+    
+    public int fichasRestantes() {
+        return this.fichas.size();
     }
 }

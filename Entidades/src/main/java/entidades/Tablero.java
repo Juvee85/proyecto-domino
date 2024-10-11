@@ -1,29 +1,27 @@
 
 package entidades;
 
+import entidades.Pozo.Ficha;
 import java.io.Serializable;
-
 
 /**
  *
- * @author neri
+ * @author
  */
 public class Tablero implements Serializable {
     private final TrenFichas fichas;
-    private final Pozo pozo;
     
     public Tablero() {
-        this.fichas = new TrenFichas();
-        this.pozo = Pozo.getInstance();
+        this.fichas = new TrenFichas(new Pozo().sacarFicha());
     }
 
     public boolean agregarFichaExtremoDerecho(Ficha ficha) {
         Ficha fichaDerecha = fichas.obtenerFichaExtremoDerecho();
         int ladoExpuesto = fichaDerecha.getPuntosCola();
-        if (ficha.getPuntosCola() == ladoExpuesto) {
+        if (ficha.getPuntosCabeza() == ladoExpuesto) {
             fichas.agregarFichaExtremoDerecho(ficha);
             return true;
-        } else if (ficha.getPuntosCabeza() == ladoExpuesto) {
+        } else if (ficha.getPuntosCola() == ladoExpuesto) {
             ficha.flip();
             fichas.agregarFichaExtremoDerecho(ficha);
             return true;
@@ -34,10 +32,10 @@ public class Tablero implements Serializable {
     public boolean agregarFichaExtremoIzquierdo(Ficha ficha) {
         Ficha fichaIzquierda = fichas.obtenerFichaExtremoIzquierdo();
         int ladoExpuesto = fichaIzquierda.getPuntosCola();
-        if (ficha.getPuntosCola() == ladoExpuesto) {
+        if (ficha.getPuntosCabeza() == ladoExpuesto) {
             fichas.agregarFichaExtremoIzquierdo(ficha);
             return true;
-        } else if (ficha.getPuntosCabeza() == ladoExpuesto) {
+        } else if (ficha.getPuntosCola() == ladoExpuesto) {
             ficha.flip();
             fichas.agregarFichaExtremoIzquierdo(ficha);
             return true;
@@ -45,19 +43,16 @@ public class Tablero implements Serializable {
         return false;
     }
     
-    public List<Ficha> obtenerJuegoFichas(int cantidadFichas) {
-        return this.pozo.obtenerJuegoFichas(cantidadFichas);
+    public Ficha obtenerFichaExtremoDerecho() {
+        return this.fichas.obtenerFichaExtremoDerecho();
     }
     
-    public Ficha sacarFicha() {
-        return this.pozo.sacarFicha();
+    public Ficha obtenerFichaExtremoIzquierdo() {
+        return this.fichas.obtenerFichaExtremoIzquierdo();
     }
-    
-    public void meterFicha(Ficha ficha) {
-        this.pozo.meterFicha(ficha);
+
+    public TrenFichas getFichas() {
+        return fichas;
     }
-    
-    public void meterListaFichas(List<Ficha> listaFichas) {
-        this.pozo.meterListaFichas(listaFichas);
-    }
+   
 }

@@ -10,7 +10,7 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JPanel;
 
 public class PanelRound extends JPanel {
-
+    
     public int getRoundTopLeft() {
         return roundTopLeft;
     }
@@ -55,6 +55,13 @@ public class PanelRound extends JPanel {
     public PanelRound() {
         setOpaque(false);
     }
+    
+    /**
+     * Dibuja las fichas en el panel
+     */
+    public void dibujarFichas() {
+        // dibuja las fichas usando el tablero
+    }
 
     @Override
     protected void paintComponent(Graphics grphcs) {
@@ -72,6 +79,9 @@ public class PanelRound extends JPanel {
             area.intersect(new Area(createRoundBottomRight()));
         }
         g2.fill(area);
+        
+        // se dibujan las fichas...
+        
         g2.dispose();
         super.paintComponent(grphcs);
     }

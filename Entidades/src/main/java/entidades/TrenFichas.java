@@ -3,6 +3,7 @@
  */
 package entidades;
 
+import entidades.Pozo.Ficha;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
@@ -31,7 +32,7 @@ public class TrenFichas implements Iterable<Ficha> {
         }
     }
 
-    public class IteradorFichas implements Iterator<Ficha> {
+    private class IteradorFichas implements Iterator<Ficha> {
 
         private Stack<Nodo> pilaNodos;
         private Nodo nodoActual;
@@ -40,7 +41,7 @@ public class TrenFichas implements Iterable<Ficha> {
         /**
          * Inicializa los atributos de la clase
          */
-        public IteradorFichas() {
+        private IteradorFichas() {
             // Pila para almacenar los nodos izquierdos
             pilaNodos = new Stack<>();
             nodoActual = nodo;
@@ -94,15 +95,34 @@ public class TrenFichas implements Iterable<Ficha> {
 
     }
 
+    /*
     public TrenFichas(Ficha primeraMula) {
         this.nodo = new Nodo(primeraMula);
+    }*/
+
+    public TrenFichas(Ficha ficha) {
+        nodo = new Nodo(ficha);
     }
 
-    public TrenFichas() {
-
+    
+    private boolean ponerMulaEnCentro(Ficha ficha) {
+        if (ficha.esMula()) {
+            this.nodo = new Nodo(ficha);
+            return true;
+        }
+        
+        return false;
     }
-
+    
     public void agregarFichaExtremoIzquierdo(Ficha ficha) {
+        
+        if (this.nodo == null) {
+            boolean fichaAgregada = this.ponerMulaEnCentro(ficha);
+            if (fichaAgregada) {
+                return;
+            }
+        }
+        
         Nodo actual = nodo;
         while (actual.hijoIzq != null) {
             actual = actual.hijoIzq;
@@ -111,6 +131,13 @@ public class TrenFichas implements Iterable<Ficha> {
     }
 
     public void agregarFichaExtremoDerecho(Ficha ficha) {
+        if (this.nodo == null) {
+            boolean fichaAgregada = this.ponerMulaEnCentro(ficha);
+            if (fichaAgregada) {
+                return;
+            }
+        }
+        
         Nodo actual = nodo;
         while (actual.hijoDer != null) {
             actual = actual.hijoDer;

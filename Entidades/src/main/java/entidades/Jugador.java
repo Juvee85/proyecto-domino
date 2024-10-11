@@ -3,9 +3,12 @@ package entidades;
 import java.io.Serializable;
 import java.util.List;
 
+import entidades.Pozo.Ficha;
+import java.util.ArrayList;
+
 /**
  *
- * @author Saul Neri
+ * @author 
  */
 public class Jugador implements Serializable {
     private String nombre;
@@ -13,10 +16,19 @@ public class Jugador implements Serializable {
     private List<Ficha> fichas;
     private int partidasGanadas;
     private boolean anfitrion;
+    private int numero;
 
     public Jugador() {
-        
+        this.fichas = new ArrayList<>();
     }
+    
+    /**
+     * Asigna si el jugador es un anfitrion o no
+     * @param anfitrion 
+     */
+    public void esAnfitrion(boolean anfitrion) {
+        this.anfitrion = anfitrion;
+    } 
     
     public boolean esAnfitrion() {
         return this.anfitrion;
@@ -49,11 +61,19 @@ public class Jugador implements Serializable {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+    
+    /**
+     * Asigna fichas al jugador
+     * @param juegoFichas
+     */
+    public void asignarFichas(List<Ficha> juegoFichas) {
+        this.fichas = juegoFichas;
+    }
 
     /**
      * @return the fichas
      */
-    public List<Ficha> getFichas() {
+    public List<Ficha> obtenerFichas() {
         return fichas;
     }
 
@@ -69,5 +89,19 @@ public class Jugador implements Serializable {
      */
     public void setPartidasGanadas(int partidasGanadas) {
         this.partidasGanadas = partidasGanadas;
+    }
+
+    /**
+     * @return the numero
+     */
+    public int getNumero() {
+        return numero;
+    }
+
+    /**
+     * @param numero the numero to set
+     */
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 }

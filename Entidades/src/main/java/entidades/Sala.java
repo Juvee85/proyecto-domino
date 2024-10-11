@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Saul Neri
+ * @author 
  */
 public class Sala implements Serializable {
     private Partida partida;
