@@ -19,7 +19,7 @@ public class PartidaConverter extends Converter<PartidaDTO, Partida> {
     }
    
     private static PartidaDTO convertToDto(Partida partida) {
-        return null;
+        return new PartidaDTO();
     }
 
     private static Partida convertToEntity(PartidaDTO DTO) {

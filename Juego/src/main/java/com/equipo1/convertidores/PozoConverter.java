@@ -17,7 +17,7 @@ public class PozoConverter extends Converter<PozoDTO, Pozo> {
         super(PozoConverter::convertToEntity, PozoConverter::convertToDto);
     }
     private static PozoDTO convertToDto(Pozo pozo) {
-        return null;
+        return new PozoDTO();
     }
 
     private static Pozo convertToEntity(PozoDTO DTO) {

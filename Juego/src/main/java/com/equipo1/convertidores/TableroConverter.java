@@ -14,11 +14,11 @@ import entidades.Tablero;
 public class TableroConverter extends Converter<TableroDTO, Tablero> {
 
     public TableroConverter(){
-        super(TableroConverter::convertToEntity, TableroConverter::convertToDto);
+        super(TableroConverter::convertToEntity, TableroConverter::convertToDTO);
     }
     
-    private static TableroDTO convertToDto(Tablero tablero ) {
-        return null;
+    private static TableroDTO convertToDTO(Tablero tablero ) {
+        return new TableroDTO();
         
     }
     

@@ -24,7 +24,7 @@ public class Converter <T, U> {
         this.fromEntity = fromEntity;
     }
 
-    public final U convertFromDto(final T dto) {
+    public final U convertFromDTO(final T dto) {
         return fromDTO.apply(dto);
     }
 
@@ -32,8 +32,8 @@ public class Converter <T, U> {
         return fromEntity.apply(entity);
     }
 
-    public final List<U> createFromDtos(final Collection<T> dtos) {
-        return dtos.stream().map(this::convertFromDto).collect(Collectors.toList());
+    public final List<U> createFromDTOS(final Collection<T> dtos) {
+        return dtos.stream().map(this::convertFromDTO).collect(Collectors.toList());
     }
 
     public final List<T> createFromEntities(final Collection<U> entities) {

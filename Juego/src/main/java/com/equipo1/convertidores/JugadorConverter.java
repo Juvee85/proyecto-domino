@@ -17,7 +17,7 @@ public class JugadorConverter extends Converter <JugadorDTO, Jugador> {
         super(JugadorConverter::convertToEntity, JugadorConverter::convertToDto);
     }
     private static JugadorDTO convertToDto(Jugador jugador) {
-     return null;     
+     return new JugadorDTO();     
     }
 
     private static Jugador convertToEntity(JugadorDTO DTO) {
