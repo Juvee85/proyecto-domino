@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.equipo1.convertidores;
 
 import DTOS.FichaDTO;
@@ -18,7 +14,7 @@ public class FichaConverter extends Converter<FichaDTO, Ficha> {
     }
    
     private static FichaDTO convertToDto(Ficha ficha) {
-        return null;
+        return new FichaDTO(ficha.getPuntosCabeza(), ficha.getPuntosCola());
     }
 
     private static Ficha convertToEntity(FichaDTO DTO) {
