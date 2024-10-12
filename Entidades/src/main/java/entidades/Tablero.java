@@ -12,7 +12,11 @@ public class Tablero implements Serializable {
     private final TrenFichas fichas;
 
     public Tablero() {
-        this.fichas = new TrenFichas(new Pozo().sacarFicha());
+        Ficha primeraFicha = null;
+        do {
+            primeraFicha = new Pozo().sacarFicha();
+        } while (!primeraFicha.esMula());
+        this.fichas = new TrenFichas(primeraFicha);
     }
 
     public boolean agregarFichaExtremoDerecho(Ficha ficha) {

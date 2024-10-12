@@ -18,7 +18,7 @@ public class TableroModelo {
     //General drawing info
     private final int windowWidth = 1200;
     private final int windowHeight = 720;
-    private double zoomFactor = 1;
+    private double zoomFactor = .6;
     private double prevZoomFactor = 1;
     private double xOffset = 0;
     private double yOffset = 0;
@@ -27,8 +27,8 @@ public class TableroModelo {
     private final int dominoWidth = 100;
     private final int dominoHeight = 200;
     private final int dominoEdgeArc = 40;
-    private final int dominoStartingX = 350;
-    private final int dominoStartingY = 150;
+    private final int dominoStartingX = 650;
+    private final int dominoStartingY = 350;
 
     //Pip Drawing info
     private final int pipSpacing = 30;
@@ -104,7 +104,7 @@ public class TableroModelo {
         return dominoPieceColor;
     }
 
-    public Color getCenterCircle() {
+    public Color getCenterCircleColor() {
         return centerCircle;
     }
 

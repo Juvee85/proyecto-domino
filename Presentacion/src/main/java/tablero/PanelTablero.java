@@ -5,7 +5,6 @@ package tablero;
 
 import DTOS.FichaDTO;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
@@ -13,9 +12,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import javax.swing.JPanel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -31,12 +27,11 @@ public class PanelTablero extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); 
-        
+        super.paintComponent(g);
+
         draw((Graphics2D) g);
     }
 
-    
     public void draw(Graphics2D g) {
         setZoom(g);
 
@@ -46,7 +41,7 @@ public class PanelTablero extends JPanel {
 
         List<FichaDTO> fichas = modelo.getFichasEnJuego();
         int xLeftOffset = modelo.getDominoStartingX();
-        int xRightOffset = modelo.getDominoStartingX() + 150;
+        int xRightOffset = modelo.getDominoStartingX() -200 ;
 
         boolean enLadoIzq = true;
         for (FichaDTO ficha : fichas) {
@@ -55,20 +50,23 @@ public class PanelTablero extends JPanel {
                 deg = 90;
             }
             if (enLadoIzq) {
-                drawDomino(ficha, g, xLeftOffset, modelo.getDominoStartingY(), deg);
-
                 if (ficha.getOrientacion() == Orientacion.HORIZONTAL) {
                     xLeftOffset = xLeftOffset - (modelo.getDominoHeight());
-                } else {
+                } else if (ficha.getOrientacion() == Orientacion.VERTICAL) {
                     xLeftOffset = xLeftOffset - (modelo.getDominoWidth() * 3) / 2;
                 }
+                
+                drawDomino(ficha, g, xLeftOffset, modelo.getDominoStartingY(), deg);
+                xLeftOffset += ((ficha.esMula()) ? modelo.getDominoWidth() / 2 : 0);
             } else {
-                drawDomino(ficha, g, xRightOffset, modelo.getDominoStartingY(), deg);
                 if (ficha.getOrientacion() == Orientacion.HORIZONTAL) {
                     xRightOffset = xRightOffset + (modelo.getDominoHeight());
-                } else {
+                } else if (ficha.getOrientacion() == Orientacion.VERTICAL) {
                     xRightOffset = xRightOffset + (modelo.getDominoWidth() * 3) / 2;
                 }
+
+                drawDomino(ficha, g, xRightOffset, modelo.getDominoStartingY(), deg);
+                xRightOffset -= ((ficha.esMula()) ? modelo.getDominoWidth() / 2 : 0);
             }
 
             if (ficha.equals(modelo.getFichaIzquierda())) {
@@ -95,7 +93,7 @@ public class PanelTablero extends JPanel {
         modelo.setxOffset(xOffset);
         modelo.setyOffset(yOffset);
 
-        at.translate(xOffset, yOffset);
+        // at.translate(xOffset, yOffset);
         at.scale(zoomFactor, zoomFactor);
         modelo.setPrevZoomFactor(zoomFactor);
 
@@ -106,6 +104,8 @@ public class PanelTablero extends JPanel {
 
         int width = modelo.getDominoWidth();
         int height = modelo.getDominoHeight();
+        int arc = modelo.getDominoEdgeArc();
+        int centerCircleSize = 15;
 
         int pieceCenterX = x + width / 2;
         int pieceCenterY = y + height / 2;
@@ -115,16 +115,16 @@ public class PanelTablero extends JPanel {
         ((Graphics2D) g).rotate(Math.toRadians(deg));
         ((Graphics2D) g).translate(-pieceCenterX, -pieceCenterY);
 
-        g.setColor(new Color(252, 247, 236)); // White
-        g.fillRoundRect(x, y, width, height, 40, 40);
+        g.setColor(modelo.getDominoPieceColor()); // White
+        g.fillRoundRect(x, y, width, height, arc, arc);
         g.setStroke(new BasicStroke(4));
-        g.setColor(Color.BLACK);
-        g.drawRoundRect(x, y, width, height, 40, 40);
+        g.setColor(modelo.getStrokeColor());
+        g.drawRoundRect(x, y, width, height, arc, arc);
         g.drawLine(x, y + height / 2, x + width, y + height / 2);
-        g.setColor(new Color(197, 185, 76)); //Center circle yellow thingy
-        g.fillOval(x + 42, y + 92, 15, 15);
-        g.setColor(Color.BLACK); //Center circle stroke
-        g.drawOval(x + 42, y + 92, 15, 15);
+        g.setColor(modelo.getCenterCircleColor()); //Center circle yellow thingy
+        g.fillOval(x + 42, y + 92, centerCircleSize, centerCircleSize);
+        g.setColor(modelo.getStrokeColor()); //Center circle stroke
+        g.drawOval(x + 42, y + 92, centerCircleSize, centerCircleSize);
 
         drawPips(ficha, g, x, y);
         ((Graphics2D) g).setTransform(oldTransform);
