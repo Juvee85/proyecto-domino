@@ -17,7 +17,7 @@ public class JugadorDTO {
     private int partidasGanadas;
     private boolean anfitrion;
     private int numero;
-
+    
     public String getNombre() {
         return nombre;
     }
