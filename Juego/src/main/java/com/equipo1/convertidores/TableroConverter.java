@@ -27,7 +27,7 @@ public class TableroConverter extends Converter<TableroDTO, Tablero> {
         for (Pozo.Ficha ficha : fichas) {
             FichaDTO fichaDTO = convertidor.convertFromEntity(ficha);
 
-            if (cuenta < 5) {
+            if (cuenta < 5 && cuenta > 0) {
                 fichaDTO.setOrientacion(Orientacion.HORIZONTAL);
             } else {
                 fichaDTO.setOrientacion(Orientacion.VERTICAL);

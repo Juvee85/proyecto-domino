@@ -1,18 +1,13 @@
 
 package com.equipo1.logicadomino;
 
-import DTOS.FichaDTO;
-import DTOS.JugadorDTO;
 import DTOS.PartidaDTO;
-import DTOS.TableroDTO;
+import com.equipo1.convertidores.PartidaConverter;
 import entidades.ConfiguracionJuego;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo.Ficha;
 import entidades.Tablero;
-import entidades.TrenFichas;
-import java.util.ArrayList;
-import java.util.List;
 import mediador.MediadorPantallas;
 
 /**
@@ -56,9 +51,7 @@ public class LogicaDomino {
         
         System.out.println("Estado de la partida: " + partida.getEstado());
         
-        // Convertir Partida
-        List<FichaDTO> fichas = new ArrayList<>();
-        TableroDTO tablero = new TableroDTO();
+      
        
         Tablero tab = new Tablero();
       // Agrega fichas de prueba
@@ -82,28 +75,11 @@ public class LogicaDomino {
         tab.agregarFichaExtremoIzquierdo(ficha1);
         tab.agregarFichaExtremoDerecho(ficha2);
         
-        TrenFichas tren = tab.getFichas();
-        for (Ficha ficha : tren) {
-            fichas.add(new FichaDTO(ficha.getPuntosCabeza(), ficha.getPuntosCola()));
-            if (ficha.equals(tab.getFichas().obtenerFichaExtremoIzquierdo())) {
-                tablero.setFichaExtremoIzquierda(new FichaDTO(ficha.getPuntosCabeza(), ficha.getPuntosCola()));
-            }
-        }
-        tablero.setFichas(fichas);
+        partida.setTablero(tab);
         
-        List<Jugador> jugadoresPartida = partida.getJugadores();
-        List<JugadorDTO> jugadores = new ArrayList<>();
-        for (Jugador jugador : jugadoresPartida) {
-            JugadorDTO dto = new JugadorDTO();
-            dto.setAnfitrion(jugador.esAnfitrion());
-            dto.setAvatar(jugador.getAvatar());
-            dto.setNumero(jugador.getNumero());
-            jugadores.add(dto);
-        }
         
-        PartidaDTO dto = new PartidaDTO();
-        dto.setTablero(tablero);
-        dto.setJugadores(jugadores);
+        PartidaDTO dto = new PartidaConverter().convertFromEntity(partida);
+
         // Hasta aqui son conversiones
         MediadorPantallas.mostrarPantallaJuego(dto);
         

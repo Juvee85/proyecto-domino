@@ -19,7 +19,10 @@ public class PartidaConverter extends Converter<PartidaDTO, Partida> {
     }
    
     private static PartidaDTO convertToDto(Partida partida) {
-        return new PartidaDTO();
+        PartidaDTO dto = new  PartidaDTO();
+        dto.setJugadores(new JugadorConverter().createFromEntities(partida.getJugadores()));
+        dto.setTablero(new TableroConverter().convertFromEntity(partida.getTablero()));
+        return dto;
     }
 
     private static Partida convertToEntity(PartidaDTO DTO) {

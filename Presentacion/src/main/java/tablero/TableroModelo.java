@@ -27,7 +27,7 @@ public class TableroModelo {
     private final int dominoWidth = 100;
     private final int dominoHeight = 200;
     private final int dominoEdgeArc = 40;
-    private final int dominoStartingX = 600;
+    private final int dominoStartingX = 350;
     private final int dominoStartingY = 150;
 
     //Pip Drawing info

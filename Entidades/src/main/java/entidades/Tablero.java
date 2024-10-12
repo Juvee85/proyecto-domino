@@ -1,4 +1,3 @@
-
 package entidades;
 
 import entidades.Pozo.Ficha;
@@ -9,26 +8,27 @@ import java.io.Serializable;
  * @author
  */
 public class Tablero implements Serializable {
+
     private final TrenFichas fichas;
-    
+
     public Tablero() {
         this.fichas = new TrenFichas(new Pozo().sacarFicha());
     }
 
     public boolean agregarFichaExtremoDerecho(Ficha ficha) {
         Ficha fichaDerecha = fichas.obtenerFichaExtremoDerecho();
-        int ladoExpuesto = fichaDerecha.getPuntosCola();
-        if (ficha.getPuntosCabeza() == ladoExpuesto) {
+        int ladoExpuesto = fichaDerecha.getPuntosCabeza();
+        if (ficha.getPuntosCola() == ladoExpuesto) {
             fichas.agregarFichaExtremoDerecho(ficha);
             return true;
-        } else if (ficha.getPuntosCola() == ladoExpuesto) {
+        } else if (ficha.getPuntosCabeza() == ladoExpuesto) {
             ficha.flip();
             fichas.agregarFichaExtremoDerecho(ficha);
             return true;
         }
         return false;
     }
-    
+
     public boolean agregarFichaExtremoIzquierdo(Ficha ficha) {
         Ficha fichaIzquierda = fichas.obtenerFichaExtremoIzquierdo();
         int ladoExpuesto = fichaIzquierda.getPuntosCola();
@@ -42,11 +42,11 @@ public class Tablero implements Serializable {
         }
         return false;
     }
-    
+
     public Ficha obtenerFichaExtremoDerecho() {
         return this.fichas.obtenerFichaExtremoDerecho();
     }
-    
+
     public Ficha obtenerFichaExtremoIzquierdo() {
         return this.fichas.obtenerFichaExtremoIzquierdo();
     }
@@ -54,5 +54,5 @@ public class Tablero implements Serializable {
     public TrenFichas getFichas() {
         return fichas;
     }
-   
+
 }
