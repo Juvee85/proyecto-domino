@@ -16,6 +16,7 @@ public class TableroGUI extends javax.swing.JFrame {
     private TableroModelo modelo;
     private PanelTablero panelTablero;
     private PanelManoJugador mano;
+    private ControladorArrastreFicha controladorArrastre;
 
     /**
      * Creates new form TableroGUI
@@ -38,6 +39,8 @@ public class TableroGUI extends javax.swing.JFrame {
         tableroDomino.add(panelTablero);
         panelTablero.setSize(tableroDomino.getSize());
         panelTablero.setOpaque(false);
+
+        controladorArrastre = new ControladorArrastreFicha(panelManoJugador, panelTablero, modelo);
 
         this.mostrarJugadores();
     }
@@ -207,7 +210,7 @@ public class TableroGUI extends javax.swing.JFrame {
         );
         manoJugadorLayout.setVerticalGroup(
             manoJugadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 86, Short.MAX_VALUE)
+            .addGap(0, 95, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
@@ -224,7 +227,7 @@ public class TableroGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
                 .addContainerGap(619, Short.MAX_VALUE)
                 .addComponent(manoJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addGap(16, 16, 16))
         );
 
         getContentPane().add(Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1160, 730));
