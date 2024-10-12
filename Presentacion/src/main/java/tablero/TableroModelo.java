@@ -4,6 +4,7 @@
 package tablero;
 
 import DTOS.FichaDTO;
+import DTOS.JugadorDTO;
 import interfacesObservador.Observador;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class TableroModelo {
     //General drawing info
     private final int windowWidth = 1200;
     private final int windowHeight = 720;
-    private double zoomFactor = 1;
+    private double zoomFactor = .6;
     private double prevZoomFactor = 1;
     private double xOffset = 0;
     private double yOffset = 0;
@@ -27,8 +28,8 @@ public class TableroModelo {
     private final int dominoWidth = 100;
     private final int dominoHeight = 200;
     private final int dominoEdgeArc = 40;
-    private final int dominoStartingX = 600;
-    private final int dominoStartingY = 150;
+    private final int dominoStartingX = 650;
+    private final int dominoStartingY = 350;
 
     //Pip Drawing info
     private final int pipSpacing = 30;
@@ -47,6 +48,7 @@ public class TableroModelo {
     private final Color centerCircle = new Color(197, 185, 76);
 
     private List<FichaDTO> fichasEnJuego;
+    private List<JugadorDTO> jugadores;
     private FichaDTO fichaIzquierda;
 
     //Observers
@@ -104,7 +106,7 @@ public class TableroModelo {
         return dominoPieceColor;
     }
 
-    public Color getCenterCircle() {
+    public Color getCenterCircleColor() {
         return centerCircle;
     }
 
@@ -158,6 +160,14 @@ public class TableroModelo {
 
     public void setFichaIzquierda(FichaDTO fichaIzquierda) {
         this.fichaIzquierda = fichaIzquierda;
+    }
+
+    public List<JugadorDTO> getJugadores() {
+        return jugadores;
+    }
+
+    public void setJugadores(List<JugadorDTO> jugadores) {
+        this.jugadores = jugadores;
     }
 
     public List<Observador> getObservers() {

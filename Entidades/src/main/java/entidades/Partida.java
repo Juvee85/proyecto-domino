@@ -52,6 +52,10 @@ public class Partida {
         return tablero;
     }
 
+    public void setTablero(Tablero tablero) {
+        this.tablero = tablero;
+    }
+
     /**
      * @return the configuracion
      */
