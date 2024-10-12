@@ -13,11 +13,11 @@ public class JugadorDTO {
 
     private String nombre;
     private String avatar;
-    private List<FichaDTO> fichas;
+    private List<FichaDTO> fichas;  // Las fichas en la mano del jugador
     private int partidasGanadas;
     private boolean anfitrion;
     private int numero;
-    
+
     public String getNombre() {
         return nombre;
     }
@@ -66,4 +66,20 @@ public class JugadorDTO {
         this.numero = numero;
     }
 
+    // Seleccionar cualquier ficha de la mano
+    public FichaDTO seleccionarFicha(int indice) {
+        if (indice >= 0 && indice < fichas.size()) {
+            return fichas.get(indice);
+        }
+        return null;
+    }
+
+    // Jugar una ficha si es válida
+    public boolean jugarFicha(FichaDTO ficha, TableroDTO tablero) {
+        if (tablero.puedeAgregarFicha(ficha)) {
+            fichas.remove(ficha);
+            return true;
+        }
+        return false;
+    }
 }

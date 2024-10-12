@@ -9,6 +9,7 @@ import tablero.Orientacion;
  *
  * @author Juventino López García - 00000248547 - 09/10/2024
  */
+
 public class FichaDTO {
 
     private final boolean esMula;
@@ -19,7 +20,6 @@ public class FichaDTO {
     public FichaDTO(int puntosCabeza, int puntosCola) {
         this.puntosCabeza = puntosCabeza;
         this.puntosCola = puntosCola;
-
         this.esMula = puntosCabeza == puntosCola;
     }
 
@@ -43,10 +43,9 @@ public class FichaDTO {
         this.orientacion = orientacion;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        return hash;
+    // Método para verificar si dos fichas pueden conectarse
+    public boolean puedeConectarCon(FichaDTO otraFicha) {
+        return this.puntosCola == otraFicha.puntosCabeza || this.puntosCabeza == otraFicha.puntosCola;
     }
 
     @Override
@@ -61,10 +60,7 @@ public class FichaDTO {
             return false;
         }
         final FichaDTO other = (FichaDTO) obj;
-
-        return (this.puntosCola == other.puntosCola && this.puntosCabeza == other.puntosCabeza
-                || this.puntosCola == other.puntosCabeza && this.puntosCabeza == other.puntosCola);
-
+        return (this.puntosCola == other.puntosCola && this.puntosCabeza == other.puntosCabeza)
+                || (this.puntosCola == other.puntosCabeza && this.puntosCabeza == other.puntosCola);
     }
-
 }

@@ -13,6 +13,7 @@
 package tablero;
 
 import DTOS.FichaDTO;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -59,6 +60,12 @@ public class ControladorArrastreFicha {
                 // Al soltar el clic, intenta colocar la ficha en el tablero
                 soltarFicha(e.getX(), e.getY());
             }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // Cambiar el cursor a mano si está sobre una ficha
+                cambiarCursorSiSobreFicha(e.getX(), e.getY());
+            }
         });
 
         // Listener para gestionar el arrastre de la ficha seleccionada
@@ -70,7 +77,34 @@ public class ControladorArrastreFicha {
                     moverFicha(e.getX(), e.getY());
                 }
             }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // Cambiar el cursor a mano si está sobre una ficha
+                cambiarCursorSiSobreFicha(e.getX(), e.getY());
+            }
         });
+    }
+
+    /**
+     * Método para cambiar el cursor a "mano" si el mouse está sobre una ficha en la mano del jugador.
+     *
+     * @param x Coordenada X del mouse
+     * @param y Coordenada Y del mouse
+     */
+    private void cambiarCursorSiSobreFicha(int x, int y) {
+        boolean sobreFicha = false;
+        for (FichaDTO ficha : panelManoJugador.getFichasJugador()) {
+            if (esClicSobreFicha(ficha, x, y)) {
+                sobreFicha = true;
+                break;
+            }
+        }
+        if (sobreFicha) {
+            panelManoJugador.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));  // Cambia a cursor de mano
+        } else {
+            panelManoJugador.setCursor(Cursor.getDefaultCursor());  // Restaura el cursor por defecto
+        }
     }
 
     /**
@@ -111,74 +145,37 @@ public class ControladorArrastreFicha {
         return (x >= fichaX && x <= fichaX + fichaWidth && y >= fichaY && y <= fichaY + fichaHeight);
     }
 
-    /**
-     * Calcula la posición X de una ficha en la mano del jugador.
-     * Este es un método auxiliar para determinar la ubicación exacta de una ficha en la interfaz.
-     *
-     * @param ficha La ficha cuya posición se está calculando
-     * @return La posición X de la ficha en la mano del jugador
-     */
+    // Métodos auxiliares para calcular la posición de las fichas (pueden ser definidos por la lógica del modelo)
+
     private int calcularPosicionFichaX(FichaDTO ficha) {
-        // Lógica específica para calcular la posición X de la ficha (dependiente de la interfaz gráfica)
+        // Lógica para calcular la posición X de la ficha
         return 0;
     }
 
-    /**
-     * Calcula la posición Y de una ficha en la mano del jugador.
-     * Este es un método auxiliar para determinar la ubicación exacta de una ficha en la interfaz.
-     *
-     * @param ficha La ficha cuya posición se está calculando
-     * @return La posición Y de la ficha en la mano del jugador
-     */
     private int calcularPosicionFichaY(FichaDTO ficha) {
-        // Lógica específica para calcular la posición Y de la ficha (dependiente de la interfaz gráfica)
+        // Lógica para calcular la posición Y de la ficha
         return 0;
     }
 
-    /**
-     * Mueve la ficha seleccionada mientras se arrastra con el mouse. Actualiza la interfaz gráfica
-     * para mostrar el movimiento en tiempo real.
-     *
-     * @param x Nueva coordenada X del mouse durante el arrastre
-     * @param y Nueva coordenada Y del mouse durante el arrastre
-     */
     private void moverFicha(int x, int y) {
-        // Actualiza la posición de la ficha seleccionada mientras se arrastra
-        panelManoJugador.repaint();  // Redibuja el panel de la mano del jugador para reflejar el movimiento
+        // Actualiza la posición de la ficha mientras se arrastra
+        panelManoJugador.repaint();
     }
 
-    /**
-     * Suelta la ficha arrastrada y, si está en una posición válida sobre el tablero, la coloca
-     * en la posición correspondiente. Si no, la ficha vuelve a la mano del jugador.
-     *
-     * @param x Coordenada X donde se soltó la ficha
-     * @param y Coordenada Y donde se soltó la ficha
-     */
     private void soltarFicha(int x, int y) {
         if (fichaSeleccionada != null) {
-            // Verificar si la posición donde se soltó la ficha es válida en el tablero
             if (esPosicionValidaEnTablero(x, y)) {
-                // Añadir la ficha al tablero si la posición es válida
                 modelo.getFichasEnJuego().add(fichaSeleccionada);
-                panelTablero.repaint();  // Redibuja el tablero para reflejar la nueva ficha
-                
-                // Eliminar la ficha de la mano del jugador
+                panelTablero.repaint();
                 panelManoJugador.getFichasJugador().remove(fichaSeleccionada);
-                panelManoJugador.repaint();  // Redibuja la mano del jugador sin la ficha
+                panelManoJugador.repaint();
             }
-            fichaSeleccionada = null;  // Limpiar la ficha seleccionada
+            fichaSeleccionada = null;
         }
     }
 
-    /**
-     * Verifica si la posición donde se soltó la ficha es válida en el tablero.
-     *
-     * @param x Coordenada X donde se soltó la ficha
-     * @param y Coordenada Y donde se soltó la ficha
-     * @return true si la posición es válida, false en caso contrario
-     */
     private boolean esPosicionValidaEnTablero(int x, int y) {
-        // Lógica para determinar si la posición es válida en el tablero (según las reglas del juego)
+        // Lógica para determinar si la posición es válida en el tablero
         return true;
     }
 }
