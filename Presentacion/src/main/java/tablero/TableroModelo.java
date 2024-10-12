@@ -4,6 +4,7 @@
 package tablero;
 
 import DTOS.FichaDTO;
+import DTOS.JugadorDTO;
 import interfacesObservador.Observador;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class TableroModelo {
     private final Color centerCircle = new Color(197, 185, 76);
 
     private List<FichaDTO> fichasEnJuego;
+    private List<JugadorDTO> jugadores;
     private FichaDTO fichaIzquierda;
 
     //Observers
@@ -158,6 +160,14 @@ public class TableroModelo {
 
     public void setFichaIzquierda(FichaDTO fichaIzquierda) {
         this.fichaIzquierda = fichaIzquierda;
+    }
+
+    public List<JugadorDTO> getJugadores() {
+        return jugadores;
+    }
+
+    public void setJugadores(List<JugadorDTO> jugadores) {
+        this.jugadores = jugadores;
     }
 
     public List<Observador> getObservers() {

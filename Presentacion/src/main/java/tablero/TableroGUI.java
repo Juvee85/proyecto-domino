@@ -12,7 +12,6 @@ import java.util.List;
 public class TableroGUI extends javax.swing.JFrame {
 
     private PanelManoJugador panelManoJugador;
-
     private PartidaDTO partida;
     private TableroModelo modelo;
     private PanelTablero panelTablero;
@@ -29,7 +28,7 @@ public class TableroGUI extends javax.swing.JFrame {
         this.partida = partida;
 
         // Inicializar el panel de la mano del jugador
-        panelManoJugador = new PanelManoJugador();
+        panelManoJugador = new PanelManoJugador(modelo);
         manoJugador.add(panelManoJugador);  // Agregar el panel al contenedor manoJugador
         panelManoJugador.setSize(manoJugador.getSize());
         panelManoJugador.setOpaque(false);

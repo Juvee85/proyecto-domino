@@ -20,6 +20,7 @@ public class MediadorPantallas {
         FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
         modelo.setFichaIzquierda(fichaIzquierda);
         modelo.setFichasEnJuego(partida.getTablero().getFichas());
+        modelo.setJugadores(partida.getJugadores());
         TableroGUI ventana = new TableroGUI(partida, modelo);
         ventana.setVisible(true);
     }
