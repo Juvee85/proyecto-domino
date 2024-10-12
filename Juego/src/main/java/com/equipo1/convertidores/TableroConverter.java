@@ -45,7 +45,17 @@ public class TableroConverter extends Converter<TableroDTO, Tablero> {
     }
 
     private static Tablero convertToEntity(TableroDTO DTO) {
-        return null;
+        FichaConverter fichaConverter = new FichaConverter();
+
+        for (FichaDTO fichaDTO : DTO.getFichas()) {
+            Pozo.Ficha ficha = fichaConverter.convertFromDTO(fichaDTO);
+
+        }
+
+        Tablero tablero = new Tablero();
+
+        return tablero;
+    }
     }
 
-}
+
