@@ -1,4 +1,5 @@
 com\equipo1\convertidores\FichaConverter.class
+com\equipo1\logicadomino\Principal.class
 com\equipo1\convertidores\JugadorConverter.class
 com\equipo1\convertidores\Converter.class
 com\equipo1\convertidores\TableroConverter.class

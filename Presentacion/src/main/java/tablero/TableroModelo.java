@@ -5,7 +5,9 @@ package tablero;
 
 import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
+import interfacesObservador.Observable;
 import interfacesObservador.Observador;
+import interfacesObservador.ObservadorAnhadirFicha;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  *
  * @author Juventino López García - 00000248547
  */
-public class TableroModelo {
+public class TableroModelo implements Observable {
 
     //General drawing info
     private final int windowWidth = 1200;
@@ -48,14 +50,18 @@ public class TableroModelo {
     private final Color centerCircle = new Color(197, 185, 76);
 
     private List<FichaDTO> fichasEnJuego;
+    private FichaDTO fichaSeleccionada;
+    private int indiceFichaSeleccionada;
     private List<JugadorDTO> jugadores;
     private FichaDTO fichaIzquierda;
 
     //Observers
     private List<Observador> observers;
+    private List<ObservadorAnhadirFicha> observersAnhadir;
 
     public TableroModelo() {
         this.observers = new ArrayList<>();
+        this.observersAnhadir = new ArrayList<>();
     }
 
     public int getWindowHeight() {
@@ -177,9 +183,54 @@ public class TableroModelo {
     public void setObservers(List<Observador> observers) {
         this.observers = observers;
     }
-    
+
     public void setFichasEnJuego(List<FichaDTO> fichasEnJuego) {
         this.fichasEnJuego = fichasEnJuego;
+    }
+
+    public FichaDTO getFichaSeleccionada() {
+        return fichaSeleccionada;
+    }
+
+    public void setFichaSeleccionada(FichaDTO fichaSeleccionada) {
+        this.fichaSeleccionada = fichaSeleccionada;
+    }
+
+    public int getIndiceFichaSeleccionada() {
+        return indiceFichaSeleccionada;
+    }
+
+    public void setIndiceFichaSeleccionada(int indiceFichaSeleccionada) {
+        this.indiceFichaSeleccionada = indiceFichaSeleccionada;
+        fichaSeleccionada = jugadores.get(0).getFichas().get(indiceFichaSeleccionada);
+        notificar();
+    }
+
+    public void anhadirObservador(ObservadorAnhadirFicha observador) {
+        observersAnhadir.add(observador);
+    }
+
+    @Override
+    public void notificar() {
+        for (Observador observer : observers) {
+            observer.actualizar();
+        }
+    }
+
+    @Override
+    public void anhadirObservador(Observador observador) {
+        observers.add(observador);
+    }
+
+    @Override
+    public void removerObservador(Observador observador) {
+        observers.remove(observador);
+    }
+
+    public void agregarFicha() {
+        for (ObservadorAnhadirFicha observer : observersAnhadir) {
+            observer.actualizar(jugadores.get(0), fichaSeleccionada);
+        }
     }
 
 }

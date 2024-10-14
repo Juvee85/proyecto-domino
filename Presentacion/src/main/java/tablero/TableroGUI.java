@@ -1,15 +1,16 @@
 package tablero;
 
-import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
 import DTOS.PartidaDTO;
+import interfacesObservador.Observador;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 /**
  *
  * @author Sebastian
  */
-public class TableroGUI extends javax.swing.JFrame {
+public class TableroGUI extends javax.swing.JFrame implements Observador {
 
     private PanelManoJugador panelManoJugador;
     private PartidaDTO partida;
@@ -17,6 +18,7 @@ public class TableroGUI extends javax.swing.JFrame {
     private PanelTablero panelTablero;
     private PanelManoJugador mano;
     private ControladorArrastreFicha controladorArrastre;
+    private ControladorSeleccionarFicha controlador;
 
     /**
      * Creates new form TableroGUI
@@ -28,6 +30,7 @@ public class TableroGUI extends javax.swing.JFrame {
         this.modelo = modelo;
         this.partida = partida;
 
+        modelo.anhadirObservador(this);
         // Inicializar el panel de la mano del jugador
         panelManoJugador = new PanelManoJugador(modelo);
         manoJugador.add(panelManoJugador);  // Agregar el panel al contenedor manoJugador
@@ -40,7 +43,9 @@ public class TableroGUI extends javax.swing.JFrame {
         panelTablero.setSize(tableroDomino.getSize());
         panelTablero.setOpaque(false);
 
+        panelManoJugador.requestFocus();
         controladorArrastre = new ControladorArrastreFicha(panelManoJugador, panelTablero, modelo);
+        controlador = new ControladorSeleccionarFicha(this, modelo);
 
         this.mostrarJugadores();
     }
@@ -72,8 +77,12 @@ public class TableroGUI extends javax.swing.JFrame {
 
     }
 
-    public void actualizarManoJugador(List<FichaDTO> fichasJugador) {
-        panelManoJugador.actualizarFichas(fichasJugador);  // Actualizar fichas en el panel
+    public void anhadirListenerPanelManoJugador(KeyListener l) {
+        panelManoJugador.addKeyListener(l);
+    }
+
+    public void actualizarManoJugador() {
+        panelManoJugador.actualizarFichas();  // Actualizar fichas en el panel
     }
 
     /**
@@ -245,4 +254,10 @@ public class TableroGUI extends javax.swing.JFrame {
     private tablero.PanelRound player4;
     private tablero.PanelRound tableroDomino;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actualizar() {
+        actualizarManoJugador();
+        panelTablero.repaint();
+    }
 }

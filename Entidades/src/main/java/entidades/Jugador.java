@@ -1,10 +1,9 @@
 package entidades;
 
-import java.io.Serializable;
-import java.util.List;
-
 import entidades.Pozo.Ficha;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -103,5 +102,22 @@ public class Jugador implements Serializable {
      */
     public void setNumero(int numero) {
         this.numero = numero;
+    }
+    
+    public Ficha sacarFicha(Ficha ficha) {
+        Ficha removida = null;
+        for (Ficha ficha1 : fichas) {
+            if (ficha.equals(ficha1)) {
+                removida = ficha1;
+                break;
+            }
+        }
+        fichas.remove(removida);
+        
+        return removida;
+    }
+    
+    public void agregarFicha(Ficha ficha) {
+        fichas.add(ficha);
     }
 }
