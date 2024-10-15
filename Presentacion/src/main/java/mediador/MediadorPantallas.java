@@ -4,7 +4,9 @@
 package mediador;
 
 import DTOS.FichaDTO;
+import DTOS.JugadorDTO;
 import DTOS.PartidaDTO;
+import interfacesObservador.ObservadorAnhadirFicha;
 import tablero.TableroGUI;
 import tablero.TableroModelo;
 
@@ -17,6 +19,7 @@ public class MediadorPantallas {
 
     private TableroModelo modelo;
     private static MediadorPantallas instance;
+    private ObservadorAnhadirFicha observador;
 
     private MediadorPantallas() {
     }
@@ -50,6 +53,14 @@ public class MediadorPantallas {
 
     public TableroModelo getModelo() {
         return modelo;
+    }
+
+    public void notificarObservadores(JugadorDTO jugador, FichaDTO ficha) {
+        observador.actualizar(jugador, ficha);
+    }
+
+    public void anhadirObservador(ObservadorAnhadirFicha observador) {
+        this.observador = observador;
     }
 
 }

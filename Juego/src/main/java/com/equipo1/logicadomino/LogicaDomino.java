@@ -10,7 +10,6 @@ import entidades.Partida;
 import entidades.Pozo.Ficha;
 import entidades.Tablero;
 import mediador.MediadorPantallas;
-import tablero.TableroModelo;
 
 /**
  *
@@ -107,8 +106,7 @@ public class LogicaDomino {
 
         MediadorPantallas.getInstance().mostrarPantallaJuego(dto);
 
-        TableroModelo modelo = MediadorPantallas.getInstance().getModelo();
-        modelo.anhadirObservador((jugador, ficha) -> {
+        MediadorPantallas.getInstance().anhadirObservador((jugador, ficha) -> {
             anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
                     new FichaConverter().convertFromDTO(ficha));
         });
@@ -117,12 +115,9 @@ public class LogicaDomino {
     public void anhadirFichaTablero(Jugador jugador, Ficha ficha) {
         Tablero tablero = partida.getTablero();
 
-        Ficha fichaSacada = partida.getJugadores().get(0).sacarFicha(ficha);
-
-        if (!tablero.agregarFichaExtremoIzquierdo(fichaSacada)) {
-            if (!tablero.agregarFichaExtremoDerecho(fichaSacada)) {
-                partida.getJugadores().get(0).agregarFicha(ficha);
-            }
+        if (tablero.agregarFichaExtremoIzquierdo(ficha)
+                || tablero.agregarFichaExtremoDerecho(ficha)) {
+            partida.getJugadores().get(0).sacarFicha(ficha);
         }
 
         MediadorPantallas.getInstance().actualizarPantalla(new PartidaConverter().convertFromEntity(partida));
