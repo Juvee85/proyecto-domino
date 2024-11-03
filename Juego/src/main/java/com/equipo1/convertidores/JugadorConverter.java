@@ -25,8 +25,15 @@ public class JugadorConverter extends Converter<JugadorDTO, Jugador> {
         return dto;
     }
 
-    private static Jugador convertToEntity(JugadorDTO DTO) {
-        return null;
+    private static Jugador convertToEntity(JugadorDTO dto) {
+        Jugador jugador = new Jugador();
+        jugador.asignarFichas(new FichaConverter().createFromDTOS(dto.getFichas()));
+        jugador.setAvatar(dto.getAvatar());
+        jugador.setNombre(dto.getNombre());
+        jugador.setNumero(dto.getNumero());
+        jugador.setPartidasGanadas(dto.getPartidasGanadas());
+
+        return jugador;
     }
 
 }

@@ -1,6 +1,8 @@
 package com.equipo1.logicadomino;
 
 import DTOS.PartidaDTO;
+import com.equipo1.convertidores.FichaConverter;
+import com.equipo1.convertidores.JugadorConverter;
 import com.equipo1.convertidores.PartidaConverter;
 import entidades.ConfiguracionJuego;
 import entidades.Jugador;
@@ -15,7 +17,9 @@ import mediador.MediadorPantallas;
  */
 public class LogicaDomino {
 
-    public static void main(String[] args) {
+    private Partida partida;
+
+    public void inicio() {
         Jugador anfitrion = new Jugador();
         anfitrion.setNombre("Alfonso");
         anfitrion.setAvatar("DonAlfonsoDestroyer");
@@ -77,17 +81,17 @@ public class LogicaDomino {
         ficha2 = partida.getPozo().sacarFicha();
         tab.agregarFichaExtremoIzquierdo(ficha1);
         tab.agregarFichaExtremoDerecho(ficha2);
-        
+
         ficha1 = partida.getPozo().sacarFicha();
         ficha2 = partida.getPozo().sacarFicha();
         tab.agregarFichaExtremoIzquierdo(ficha1);
         tab.agregarFichaExtremoDerecho(ficha2);
-        
+
         ficha1 = partida.getPozo().sacarFicha();
         ficha2 = partida.getPozo().sacarFicha();
         tab.agregarFichaExtremoIzquierdo(ficha1);
         tab.agregarFichaExtremoDerecho(ficha2);
-        
+
         ficha1 = partida.getPozo().sacarFicha();
         ficha2 = partida.getPozo().sacarFicha();
         tab.agregarFichaExtremoIzquierdo(ficha1);
@@ -96,9 +100,26 @@ public class LogicaDomino {
         partida.setTablero(tab);
         // Hasta aqui se agregan datos de prueba
 
+        this.partida = partida;
+
         PartidaDTO dto = new PartidaConverter().convertFromEntity(partida);
 
-        MediadorPantallas.mostrarPantallaJuego(dto);
+        MediadorPantallas.getInstance().mostrarPantallaJuego(dto);
 
+        MediadorPantallas.getInstance().anhadirObservador((jugador, ficha) -> {
+            anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
+                    new FichaConverter().convertFromDTO(ficha));
+        });
+    }
+
+    public void anhadirFichaTablero(Jugador jugador, Ficha ficha) {
+        Tablero tablero = partida.getTablero();
+
+        if (tablero.agregarFichaExtremoIzquierdo(ficha)
+                || tablero.agregarFichaExtremoDerecho(ficha)) {
+            partida.getJugadores().get(0).sacarFicha(ficha);
+        }
+
+        MediadorPantallas.getInstance().actualizarPantalla(new PartidaConverter().convertFromEntity(partida));
     }
 }

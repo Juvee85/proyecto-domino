@@ -1,11 +1,13 @@
 
 package entidades;
 
+import java.io.Serializable;
+
 /**
- *
- * @author 
+ * Indica el estado actual de la partida
+ * @author Equipo 1
  */
-public enum EstadoPartida {
+public enum EstadoPartida implements Serializable {
     EN_CURSO,
     TERMINADA,
     EN_ESPERA

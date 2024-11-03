@@ -1,23 +1,29 @@
 package entidades;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import entidades.Pozo.Ficha;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import entidades.Pozo.Ficha;
-import java.util.ArrayList;
-
 /**
- *
- * @author 
+ * Representa un jugador en el juego
+ * @author Equipo 1
  */
 public class Jugador implements Serializable {
+    @JsonProperty("nombre")
     private String nombre;
+    @JsonProperty("avatar")
     private String avatar;
+    @JsonProperty("fichas")
     private List<Ficha> fichas;
+    @JsonProperty("partidas_ganadas")
     private int partidasGanadas;
+    @JsonProperty("es_anfitrion")
     private boolean anfitrion;
+    @JsonProperty("numero_jugador")
     private int numero;
-
+    
     public Jugador() {
         this.fichas = new ArrayList<>();
     }
@@ -103,5 +109,22 @@ public class Jugador implements Serializable {
      */
     public void setNumero(int numero) {
         this.numero = numero;
+    }
+    
+    public Ficha sacarFicha(Ficha ficha) {
+        Ficha removida = null;
+        for (Ficha ficha1 : fichas) {
+            if (ficha.equals(ficha1)) {
+                removida = ficha1;
+                break;
+            }
+        }
+        fichas.remove(removida);
+        
+        return removida;
+    }
+    
+    public void agregarFicha(Ficha ficha) {
+        fichas.add(ficha);
     }
 }

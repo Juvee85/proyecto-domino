@@ -1,21 +1,39 @@
 package entidades;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Pozo.Ficha;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- *
- * @author 
+ * Representa la informacion completa de una partida
+ * @author Equipo 1
  */
-public class Partida {
+public class Partida implements Serializable {
+    @JsonProperty("jugadores")
     private List<Jugador> jugadores;
+    @JsonProperty("tablero")
     private Tablero tablero;
+    @JsonProperty("configuracion")
     private ConfiguracionJuego configuracion;
+    @JsonProperty("estado")
     private EstadoPartida estado;
+    @JsonProperty("pozo")
     private Pozo pozo;
     
+    /**
+     * Constructor utilizado para permitir la serializacion
+     */
+    public Partida() {
+        
+    }
+    
+    /**
+     * Crea una nueva partida con un jugador anfitrion como el jugador numero 1
+     * @param anfitrion Objeto jugador el cual es el anfitrion
+     */
     public Partida(Jugador anfitrion) {
         this.jugadores = new ArrayList<>();
         this.jugadores.add(anfitrion);
@@ -26,7 +44,7 @@ public class Partida {
    
     /**
      * Agrega un nuevo jugador a la partida
-     * @param jugador 
+     * @param jugador Jugador que sera parte de la partida
      * @return  
      */
     public boolean agregarJugador(Jugador jugador) {

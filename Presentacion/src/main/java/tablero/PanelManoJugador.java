@@ -58,8 +58,8 @@ public class PanelManoJugador extends JPanel {
     }
 
     // Método para actualizar las fichas en la mano del jugador
-    public void actualizarFichas(List<FichaDTO> nuevasFichas) {
-        this.fichasJugador = nuevasFichas;
+    public void actualizarFichas() {
+        this.fichasJugador = modelo.getJugadores().get(0).getFichas();
         repaint(); // Redibuja el panel
         notificarObservadores();
     }
@@ -100,6 +100,10 @@ public class PanelManoJugador extends JPanel {
         ((Graphics2D) g).translate(pieceCenterX, pieceCenterY);
         ((Graphics2D) g).rotate(Math.toRadians(deg));
         ((Graphics2D) g).translate(-pieceCenterX, -pieceCenterY);
+
+        if (ficha.equals(modelo.getFichaSeleccionada())) {
+            g.scale(1.1, 1.1);
+        }
 
         g.setColor(modelo.getDominoPieceColor()); // White
         g.fillRoundRect(x, y, width, height, arc, arc);

@@ -17,8 +17,8 @@ public class FichaConverter extends Converter<FichaDTO, Ficha> {
         return new FichaDTO(ficha.getPuntosCabeza(), ficha.getPuntosCola());
     }
 
-    private static Ficha convertToEntity(FichaDTO DTO) {
-        return null;
+    private static Ficha convertToEntity(FichaDTO dto) {
+        return new Ficha(dto.getPuntosCabeza(), dto.getPuntosCola());
     }
     
 }
