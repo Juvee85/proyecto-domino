@@ -1,23 +1,39 @@
 package entidades;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Pozo.Ficha;
 import java.io.Serializable;
 
 /**
- *
- * @author
+ * Representa el tablero en el juego
+ * @author Equipo 1
  */
 public class Tablero implements Serializable {
 
-    private final TrenFichas fichas;
-
+    @JsonProperty("tren_fichas")
+    private TrenFichas fichas = null;
+    
+    public Tablero() {
+        this.fichas = null;
+    }
+    
+    public Tablero(Ficha primeraMula) {
+        if (primeraMula.esMula()) {
+            this.fichas = new TrenFichas();
+        }
+    }
+    
+    
+    /*
+    NOTE: Creo que esto deberia cambiarse.....
+    *
     public Tablero() {
         Ficha primeraFicha = null;
         do {
             primeraFicha = new Pozo().sacarFicha();
         } while (!primeraFicha.esMula());
         this.fichas = new TrenFichas(primeraFicha);
-    }
+    }*/
 
     public boolean agregarFichaExtremoDerecho(Ficha ficha) {
         Ficha fichaDerecha = fichas.obtenerFichaExtremoDerecho();

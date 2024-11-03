@@ -3,6 +3,7 @@
  */
 package entidades;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Pozo.Ficha;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -14,14 +15,32 @@ import java.util.Stack;
  */
 public class TrenFichas implements Iterable<Ficha> {
 
+    @JsonProperty("nodo")
     private Nodo nodo;
 
-    private class Nodo {
+    /**
+     * Constructor por defecto para permitir la serializacion
+     */
+    public TrenFichas() {
+        
+    }
+    
+    private static class Nodo {
 
+        @JsonProperty("ficha")
         Ficha dato;
+        @JsonProperty("hijo_izq")
         Nodo hijoIzq;
+        @JsonProperty("hijo_der")
         Nodo hijoDer;
 
+        /**
+         * Constructor vacio para permitir la serializacion
+         */
+        public Nodo() {
+            
+        }
+        
         /**
          * Inicializa el atributo dato al valor de su parametro
          *

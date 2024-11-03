@@ -1,5 +1,6 @@
 package entidades;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,8 +12,9 @@ import java.util.List;
  *
  * @author
  */
-public class Pozo {
+public class Pozo implements Serializable {
 
+    @JsonProperty("fichas")
     private final List<Ficha> fichas;
 
     /**
@@ -20,10 +22,20 @@ public class Pozo {
      */
     public static class Ficha implements Serializable {
 
+        @JsonProperty("es_mula")
         private boolean esMula;
+        @JsonProperty("puntos_cabeza")
         private int puntosCabeza;
+        @JsonProperty("puntos_cola")
         private int puntosCola;
 
+        /**
+         * Usado solamente para permitir la serializacion
+         */
+        public Ficha() {
+            
+        }
+        
         public Ficha(int puntosCabeza, int puntosCola) {
             this.puntosCabeza = puntosCabeza;
             this.puntosCola = puntosCola;

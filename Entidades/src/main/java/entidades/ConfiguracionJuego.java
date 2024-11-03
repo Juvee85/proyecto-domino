@@ -1,15 +1,25 @@
 
 package entidades;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
- *
- * @author
+ * Representa la configuracion de una partida
+ * @author Equipo 1
  */
 public class ConfiguracionJuego implements Serializable {
+    @JsonProperty("maximo_jugadores")
     private int maximoJugadores;
+    @JsonProperty("fichas_por_jugador")
     private int fichasPorJugador;
+    
+    /**
+     * Usado para permitir la serializacion
+     */
+    public ConfiguracionJuego() {
+        
+    }
     
     public ConfiguracionJuego(int maximoJugadores, int fichasPorJugador) {
         this.maximoJugadores = maximoJugadores;
