@@ -1,0 +1,5 @@
+manejadores\EventosManejador.class
+manejadores\ManejadorEvento.class
+repositorio\RepositorioSalas.class
+com\equipo7\serviciopartidas\ServicioSalas.class
+manejadores\AgregarSalaSolicitudManejador.class
