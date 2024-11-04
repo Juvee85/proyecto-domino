@@ -9,7 +9,11 @@ import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo.Ficha;
 import entidades.Tablero;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import mediador.MediadorPantallas;
+import projects.conexion.Conexion;
 
 /**
  *
@@ -19,7 +23,13 @@ public class LogicaDomino {
 
     private Partida partida;
 
+    private Conexion conexion;
+
     public void inicio() {
+        conexion = new Conexion();
+        Thread hilo = new Thread(conexion);
+        hilo.start();
+
         Jugador anfitrion = new Jugador();
         anfitrion.setNombre("Alfonso");
         anfitrion.setAvatar("DonAlfonsoDestroyer");
@@ -112,7 +122,7 @@ public class LogicaDomino {
         });
     }
 
-    public void anhadirFichaTablero(Jugador jugador, Ficha ficha) {
+    public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
         Tablero tablero = partida.getTablero();
 
         if (tablero.agregarFichaExtremoIzquierdo(ficha)
@@ -121,5 +131,17 @@ public class LogicaDomino {
         }
 
         MediadorPantallas.getInstance().actualizarPantalla(new PartidaConverter().convertFromEntity(partida));
+
+        conexion.enviarEvento(crearEvento(jugador, ficha));
     }
+
+    private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
+        HashMap<String, Object> mapa = new HashMap<>();
+        
+        mapa.put("jugador", jugador);
+        mapa.put("ficha", ficha);
+        
+        return mapa;
+    }
+
 }
