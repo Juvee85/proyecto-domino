@@ -9,14 +9,17 @@ import java.io.Serializable;
  * @author Equipo 1
  */
 public class Sala implements Serializable {
-    @JsonProperty("info_partida")
-    private Partida partida;
+
     @JsonProperty("nombre_sala")
     private String nombre;
+    @JsonProperty("max_jugadores")
+    private int maxJugadores;
+    @JsonProperty("jugadores_en_sala")
+    private int jugadoresEnSala;
     @JsonProperty("host")
     private String host;
     @JsonProperty("puerto")
-    private Integer puerto;
+    private int puerto;
     @JsonProperty("contrasena")
     private String contrasena;
     @JsonProperty("tiene_contrasena")
@@ -24,19 +27,9 @@ public class Sala implements Serializable {
     
     /**
      * Crea una sala nueva sin contrasena por defecto
-     * @param anfitrion Anfitrion de la sala
      */
-    public Sala(Jugador anfitrion) {
-        this.partida = new Partida(anfitrion);
+    public Sala() {
         this.tieneContrasena = false;
-    }
-
-    /**
-     * Devuelve la informacion de la partida
-     * @return Partida que aloja la sala
-     */
-    public Partida getPartida() {
-        return partida;
     }
 
     /**
@@ -107,7 +100,7 @@ public class Sala implements Serializable {
      *
      * @return el puerto la sala
      */
-    public Integer getPuerto() {
+    public int getPuerto() {
         return puerto;
     }
 
@@ -116,7 +109,41 @@ public class Sala implements Serializable {
      *
      * @param puerto el puerto a establecer.
      */
-    public void setPuerto(Integer puerto) {
+    public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
+
+    /**
+     * Obtiene la cantidad maxima de jugadores permitidos en la sala
+     * @return Cantidad maxima jugadores
+     */
+    public int getMaxJugadores() {
+        return maxJugadores;
+    }
+
+    /**
+     * Asigna la cantidad maxima de jugadores en la sala
+     * @param maxJugadores Cantidad Maxima jugadores a asignar
+     */
+    public void setMaxJugadores(int maxJugadores) {
+        this.maxJugadores = maxJugadores;
+    }
+
+    /**
+     * Obtiene la cantidad de jugadores actuales en la sala
+     * @return the jugadoresEnSala
+     */
+    public int getJugadoresEnSala() {
+        return jugadoresEnSala;
+    }
+
+    /**
+     * Asigna la cantidad de jugadores actuales en la sala
+     * @param jugadoresEnSala Cantidad de jugadores en la sala
+     */
+    public void setJugadoresEnSala(int jugadoresEnSala) {
+        this.jugadoresEnSala = jugadoresEnSala;
+    }
+    
+    
 }
