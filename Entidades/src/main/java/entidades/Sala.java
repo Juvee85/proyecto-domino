@@ -13,6 +13,11 @@ public class Sala implements Serializable {
     private Partida partida;
     @JsonProperty("nombre_sala")
     private String nombre;
+    @JsonProperty("host")
+    private String host;
+    @JsonProperty("puerto")
+    private Integer puerto;
+    @JsonProperty("contrasena")
     private String contrasena;
     @JsonProperty("tiene_contrasena")
     private boolean tieneContrasena;
@@ -77,5 +82,41 @@ public class Sala implements Serializable {
      */
     public boolean tieneContrasena() {
         return tieneContrasena;
+    }
+    
+    /**
+     * Obtiene el host de la partida
+     *
+     * @return el host de de la partida
+     */
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * Establece el host de la partida
+     *
+     * @param host el host a establecer.
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * Obtiene el puerto de la sala
+     *
+     * @return el puerto la sala
+     */
+    public Integer getPuerto() {
+        return puerto;
+    }
+
+    /**
+     * Establece el puerto de la sala
+     *
+     * @param puerto el puerto a establecer.
+     */
+    public void setPuerto(Integer puerto) {
+        this.puerto = puerto;
     }
 }
