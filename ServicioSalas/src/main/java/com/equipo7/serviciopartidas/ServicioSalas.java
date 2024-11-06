@@ -8,61 +8,96 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import manejadores.AgregarSalaSolicitudManejador;
 import repositorio.RepositorioSalas;
+import servicio.ContratoServicio;
 
 /**
  *
  * @author neri
  */
-public class ServicioSalas {
+public class ServicioSalas extends Thread {
 
-    private static final String NOMBRE_SERVICIO = "ServicioSalas";
-    private static final String HOSTNAME = "localhost";
-    private static final int PUERTO = 15_001;
+    private static final String BUS_HOSTNAME = "localhost";
+    private static final int BUS_PUERTO = 15_001;
 
-    public static void main(String[] args) {
+    private Socket socket = null;
 
-        ServerSocket server = null;
-        
+    public ServicioSalas() {
+
+    }
+
+    public static ContratoServicio getContrato() {
+        ContratoServicio contrato = new ContratoServicio();
+
+        contrato.setHost("localhost");
+        contrato.setNombreServicio("Servicio Salas");
+        contrato.setEventosEscuchables(Arrays.asList(
+                "CrearSalaSolicitud",
+                "CrearSalaRespuesta",
+                "ConsultarSalasSolicitud",
+                "ConsultarSalasRespuesta"
+        ));
+
+        return contrato;
+    }
+
+    @Override
+    public void run() {
+
         try {
-            server = new ServerSocket(PUERTO);
+            socket = new Socket(ServicioSalas.BUS_HOSTNAME, ServicioSalas.BUS_PUERTO);
+            System.out.println("[*] CONECTADO AL BUS(%s, %d)...".formatted(ServicioSalas.BUS_HOSTNAME, ServicioSalas.BUS_PUERTO));
         } catch (IOException ex) {
             Logger.getLogger(ServicioSalas.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        
-        while (true) {
 
-            try {
-                // acepta el cliente
-                Socket client = server.accept();
+        try {
+            // buffer para mandar mensaje al server
+            DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream());
 
-                System.out.println("CLIENTE CONECTADO POR: " + client.getInetAddress().getHostAddress() + "::" + client.getPort() + "");
+            // mensaje del servidor
+            DataInputStream mensaje = new DataInputStream(socket.getInputStream());
 
-                // obtiene el mensaje en bytes del cliente
-                DataInputStream peticion = new DataInputStream(client.getInputStream());
+            // SE ENVIA EL CONTRATO DE SERVICIO 
+            String contratoServicioJSON = mapper.writeValueAsString(ServicioSalas.getContrato());
+            System.out.println("CONTRATO ENVIADO: " + contratoServicioJSON);
+            respuesta.writeUTF(contratoServicioJSON);
+            respuesta.flush();
 
-                // obtiene el evento serializado
-                String eventoSerializado = peticion.readUTF();
+            Map<String, String> m = new HashMap<>();
+            m.put("nombre_evento", "CrearSalaSolicitud");
 
-                // obtiene el nombre del evento
-                JsonNode jsonNode = mapper.readTree(eventoSerializado);
+            String eventoJSON = mapper.writeValueAsString(m);
+            System.out.println(eventoJSON);
+
+            respuesta.writeUTF(eventoJSON);
+                respuesta.flush();
+            
+            while (true) {
+                System.out.println("[=!=] ESCUCHANDO MENSAJES DEL BUS...");
+
                 
-                // manejar el evento segun el nombre
-                String nombreEvento = jsonNode.get("nombre_evento").asText();
-                if (nombreEvento.equals("AgregarSalaSolicitud")) {
-                    new AgregarSalaSolicitudManejador(client, eventoSerializado).start();
-                }
-                
-                
-            } catch (IOException ex) {
-                System.out.println("Error del servidor: " + ex.getMessage());
+
+                // recibe el mensaje del ESB
+                String response = mensaje.readUTF();
+                System.out.println("[MSG] Respuesta del servidor: " + response);
+
+                //
             }
+
+        } catch (IOException ex) {
+            System.out.println("[ERROR SERVICIO SALAS]: Ocurrio un error -> " + ex.getMessage());
+        } finally {
+            
         }
     }
 }

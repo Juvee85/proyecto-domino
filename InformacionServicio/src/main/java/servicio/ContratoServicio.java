@@ -17,7 +17,7 @@ public class ContratoServicio implements Serializable {
     private String host;
     
     @JsonProperty("puerto")
-    private Integer puerto;
+    private int puerto;
     
     @JsonProperty("eventos")
     private List<String> eventosEscuchables;
@@ -33,9 +33,9 @@ public class ContratoServicio implements Serializable {
      * Crea un nuevo contrato de servicio con su informacion principal
      * @param nombreServicio Nombre del servicio
      * @param host Nombre del host o IP del servicio
-     * @param puerto Puerto en el que atiende el servicio
+     * @param puerto Puerto en el que se conecto el servicio
      */
-    public ContratoServicio(String nombreServicio, String host, Integer puerto) {
+    public ContratoServicio(String nombreServicio, String host, int puerto) {
         this.nombreServicio = nombreServicio;
         this.host = host;
         this.puerto = puerto;
@@ -78,11 +78,11 @@ public class ContratoServicio implements Serializable {
     }
 
     /**
-     * Obtiene el puerto en el que atiende el servicio.
+     * Obtiene el puerto en el que se conecto el servicio
      *
      * @return el puerto del servicio.
      */
-    public Integer getPuerto() {
+    public int getPuerto() {
         return puerto;
     }
 
@@ -91,7 +91,7 @@ public class ContratoServicio implements Serializable {
      *
      * @param puerto el puerto a establecer.
      */
-    public void setPuerto(Integer puerto) {
+    public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
 
