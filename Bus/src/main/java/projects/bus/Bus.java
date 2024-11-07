@@ -79,10 +79,26 @@ public class Bus {
                 // asigna el contrato al servicio
                 servicio.setContrato(contrato);
                 
-                //System.out.println("Servicio(%s, %d)".formatted(servicio.getContrato().getNombreServicio(), servicio.getContrato().getEventosEscuchables().size()));
+                System.out.println("Servicio(%s, %d, %s, %s)".formatted(
+                        servicio.getContrato().getNombreServicio(), 
+                        servicio.getContrato().getEventosEscuchables().size(),
+                        servicio.getContrato().getHost(),
+                        servicio.getContrato().getPuerto()
+                    )
+                );
+                
+                
+                
+                for (String nombre: contrato.getEventosEscuchables()) {
+                    System.out.println(nombre);
+                }
+            
 
                 // ase agrega el servicio al repositorio para consultarlo cuando reciba mensajes de un tercero
                 repositorioServicios.agregarServicio(servicio);
+                
+                System.out.println("Servicios registrados: " + repositorioServicios.obtenerServicios().size());
+                
                 // se crea el manejador para ese 
                 new ServicioManejador(servicio).start();
             } catch (Exception ex) {

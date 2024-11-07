@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,12 +38,12 @@ public class ServicioManejador extends Thread {
     /**
      * Equivalente a Request
      */
-    private BufferedReader reader = null;
+    private DataInputStream reader = null;
 
     /**
      * Equivalente a Response
      */
-    private BufferedWriter writer = null;
+    private DataOutputStream writer = null;
 
     /**
      * Constructor para un nuevo hilo manejador para un servicio
@@ -55,8 +56,8 @@ public class ServicioManejador extends Thread {
         
         try {
             this.servicio = servicio;
-            writer = new BufferedWriter(new OutputStreamWriter(servicio.getSocket().getOutputStream()));
-            reader = new BufferedReader(new InputStreamReader(servicio.getSocket().getInputStream()));
+            writer = new DataOutputStream(servicio.getSocket().getOutputStream());
+            reader = new DataInputStream(servicio.getSocket().getInputStream());
         } catch (IOException ex) {
             Logger.getLogger(Bus.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -71,19 +72,32 @@ public class ServicioManejador extends Thread {
         while (true) {
             try {
                 
-                String mensajeTexto = reader.lines().collect(Collectors.joining("\n"));
+                System.out.println("ENTRO");
+                
+                String mensajeTexto = this.reader.readUTF();
                 
                 // captura el mensaje proveniente del servicio...
-                Map mensaje = jsonMapper.readValue(reader, Map.class);
+                Map mensaje = jsonMapper.readValue(mensajeTexto, Map.class);
                 
                 String nombreEvento = mensaje.get("nombre_evento").toString();
                 if (nombreEvento == null || nombreEvento.isBlank() || nombreEvento.isEmpty()) {
                     throw new IllegalArgumentException("No se pudo determinar el nombre del evento");
                 }
                 
+                System.out.println(mensaje.get("nombre_evento"));
+                
+                //System.out.println(nombreEvento);
+                
+                /**
+                 * 
+                 * TODO: NO SE OBTIENEN LOS RESPONSABLES DEL EVENTO DESDE EL REPOSITORIO
+                 */
+                
                 // redirije el evento del servicio recibido a los demas responsables de dicho evento
                 List<Servicio> responsables = repositorioServicios.obtenerResponsablesEvento(nombreEvento);
+                System.out.println(responsables.size());
                 for (Servicio responsable: responsables) {
+                    System.out.println(responsable.getContrato().getNombreServicio());
                     respuestaResponsable = new DataOutputStream(responsable.getSocket().getOutputStream());
                     System.out.println("[MENSAJE RECIBIDO: %s]".formatted(mensajeTexto));
                     respuestaResponsable.writeUTF(mensajeTexto);
@@ -92,7 +106,8 @@ public class ServicioManejador extends Thread {
                 }
              
             } catch (IOException ex) {
-                System.out.println(ex);
+                System.out.println("[ERROR] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
+                return;
             } catch (IllegalArgumentException ex) {
                 System.out.println("[ERROR] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
             }

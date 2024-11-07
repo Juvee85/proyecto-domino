@@ -81,11 +81,7 @@ public class RepositorioServicios {
      */
     public List<Servicio> obtenerResponsablesEvento(String nombreEvento) {
         return this.servicios.stream()
-                .filter(s -> s.getContrato()
-                        .getNombreServicio()
-                        .equalsIgnoreCase(nombreEvento)
-                )
-                .collect(Collectors.toList());
+                .filter(s -> s.getContrato().getEventosEscuchables().contains(nombreEvento)).collect(Collectors.toList());
     }
     
     /**

@@ -1,5 +1,6 @@
 package com.equipo7.serviciopartidas;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -11,6 +12,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -27,6 +29,8 @@ public class ServicioSalas extends Thread {
     private static final String BUS_HOSTNAME = "localhost";
     private static final int BUS_PUERTO = 15_001;
 
+    private static final Scanner in = new Scanner(System.in);
+    
     private Socket socket = null;
 
     public ServicioSalas() {
@@ -73,20 +77,16 @@ public class ServicioSalas extends Thread {
             respuesta.writeUTF(contratoServicioJSON);
             respuesta.flush();
 
-            Map<String, String> m = new HashMap<>();
-            m.put("nombre_evento", "CrearSalaSolicitud");
-
-            String eventoJSON = mapper.writeValueAsString(m);
-            System.out.println(eventoJSON);
-
-            respuesta.writeUTF(eventoJSON);
-                respuesta.flush();
-            
             while (true) {
-                System.out.println("[=!=] ESCUCHANDO MENSAJES DEL BUS...");
-
                 
-
+                System.out.println("MSG > ");
+                String msg = in.nextLine();
+                
+                respuesta.writeUTF(msg);
+                respuesta.flush();
+                
+                System.out.println("[=!=] ESCUCHANDO MENSAJES DEL BUS...");
+                
                 // recibe el mensaje del ESB
                 String response = mensaje.readUTF();
                 System.out.println("[MSG] Respuesta del servidor: " + response);
@@ -97,7 +97,7 @@ public class ServicioSalas extends Thread {
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO SALAS]: Ocurrio un error -> " + ex.getMessage());
         } finally {
-            
+
         }
     }
 }
