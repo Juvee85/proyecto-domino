@@ -6,7 +6,17 @@ package mediador;
 import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
 import DTOS.PartidaDTO;
+import crearSala.CrearSala;
+import crearSala.CrearSalaControlador;
+import crearSala.CrearSalaModelo;
+import inicio.Inicio;
+import inicio.InicioControlador;
+import inicio.InicioModelo;
+import interfacesObservador.ObservadorAbrirPantallaCrearSala;
+import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorAnhadirFicha;
+import interfacesObservador.ObservadorCrearSala;
+import interfacesObservador.ObservadorUnirASala;
 import tablero.TableroGUI;
 import tablero.TableroModelo;
 
@@ -31,6 +41,28 @@ public class MediadorPantallas {
         return instance;
     }
 
+    public void mostrarMenuPrincipal(ObservadorAbrirPantallaCrearSala observadorCrearSala,
+            ObservadorAbrirPantallaUnirASala observadorUnirASala) {
+        InicioModelo modelo = new InicioModelo();
+        modelo.anhadirObservadorCrearSala(observadorCrearSala);
+        modelo.anhadirObservadorUnirASala(observadorUnirASala);
+        Inicio vista = new Inicio(modelo);
+        InicioControlador controlador = new InicioControlador(vista, modelo);
+        vista.setVisible(true);
+    }
+
+    public void mostrarPantallaUnirASala(ObservadorUnirASala observador) {
+
+    }
+
+    public void mostrarMenuPantallaCrearSala(ObservadorCrearSala observador) {
+        CrearSalaModelo modelo = new CrearSalaModelo();
+        modelo.anhadirObservador(observador);
+        CrearSala vista = new CrearSala(modelo);
+        CrearSalaControlador controlador = new CrearSalaControlador(vista, modelo);
+        vista.setVisible(true);
+    }
+
     public void mostrarPantallaJuego(PartidaDTO partida) {
         modelo = new TableroModelo();
         FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
@@ -49,10 +81,6 @@ public class MediadorPantallas {
         modelo.setJugadores(partida.getJugadores());
         modelo.setFichaSeleccionada(modelo.getJugadores().get(0).getFichas().get(0));
         modelo.notificar();
-    }
-
-    public TableroModelo getModelo() {
-        return modelo;
     }
 
     public void notificarObservadores(JugadorDTO jugador, FichaDTO ficha) {
