@@ -23,7 +23,7 @@ public class Conexion implements Runnable {
 
     public Conexion() {
         try {
-            s1 = new Socket("localhost", 8100);
+            s1 = new Socket("localhost", 15_001);
             reader = new BufferedReader(new InputStreamReader(s1.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(s1.getOutputStream()));
             mapper = new ObjectMapper();

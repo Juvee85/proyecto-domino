@@ -20,7 +20,7 @@ import servicio.ContratoServicio;
  */
 public class Bus {
 
-    private final int PORT = 8100;
+    private final int PORT = 15_001;
     RepositorioServicios repositorio;
     private ServerSocket servidor;
     private List<Socket> sockets;

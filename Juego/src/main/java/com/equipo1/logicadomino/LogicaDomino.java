@@ -8,10 +8,16 @@ import entidades.ConfiguracionJuego;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo.Ficha;
+import entidades.Sala;
 import entidades.Tablero;
+import interfacesObservador.ObservadorAbrirPantallaCrearSala;
+import interfacesObservador.ObservadorAbrirPantallaUnirASala;
+import interfacesObservador.ObservadorCrearSala;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mediador.MediadorPantallas;
 import projects.conexion.Conexion;
 
@@ -23,10 +29,47 @@ public class LogicaDomino {
 
     private Partida partida;
 
+    private Sala sala;
+
     private Conexion conexion;
 
     public void inicio() {
-        conexion = new Conexion();
+        ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
+            crearSala();
+            conexion = new Conexion();
+        };
+
+        ObservadorAbrirPantallaUnirASala observadorUnirASala = () -> {
+            unirASala();
+        };
+
+        MediadorPantallas.getInstance().mostrarMenuPrincipal(observadorCrearSala, observadorUnirASala);
+    }
+
+    public void crearSala() {
+        ObservadorCrearSala crearSala
+                = (String nombre, String contrasenha, int numeroJugadores) -> {
+                    sala = new Sala();
+                    sala.setNombre(nombre);
+                    sala.setContrasena(contrasenha);
+                    sala.setMaxJugadores(numeroJugadores);
+
+                    try {
+                        conexion.enviarEvento(crearEventoSolicitarCrearSala(sala));
+                    } catch (IOException ex) {
+                        Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                };
+
+        MediadorPantallas.getInstance().mostrarMenuPantallaCrearSala(crearSala);
+    }
+
+    public void unirASala() {
+        // MediadorPantallas.getInstance().mostrarPantallaUnirASala(observador);
+    }
+
+    public void inicializarJuego() {
+
         Thread hilo = new Thread(conexion);
         hilo.start();
 
@@ -117,8 +160,12 @@ public class LogicaDomino {
         MediadorPantallas.getInstance().mostrarPantallaJuego(dto);
 
         MediadorPantallas.getInstance().anhadirObservador((jugador, ficha) -> {
-            anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
-                    new FichaConverter().convertFromDTO(ficha));
+            try {
+                anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
+                        new FichaConverter().convertFromDTO(ficha));
+            } catch (IOException ex) {
+                Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
     }
 
@@ -137,11 +184,17 @@ public class LogicaDomino {
 
     private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
         HashMap<String, Object> mapa = new HashMap<>();
-        
+
         mapa.put("jugador", jugador);
         mapa.put("ficha", ficha);
-        
+
         return mapa;
     }
 
+    private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("sala", sala);
+        return mapa;
+    }
 }
