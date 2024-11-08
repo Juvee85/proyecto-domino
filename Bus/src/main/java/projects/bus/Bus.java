@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -35,6 +36,7 @@ public class Bus {
         Socket socket = null;
         mapper = new ObjectMapper();
         repositorio = new RepositorioServicios();
+        sockets = new ArrayList<>();
 
         try {
             servidor = new ServerSocket(PORT);

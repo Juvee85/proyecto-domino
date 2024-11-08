@@ -37,6 +37,8 @@ public class LogicaDomino {
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
             conexion = new Conexion();
+            Thread hilo = new Thread(conexion);
+            hilo.start();
         };
 
         ObservadorAbrirPantallaUnirASala observadorUnirASala = () -> {
@@ -69,9 +71,6 @@ public class LogicaDomino {
     }
 
     public void inicializarJuego() {
-
-        Thread hilo = new Thread(conexion);
-        hilo.start();
 
         Jugador anfitrion = new Jugador();
         anfitrion.setNombre("Alfonso");
