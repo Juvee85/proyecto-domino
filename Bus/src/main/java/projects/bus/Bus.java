@@ -70,7 +70,7 @@ public class Bus {
 
                 String mensajeJSON = servicioMensaje.readUTF();
 
-                //System.out.println(mensajeJSON);
+                System.out.println(mensajeJSON);
 
                 ContratoServicio contrato = jsonMapper.readValue(mensajeJSON, ContratoServicio.class);
 

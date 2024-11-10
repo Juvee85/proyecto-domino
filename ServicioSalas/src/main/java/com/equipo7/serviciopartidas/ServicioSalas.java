@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import entidades.Sala;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,7 +17,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import manejadores.AgregarSalaSolicitudManejador;
+import manejadores.CrearSalaSolicitudManejador;
+import manejadores.ManejadorEvento;
+import manejadores.fabrica.FabricaManejadorEvento;
 import repositorio.RepositorioSalas;
 import servicio.ContratoServicio;
 
@@ -30,13 +33,18 @@ public class ServicioSalas extends Thread {
     private static final int BUS_PUERTO = 15_001;
 
     private static final Scanner in = new Scanner(System.in);
-    
+
     private Socket socket = null;
 
     public ServicioSalas() {
 
     }
 
+    /**
+     * Devuelve el contrato de servicio propio del servicio
+     *
+     * @return
+     */
     public static ContratoServicio getContrato() {
         ContratoServicio contrato = new ContratoServicio();
 
@@ -44,9 +52,9 @@ public class ServicioSalas extends Thread {
         contrato.setNombreServicio("Servicio Salas");
         contrato.setEventosEscuchables(Arrays.asList(
                 "CrearSalaSolicitud",
-                "CrearSalaRespuesta",
-                "ConsultarSalasSolicitud",
-                "ConsultarSalasRespuesta"
+                //"CrearSalaRespuesta",
+                "EliminarSalaSolicitud",
+                "ObtenerSalasSolicitud"
         ));
 
         return contrato;
@@ -77,6 +85,26 @@ public class ServicioSalas extends Thread {
             respuesta.writeUTF(contratoServicioJSON);
             respuesta.flush();
 
+            // TODO: Evaluar la respuesta del servidor
+            
+            while (true) {
+                String mensajeJSON = mensaje.readUTF();
+
+                JsonNode jsonNode = mapper.readTree(mensajeJSON);
+
+                // Acceder a los valores directamente
+                String nombreEvento = jsonNode.get("nombre_evento").asText();
+
+                System.out.println("Nombre del evento: " + nombreEvento);
+
+                ManejadorEvento manejador = FabricaManejadorEvento.obtenerManejador(nombreEvento, socket, contratoServicioJSON);
+                
+                if (manejador != null) {
+                    manejador.start();
+                }
+            }
+
+            /*
             while (true) {
                 
                 System.out.println("MSG > ");
@@ -93,7 +121,7 @@ public class ServicioSalas extends Thread {
 
                 //
             }
-
+             */
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO SALAS]: Ocurrio un error -> " + ex.getMessage());
         } finally {

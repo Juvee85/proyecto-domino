@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mediador.MediadorPantallas;
-import projects.conexion.Conexion;
+import conexion.Conexion;
 
 /**
  *

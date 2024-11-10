@@ -12,6 +12,7 @@ import java.net.Socket;
  * @author Saul Neri
  */
 public abstract class ManejadorEvento extends Thread {
+    protected String nombreEvento;
     protected String eventoSerializado;
     protected Socket clienteSck;
 
