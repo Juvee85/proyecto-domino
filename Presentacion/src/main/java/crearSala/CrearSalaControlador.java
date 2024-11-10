@@ -20,6 +20,7 @@ public class CrearSalaControlador implements Observador {
     public CrearSalaControlador(CrearSala vista, CrearSalaModelo modelo) {
         this.vista = vista;
         this.modelo = modelo;
+        this.vista.anhadirObservador(this);
 
         vista.anhadirCrearSalaObservador(new ActionListener() {
             @Override

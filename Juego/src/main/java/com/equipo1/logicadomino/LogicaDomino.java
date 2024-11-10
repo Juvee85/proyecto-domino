@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mediador.MediadorPantallas;
 import conexion.Conexion;
+import java.util.Arrays;
 import observador.ObservadorConexion;
 
 /**
@@ -30,6 +31,7 @@ public class LogicaDomino implements ObservadorConexion {
 
     private Partida partida;
     private Sala sala;
+    private Jugador jugador;
     private Conexion conexion;
 
     /**
@@ -60,7 +62,6 @@ public class LogicaDomino implements ObservadorConexion {
                     sala.setMaxJugadores(numeroJugadores);
 
                     try {
-                        System.out.println("");
                         conexion.enviarEvento(crearEventoSolicitarCrearSala(sala));
                     } catch (IOException ex) {
                         Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,7 +214,6 @@ public class LogicaDomino implements ObservadorConexion {
 
         return mapa;
     }
-
     
     /**
      * 
@@ -223,12 +223,16 @@ public class LogicaDomino implements ObservadorConexion {
     private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
         HashMap<String, Object> mapa = new HashMap<>();
 
+        mapa.put("nombre_evento", "CrearSalaSolicitud");
+        sala.setJugadores(Arrays.asList(this.jugador));
         mapa.put("sala", sala);
+        
         return mapa;
     }
 
     @Override
     public void actualizar(Map evento) {
+        // TODO: Detectar que evento es y actuar en consecuencia...
         System.out.println(evento.toString());
     }
 }

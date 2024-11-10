@@ -90,7 +90,7 @@ public class ServicioManejador extends Thread {
                 List<Servicio> responsables = repositorioServicios.obtenerResponsablesEvento(nombreEvento);
                 
                 System.out.println(responsables.size());
-                
+                System.out.println(mensajeTexto);
                 
                 for (Servicio responsable: responsables) {
                     System.out.println("Servicio responsable encontrado: %s...".formatted(responsable.getContrato().getNombreServicio()));
