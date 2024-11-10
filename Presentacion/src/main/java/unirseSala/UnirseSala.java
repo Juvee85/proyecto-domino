@@ -40,6 +40,7 @@ public class UnirseSala extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(28, 28, 28));
 
         jLabel4.setFont(new java.awt.Font("OCR A Extended", 0, 48)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Unirse a una sala");
 
         nombreSalaTxt.setBackground(new java.awt.Color(51, 51, 51));
