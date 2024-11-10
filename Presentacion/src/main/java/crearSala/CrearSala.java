@@ -1,16 +1,22 @@
 package crearSala;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import interfacesObservador.Observable;
+import interfacesObservador.Observador;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.SpinnerNumberModel;
 
 
 /**
  *
  * @author osval
  */
-public class CrearSala extends javax.swing.JFrame {
+public class CrearSala extends javax.swing.JFrame implements Observable {
 
     private CrearSalaModelo modelo;
+    private List<Observador> observadores;
 
     /**
      * Creates new form CrearSala
@@ -19,6 +25,15 @@ public class CrearSala extends javax.swing.JFrame {
         initComponents();
         FlatMacDarkLaf.setup();
 
+        this.observadores = new ArrayList<>();
+        
+        SpinnerNumberModel rango = new SpinnerNumberModel(2, 2, 4, 1);
+        
+        // Creamos el spinner usando el rango dado
+        this.noJugadoresSalaTxt.setModel(rango);
+        this.noJugadoresSalaTxt.repaint();
+        this.noJugadoresSalaTxt.revalidate();
+        
         this.modelo = modelo;
     }
 
@@ -38,9 +53,9 @@ public class CrearSala extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         contraSalaTxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        noJugadoresSalaTxt = new javax.swing.JTextField();
         volverBtn = new javax.swing.JButton();
         crearBtn = new javax.swing.JButton();
+        noJugadoresSalaTxt = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -71,10 +86,6 @@ public class CrearSala extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("jugadores");
 
-        noJugadoresSalaTxt.setBackground(new java.awt.Color(51, 51, 51));
-        noJugadoresSalaTxt.setForeground(new java.awt.Color(255, 255, 255));
-        noJugadoresSalaTxt.setSelectionColor(new java.awt.Color(153, 153, 153));
-
         volverBtn.setBackground(new java.awt.Color(102, 102, 102));
         volverBtn.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         volverBtn.setForeground(new java.awt.Color(255, 255, 255));
@@ -84,6 +95,11 @@ public class CrearSala extends javax.swing.JFrame {
         crearBtn.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         crearBtn.setForeground(new java.awt.Color(255, 255, 255));
         crearBtn.setText("Crear");
+        crearBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crearBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -101,8 +117,9 @@ public class CrearSala extends javax.swing.JFrame {
                             .addComponent(nombreSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
                             .addComponent(contraSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(noJugadoresSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(noJugadoresSalaTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(469, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -126,9 +143,9 @@ public class CrearSala extends javax.swing.JFrame {
                 .addComponent(contraSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addGap(6, 6, 6)
-                .addComponent(noJugadoresSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(noJugadoresSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(crearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(volverBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -140,6 +157,11 @@ public class CrearSala extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void crearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearBtnActionPerformed
+        // TODO add your handling code here:
+        this.notificar();
+    }//GEN-LAST:event_crearBtnActionPerformed
     public void anhadirCrearSalaObservador(ActionListener l) {
         crearBtn.addActionListener(l);
     }
@@ -153,18 +175,34 @@ public class CrearSala extends javax.swing.JFrame {
     }
 
     public int obtenerNumeroJugadores() {
-        return Integer.parseInt(noJugadoresSalaTxt.getText());
+        return Integer.parseInt(noJugadoresSalaTxt.getValue().toString());
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField contraSalaTxt;
+    public javax.swing.JTextField contraSalaTxt;
     private javax.swing.JButton crearBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField noJugadoresSalaTxt;
-    private javax.swing.JTextField nombreSalaTxt;
+    public javax.swing.JSpinner noJugadoresSalaTxt;
+    public javax.swing.JTextField nombreSalaTxt;
     private javax.swing.JButton volverBtn;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void notificar() {
+        this.observadores.forEach(obs -> obs.actualizar());
+    }
+
+    @Override
+    public void anhadirObservador(Observador observador) {
+        this.observadores.add(observador);
+    }
+
+    @Override
+    public void removerObservador(Observador observador) {
+        this.observadores.remove(observador);
+    }
 }

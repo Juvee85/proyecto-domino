@@ -11,21 +11,37 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import observador.ObservableConexion;
+import observador.ObservadorConexion;
 import servicio.ContratoServicio;
 
 /**
  *
  * @author Juventino López García - 00000248547
  */
-public class Conexion implements Runnable {
+public class Conexion implements Runnable, ObservableConexion {
 
+    /**
+     * TODO: PARA EL JUEGO, DEBERIA DE HABER UNA MANERA DE ESPERAR SOLO UN TIPO
+     * DE EVENTO SEGUN SEA EL CASO, SI ES TURNO DE ALGUIEN MAS, ENTONCES EL EVENTO
+     * QUE ESPERAS QUE MANDE EL BUS ES DE cambiarTurno U OTRO SOLAMENTE.
+     */
+    
     private Socket s1 = null;
     private ObjectMapper mapper;
     private DataInputStream reader = null;
     private DataOutputStream writer = null;
+    
+    private List<ObservadorConexion> observadores;
 
+    private Map evento;
+    
     public Conexion() {
+        
+        this.observadores = new ArrayList<>();
+        
         try {
             s1 = new Socket("localhost", 15_001);
             reader = new DataInputStream(s1.getInputStream());
@@ -54,6 +70,10 @@ public class Conexion implements Runnable {
         }
     }
 
+    /**
+     * 
+     * @return 
+     */
     public ContratoServicio getContratoServicio() {
         ContratoServicio contrato = new ContratoServicio();
 
@@ -69,6 +89,11 @@ public class Conexion implements Runnable {
         return contrato;
     }
 
+    /**
+     * 
+     * @param evento
+     * @throws IOException 
+     */
     public void enviarEvento(Map<String, Object> evento) throws IOException {
         String eventoJSON = this.mapper.writeValueAsString(evento);
         
@@ -81,7 +106,8 @@ public class Conexion implements Runnable {
         try {
             while (true) {
                 Map evento = mapper.readValue(reader.readUTF(), Map.class);
-                notificar(evento);
+                this.evento = evento;
+                notificarEvento();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,7 +115,18 @@ public class Conexion implements Runnable {
         }
     }
 
-    public void notificar(Map evento) {
+    @Override
+    public void notificarEvento() {
+        this.observadores.forEach(obs -> obs.actualizar(evento));
+    }
 
+    @Override
+    public void agregarObservador(ObservadorConexion observador) {
+        this.observadores.add(observador);
+    }
+
+    @Override
+    public void removerObservador(ObservadorConexion observador) {
+        this.observadores.remove(observador);
     }
 }

@@ -20,23 +20,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mediador.MediadorPantallas;
 import conexion.Conexion;
+import observador.ObservadorConexion;
 
 /**
  *
  * @author
  */
-public class LogicaDomino {
+public class LogicaDomino implements ObservadorConexion {
 
     private Partida partida;
-
     private Sala sala;
-
     private Conexion conexion;
 
+    /**
+     * 
+     */
     public void inicio() {
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
             conexion = new Conexion();
+            conexion.agregarObservador(this);
             Thread hilo = new Thread(conexion);
             hilo.start();
         };
@@ -50,13 +53,14 @@ public class LogicaDomino {
 
     public void crearSala() {
         ObservadorCrearSala crearSala
-                = (String nombre, String contrasenha, int numeroJugadores) -> {
+                = (var nombre, var contrasenha, var numeroJugadores) -> {
                     sala = new Sala();
                     sala.setNombre(nombre);
                     sala.setContrasena(contrasenha);
                     sala.setMaxJugadores(numeroJugadores);
 
                     try {
+                        System.out.println("");
                         conexion.enviarEvento(crearEventoSolicitarCrearSala(sala));
                     } catch (IOException ex) {
                         Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,10 +70,16 @@ public class LogicaDomino {
         MediadorPantallas.getInstance().mostrarMenuPantallaCrearSala(crearSala);
     }
 
+    /**
+     * 
+     */
     public void unirASala() {
         // MediadorPantallas.getInstance().mostrarPantallaUnirASala(observador);
     }
 
+    /**
+     * 
+     */
     public void inicializarJuego() {
 
         Jugador anfitrion = new Jugador();
@@ -168,6 +178,13 @@ public class LogicaDomino {
         });
     }
 
+    
+    /**
+     * 
+     * @param jugador
+     * @param ficha
+     * @throws IOException 
+     */
     public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
         Tablero tablero = partida.getTablero();
 
@@ -181,6 +198,13 @@ public class LogicaDomino {
         conexion.enviarEvento(crearEvento(jugador, ficha));
     }
 
+    
+    /**
+     * 
+     * @param jugador
+     * @param ficha
+     * @return 
+     */
     private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
         HashMap<String, Object> mapa = new HashMap<>();
 
@@ -190,10 +214,21 @@ public class LogicaDomino {
         return mapa;
     }
 
+    
+    /**
+     * 
+     * @param sala
+     * @return 
+     */
     private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
         HashMap<String, Object> mapa = new HashMap<>();
 
         mapa.put("sala", sala);
         return mapa;
+    }
+
+    @Override
+    public void actualizar(Map evento) {
+        System.out.println(evento.toString());
     }
 }
