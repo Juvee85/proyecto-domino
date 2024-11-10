@@ -1,5 +1,5 @@
 /*
- * RepositorioServicios.java
+ * RepositorioServiciosViejo.java
  */
 package projects.bus;
 
@@ -12,7 +12,7 @@ import servicio.ContratoServicio;
  *
  * @author Juventino López García - 00000248547 - 03/11/2024
  */
-public class RepositorioServicios {
+public class RepositorioServiciosViejo {
 
     private HashMap<String, List<ContratoServicio>> eventos;
 

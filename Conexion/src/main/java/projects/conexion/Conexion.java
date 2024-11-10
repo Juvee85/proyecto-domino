@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Map;
 import servicio.ContratoServicio;
 
@@ -23,7 +24,7 @@ public class Conexion implements Runnable {
 
     public Conexion() {
         try {
-            s1 = new Socket("localhost", 8100);
+            s1 = new Socket("localhost", 15_001);
             reader = new BufferedReader(new InputStreamReader(s1.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(s1.getOutputStream()));
             mapper = new ObjectMapper();
@@ -31,6 +32,7 @@ public class Conexion implements Runnable {
             ContratoServicio contrato = new ContratoServicio("cliente",
                     s1.getInetAddress().getHostAddress(), s1.getLocalPort());
 
+            contrato.setEventosEscuchables(new ArrayList<>());
             contrato.agregarEventoEscuchable("cambio-turno");
             contrato.agregarEventoEscuchable("ficha-agregada");
             mapper.writeValue(writer, contrato);
