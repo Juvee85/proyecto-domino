@@ -33,7 +33,7 @@ public class ServicioSalas extends Thread {
     private static final String BUS_HOSTNAME = "localhost";
     private static final int BUS_PUERTO = 15_001;
 
-    private static final Scanner in = new Scanner(System.in);
+    //private static final Scanner in = new Scanner(System.in);
 
     private Socket socket = null;
 
@@ -106,25 +106,6 @@ public class ServicioSalas extends Thread {
                     manejador.start();
                 }
             }
-
-            /*
-            while (true) {
-                
-                System.out.println("MSG > ");
-                String msg = in.nextLine();
-                
-                respuesta.writeUTF(msg);
-                respuesta.flush();
-                
-                System.out.println("[=!=] ESCUCHANDO MENSAJES DEL BUS...");
-                
-                // recibe el mensaje del ESB
-                String response = mensaje.readUTF();
-                System.out.println("[MSG] Respuesta del servidor: " + response);
-
-                //
-            }
-             */
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO SALAS]: Ocurrio un error -> " + ex.getMessage());
         } finally {
