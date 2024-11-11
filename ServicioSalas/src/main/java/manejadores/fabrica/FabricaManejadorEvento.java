@@ -8,14 +8,22 @@ package manejadores.fabrica;
 import java.net.Socket;
 import manejadores.CrearSalaSolicitudManejador;
 import manejadores.EliminarSalaSolicitudManejador;
+import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
 import manejadores.ObtenerSalasSolicitudManejador;
 
 /**
- *
+ * Fabrica concreta para crear manejadores de eventos del servicio salas
  * @author Saul Neri
  */
-public class FabricaManejadorEvento {
+public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto {
+    
+    /**
+     * Crea una nueva instancia de una fabrica de manejadores de eventos para el servicio
+     */
+    public FabricaManejadorEvento() {
+        
+    }
     
     /**
      * Obtiene una instancia de un manejador de eventos segun el nombre del evento
@@ -24,7 +32,8 @@ public class FabricaManejadorEvento {
      * @param eventoSerializado Evento serializado en formato JSON
      * @return ManejadorEvento abstracto
      */
-    public static ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
+    @Override
+    public ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
         switch (nombreEvento) {
             case "CrearSalaSolicitud": 
                 return new CrearSalaSolicitudManejador(socket, eventoSerializado);

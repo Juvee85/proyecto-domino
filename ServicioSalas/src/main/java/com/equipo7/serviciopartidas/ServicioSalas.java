@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import manejadores.CrearSalaSolicitudManejador;
+import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
 import manejadores.fabrica.FabricaManejadorEvento;
 import repositorio.RepositorioSalas;
@@ -63,6 +64,8 @@ public class ServicioSalas extends Thread {
     @Override
     public void run() {
 
+        FabricaManejadorEventoAbstracto fabricaManejadorEventos = new FabricaManejadorEvento();
+        
         try {
             socket = new Socket(ServicioSalas.BUS_HOSTNAME, ServicioSalas.BUS_PUERTO);
             System.out.println("[*] CONECTADO AL BUS(%s, %d)...".formatted(ServicioSalas.BUS_HOSTNAME, ServicioSalas.BUS_PUERTO));
@@ -97,7 +100,7 @@ public class ServicioSalas extends Thread {
 
                 System.out.println("Nombre del evento: " + nombreEvento);
 
-                ManejadorEvento manejador = FabricaManejadorEvento.obtenerManejador(nombreEvento, socket, contratoServicioJSON);
+                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, contratoServicioJSON);
                 
                 if (manejador != null) {
                     manejador.start();

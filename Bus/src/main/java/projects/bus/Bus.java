@@ -61,10 +61,8 @@ public class Bus {
                 System.out.println("[!] NUEVO SERVICIO CONECTADO %s::%d".formatted(socket.getInetAddress(), socket.getPort()));
 
                 servicio = new Servicio(socket);
-
                 // obtiene el puerto de conexion del servicio
                 int puertoConexion = socket.getPort();
-
                 // Se obtiene el contrato del mensaje del servicio
                 servicioMensaje = new DataInputStream(socket.getInputStream());
 
@@ -87,12 +85,9 @@ public class Bus {
                     )
                 );
                 
-                
-                
                 for (String nombre: contrato.getEventosEscuchables()) {
                     System.out.println(nombre);
                 }
-            
 
                 // ase agrega el servicio al repositorio para consultarlo cuando reciba mensajes de un tercero
                 repositorioServicios.agregarServicio(servicio);
@@ -107,6 +102,12 @@ public class Bus {
         }
     }
 
+    /**
+     * 
+     * @param inputStream
+     * @return
+     * @throws IOException 
+     */
     public static String leerMensaje(InputStream inputStream) throws IOException {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {

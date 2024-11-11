@@ -28,6 +28,11 @@
             <artifactId>InformacionServicio</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.domino</groupId>
+            <artifactId>ManejadorEvento</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
