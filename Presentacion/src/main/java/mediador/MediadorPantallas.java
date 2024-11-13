@@ -6,6 +6,7 @@ package mediador;
 import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
 import DTOS.PartidaDTO;
+import DTOS.SalaDTO;
 import crearSala.CrearSala;
 import crearSala.CrearSalaControlador;
 import crearSala.CrearSalaModelo;
@@ -18,6 +19,7 @@ import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorAnhadirFicha;
 import interfacesObservador.ObservadorCrearSala;
 import interfacesObservador.ObservadorUnirASala;
+import java.util.List;
 import salasDisponibles.SalasDisponibles;
 import salasDisponibles.SalasDisponiblesControlador;
 import salasDisponibles.SalasDisponiblesModelo;
@@ -57,13 +59,15 @@ public class MediadorPantallas {
     }
 
     public void mostrarPantallaUnirASala(ObservadorUnirASala observador) {
-
+        
     }
 
-    public void mostrarPantallaSalasDisponibles() {
+    public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas) {
         SalasDisponiblesModelo modelo = new SalasDisponiblesModelo();
+        modelo.setSalasDisponibles(salas);
         SalasDisponibles vista = new SalasDisponibles(modelo);
         SalasDisponiblesControlador controlador = new SalasDisponiblesControlador(modelo, vista);
+        vista.setVisible(true);
     }
 
     public void mostrarMenuPantallaCrearSala(ObservadorCrearSala observador) {

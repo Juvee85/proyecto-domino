@@ -1,6 +1,7 @@
 package com.equipo1.logicadomino;
 
 import DTOS.PartidaDTO;
+import DTOS.SalaDTO;
 import com.equipo1.convertidores.FichaConverter;
 import com.equipo1.convertidores.JugadorConverter;
 import com.equipo1.convertidores.PartidaConverter;
@@ -16,8 +17,10 @@ import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorCrearSala;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +55,7 @@ public class LogicaDomino implements ObservadorConexion {
         };
 
         ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles = () -> {
-            MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles();
+            obtenerSalasDisponibles();
         };
 
         MediadorPantallas.getInstance().mostrarMenuPrincipal(observadorCrearSala, observadorUnirASala, observadorSalasDisponibles);
@@ -74,6 +77,21 @@ public class LogicaDomino implements ObservadorConexion {
                 };
 
         MediadorPantallas.getInstance().mostrarMenuPantallaCrearSala(crearSala);
+    }
+
+    public void obtenerSalasDisponibles() {
+        conexion = new Conexion();
+        conexion.agregarObservador(this);
+        try {
+            conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
+        } catch (IOException ex) {
+            Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // obtener salas desde observador a conexión
+        // Poner lo siguiente dentro del update en el caso que reciba el evento con las salas disponibles
+        List<SalaDTO> salas = new ArrayList<>();
+        // Agregar datos de la respuesta
+        MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas);
     }
 
     /**
@@ -229,6 +247,14 @@ public class LogicaDomino implements ObservadorConexion {
         mapa.put("nombre_evento", "CrearSalaSolicitud");
         sala.setJugadores(Arrays.asList(this.jugador));
         mapa.put("sala", sala);
+
+        return mapa;
+    }
+
+    private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "SolicitarSalasDisponibles");
 
         return mapa;
     }
