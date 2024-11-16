@@ -74,5 +74,9 @@ public class Tablero implements Serializable {
     public TrenFichas getFichas() {
         return fichas;
     }
+    
+    public boolean estaVacio() {
+        return this.fichas == null;
+    }
 
 }
