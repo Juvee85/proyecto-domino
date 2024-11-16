@@ -74,9 +74,7 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
             System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
         }
     }
-
-    
-    
+ 
     @Override
     public void run() {
         
