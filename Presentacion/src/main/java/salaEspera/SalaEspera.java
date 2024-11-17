@@ -3,6 +3,9 @@ package salaEspera;
 import DTOS.JugadorDTO;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import interfacesObservador.Observable;
+import interfacesObservador.Observador;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -10,14 +13,19 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Sebastian Murrieta Verduzco - 233463
  */
-public class SalaEspera extends javax.swing.JFrame {
+public class SalaEspera extends javax.swing.JFrame implements Observable {
 
     private SalaEsperaModelo modelo;
+    private List<Observador> observadores;
 
     /**
      * Creates new form SalaEspera
+     * @param modelo
      */
     public SalaEspera(SalaEsperaModelo modelo) {
+        this.modelo = modelo;
+        this.observadores = new ArrayList<>();
+        
         FlatMacDarkLaf.setup();
         initComponents();
         table.setDefaultRenderer(Object.class, new TableGradientCell());
@@ -91,6 +99,11 @@ public class SalaEspera extends javax.swing.JFrame {
         listoBtn.setBackground(new java.awt.Color(102, 102, 102));
         listoBtn.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         listoBtn.setText("Listo");
+        listoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listoBtnActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Jugadores :");
@@ -145,6 +158,10 @@ public class SalaEspera extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_salirBtnActionPerformed
 
+    private void listoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoBtnActionPerformed
+        this.notify();
+    }//GEN-LAST:event_listoBtnActionPerformed
+
     private void mostrarTabla() {
         List<JugadorDTO> jugadores = modelo.getJugadores();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -152,6 +169,8 @@ public class SalaEspera extends javax.swing.JFrame {
         for (JugadorDTO jugador : jugadores) {
             model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager"});
         }
+        
+        this.table.repaint();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Fondo;
@@ -164,4 +183,19 @@ public class SalaEspera extends javax.swing.JFrame {
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void notificar() {
+       this.observadores.forEach(obs -> obs.actualizar());
+    }
+
+    @Override
+    public void anhadirObservador(Observador observador) {
+        this.observadores.add(observador);
+    }
+
+    @Override
+    public void removerObservador(Observador observador) {
+        this.observadores.remove(observador);
+    }
 }

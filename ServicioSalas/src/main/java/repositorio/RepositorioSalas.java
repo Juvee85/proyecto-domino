@@ -36,13 +36,12 @@ public class RepositorioSalas {
     
     /**
      * Indica si la partida con la direccion de red dada existe
-     * @param host Host o IP de la sala
-     * @param puerto Puerto de la sala
+     * @param nombreSala Nombre de la asala a buscar
      * @return true si existe la partida
      */
-    public boolean existePartida(String host, int puerto) {
+    public boolean existePartida(String nombreSala) {
         return this.salas.stream()
-                .filter(s -> s.getHost().equals(host) && s.getPuerto() == puerto)
+                .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
                 .count() > 0;
     }
     
@@ -50,7 +49,7 @@ public class RepositorioSalas {
      * Obtiene todas las salas activas del juego
      * @return Lista de salas
      */
-    public List<Sala> getSalasActivas() {
+    public List<Sala> getSalas() {
         return this.salas;
     }
     

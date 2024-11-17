@@ -6,11 +6,15 @@ package manejadores;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import entidades.Sala;
+import eventos.ObtenerSalasRespuestaEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import repositorio.RepositorioSalas;
 
 /**
  * Se encarga de manejar la solicitud con el nombre ObtenerSalasSolicitud, la cual
@@ -19,11 +23,25 @@ import java.util.logging.Logger;
  */
 public class ObtenerSalasSolicitudManejador extends ManejadorEvento {
 
+    private final static RepositorioSalas repositorio = RepositorioSalas.getInstance();
+           
+    
+    /**
+     * Crea un nuevo manejador para regresar las salas activas en el sistema
+     * @param clienteSck
+     * @param eventoSerializado 
+     */
     public ObtenerSalasSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
 
+    public List<Sala> obtenerSalas() {
+        List<Sala> salasDisponibles = repositorio.getSalas();
+        
+        return salasDisponibles;
+    }
+    
     @Override
     public void run() {
 
@@ -41,14 +59,11 @@ public class ObtenerSalasSolicitudManejador extends ManejadorEvento {
         try {
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
-            // Acceder a los valores directamente
-            String host = jsonNode.get("host").asText();
-            int puerto = jsonNode.get("puerto").asInt();
-
-            System.out.println("Host: " + host);
-            System.out.println("Puerto: " + puerto);
-
-            respuesta.writeUTF("Recibido");
+            ObtenerSalasRespuestaEvento evento = new ObtenerSalasRespuestaEvento(this.obtenerSalas());
+            
+            String eventoJSON = objectMapper.writeValueAsString(evento);
+            
+            respuesta.writeUTF(eventoJSON);
             respuesta.flush();
 
             // cierra la conexion
