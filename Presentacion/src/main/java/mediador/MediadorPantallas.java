@@ -20,6 +20,9 @@ import interfacesObservador.ObservadorAnhadirFicha;
 import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
 import java.util.List;
+import salaEspera.SalaEspera;
+import salaEspera.SalaEsperaControlador;
+import salaEspera.SalaEsperaModelo;
 import salasDisponibles.SalasDisponibles;
 import salasDisponibles.SalasDisponiblesControlador;
 import salasDisponibles.SalasDisponiblesModelo;
@@ -59,7 +62,7 @@ public class MediadorPantallas {
     }
 
     public void mostrarPantallaUnirASala(ObservadorUnirASala observador) {
-        
+
     }
 
     public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas) {
@@ -75,6 +78,14 @@ public class MediadorPantallas {
         modelo.anhadirObservador(observador);
         CrearSala vista = new CrearSala(modelo);
         CrearSalaControlador controlador = new CrearSalaControlador(vista, modelo);
+        vista.setVisible(true);
+    }
+
+    public void mostrarSalaEspera() {
+        SalaEsperaModelo modelo = new SalaEsperaModelo();
+        SalaEspera vista = new SalaEspera(modelo);
+        SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
+
         vista.setVisible(true);
     }
 

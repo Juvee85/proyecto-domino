@@ -1,7 +1,9 @@
 package salaEspera;
 
+import DTOS.JugadorDTO;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -10,10 +12,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SalaEspera extends javax.swing.JFrame {
 
+    private SalaEsperaModelo modelo;
+
     /**
      * Creates new form SalaEspera
      */
-    public SalaEspera() {
+    public SalaEspera(SalaEsperaModelo modelo) {
         FlatMacDarkLaf.setup();
         initComponents();
         table.setDefaultRenderer(Object.class, new TableGradientCell());
@@ -27,7 +31,7 @@ public class SalaEspera extends javax.swing.JFrame {
                 + "border:3,0,3,0,$Table.background,10,10");
         scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "hoverTrackColor:null");
-        testData();
+        mostrarTabla();
     }
 
     @SuppressWarnings("unchecked")
@@ -141,29 +145,14 @@ public class SalaEspera extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_salirBtnActionPerformed
 
-    private void testData() {
+    private void mostrarTabla() {
+        List<JugadorDTO> jugadores = modelo.getJugadores();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-        model.addRow(new Object[]{1, "John Smith", "john.smith@example.com", "123 Main St, City", "Manager"});
-        model.addRow(new Object[]{2, "Sarah Jones", "sarah.jones@example.com", "456 Elm St, Town", "Salesperson"});
-        model.addRow(new Object[]{3, "David Brown", "david.b@example.com", "789 Oak St, Village", "Technician"});
-        model.addRow(new Object[]{4, "Lisa Davis", "lisa.d@example.com", "101 Pine St, Town", "Receptionist"});
-        model.addRow(new Object[]{5, "Mark Wilson", "mark.w@example.com", "555 Cedar St, City", "Accountant"});
-        model.addRow(new Object[]{6, "Alice Johnson", "alice.j@example.com", "222 Elm St, Village", "Marketing"});
+        for (JugadorDTO jugador : jugadores) {
+            model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager"});
+        }
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SalaEspera().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Fondo;
     private javax.swing.JLabel jLabel1;
