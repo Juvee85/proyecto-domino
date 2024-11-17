@@ -97,6 +97,8 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
             
             String eventoJSON = objectMapper.writeValueAsString(evento);
             
+            System.out.println("[*] Se creo una nueva sala...");
+            
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
 

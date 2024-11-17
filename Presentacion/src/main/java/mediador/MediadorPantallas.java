@@ -82,8 +82,9 @@ public class MediadorPantallas {
     }
 
     public void mostrarSalaEspera(List<JugadorDTO> jugadores) {
-        SalaEsperaModelo modelo = new SalaEsperaModelo(jugadores);
+        SalaEsperaModelo modelo = new SalaEsperaModelo();
         modelo.setJugadores(jugadores);
+        //System.out.println("### modelo: %s".formatted(modelo));
         SalaEspera vista = new SalaEspera(modelo);
         SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
         vista.setVisible(true);

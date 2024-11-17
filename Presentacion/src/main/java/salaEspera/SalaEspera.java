@@ -20,12 +20,13 @@ public class SalaEspera extends javax.swing.JFrame implements Observable {
 
     /**
      * Creates new form SalaEspera
+     *
      * @param modelo
      */
     public SalaEspera(SalaEsperaModelo modelo) {
         this.modelo = modelo;
         this.observadores = new ArrayList<>();
-        
+
         FlatMacDarkLaf.setup();
         initComponents();
         table.setDefaultRenderer(Object.class, new TableGradientCell());
@@ -159,18 +160,42 @@ public class SalaEspera extends javax.swing.JFrame implements Observable {
     }//GEN-LAST:event_salirBtnActionPerformed
 
     private void listoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoBtnActionPerformed
-        this.notify();
+        
     }//GEN-LAST:event_listoBtnActionPerformed
 
     private void mostrarTabla() {
+        // TODO: Manejar errores correctamente
+        if (modelo == null) {
+            System.err.println("El modelo es nulo. No se puede mostrar la tabla.");
+            return;
+        }
+
+        List<JugadorDTO> jugadores = modelo.getJugadores();
+        if (jugadores == null || jugadores.isEmpty()) {
+            System.out.println("No hay jugadores para mostrar en la tabla.");
+            return;
+        }
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0); // Limpia la tabla antes de agregar filas
+
+        for (JugadorDTO jugador : jugadores) {
+            model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager"});
+        }
+
+        this.table.repaint();
+        
+        /*
+
         List<JugadorDTO> jugadores = modelo.getJugadores();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
         for (JugadorDTO jugador : jugadores) {
             model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager"});
         }
-        
+
         this.table.repaint();
+*/
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Fondo;
@@ -186,7 +211,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable {
 
     @Override
     public void notificar() {
-       this.observadores.forEach(obs -> obs.actualizar());
+        this.observadores.forEach(obs -> obs.actualizar());
     }
 
     @Override
