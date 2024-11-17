@@ -63,6 +63,7 @@ public class SalaDTO {
             this.contrasena = null;
         } else if (contrasena.length() >= 5 && contrasena.length() <= 18) {
             this.contrasena = contrasena;
+            this.tieneContrasena = true;
         }
     }
 

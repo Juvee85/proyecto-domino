@@ -266,10 +266,12 @@ public class LogicaDomino implements ObservadorConexion {
         System.out.println(evento.toString());
         System.out.println("HERE");
 
+        
+        
         String nombreEvento = (String) evento.get("nombre_evento");
-
-        if (nombreEvento == "evento") {
-            MediadorPantallas.getInstance().mostrarSalaEspera();
+        if (nombreEvento.equals("CrearSalaRespuesta")) {
+            //System.out.println("### Jugador actual: %s".formatted(this.jugador));
+            MediadorPantallas.getInstance().mostrarSalaEspera(Arrays.asList(new JugadorConverter().convertFromEntity(this.jugador)));
         }
     }
 }

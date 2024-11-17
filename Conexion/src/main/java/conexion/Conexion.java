@@ -97,6 +97,7 @@ public class Conexion implements Runnable, ObservableConexion {
     public void enviarEvento(Map<String, Object> evento) throws IOException {
         String eventoJSON = this.mapper.writeValueAsString(evento);
         
+        System.out.println("[>] EVENTO A ENVIAR AL BUS...");
         System.out.println(eventoJSON);
         
         writer.writeUTF(eventoJSON);
@@ -119,6 +120,8 @@ public class Conexion implements Runnable, ObservableConexion {
 
     @Override
     public void notificarEvento() {
+        System.out.println("[<] Evento proveniente del bus:");
+        System.out.println(this.evento.toString());
         this.observadores.forEach(obs -> obs.actualizar(evento));
     }
 

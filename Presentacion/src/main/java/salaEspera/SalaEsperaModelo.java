@@ -14,6 +14,10 @@ public class SalaEsperaModelo {
 
     private List<JugadorDTO> jugadores;
 
+    public SalaEsperaModelo() {
+        
+    }
+    
     public List<JugadorDTO> getJugadores() {
         return jugadores;
     }
