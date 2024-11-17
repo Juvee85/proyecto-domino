@@ -4,8 +4,6 @@
 package crearSala;
 
 import interfacesObservador.Observador;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  *
@@ -14,7 +12,6 @@ import java.awt.event.ActionListener;
 public class CrearSalaControlador implements Observador {
 
     private CrearSala vista;
-
     private CrearSalaModelo modelo;
 
     public CrearSalaControlador(CrearSala vista, CrearSalaModelo modelo) {
@@ -26,14 +23,16 @@ public class CrearSalaControlador implements Observador {
 
     @Override
     public void actualizar() {
-        String nombreSala = this.vista.nombreSalaTxt.getText();
-        String contrasena = this.vista.contraSalaTxt.getText();
-        int maxJugadores = (Integer) this.vista.noJugadoresSalaTxt.getValue();
-        
-        //modelo.set
-        modelo.setContrasenhaSala(contrasena);
-        modelo.setNumeroJugadores(maxJugadores);
-        
+        String nombreSala = this.vista.obtenerNombre();
+        String contrasena = this.vista.obtenerContrasenha();
+        int maxJugadores = this.vista.obtenerNumeroJugadores();
+        String nombreJugador = this.vista.obtenerNombreJugador();
+
+        modelo.setNombreSala(nombreSala);
+        modelo.setContrasena(contrasena);
+        modelo.setMaxJugadores(maxJugadores);
+        modelo.setNombreJugador(nombreJugador);
+
         modelo.notificar();
     }
 }

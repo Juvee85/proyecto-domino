@@ -11,5 +11,6 @@ import DTOS.SalaDTO;
  * @author neri
  */
 public interface ObservadorCrearSala {
-    public void actualizar(SalaDTO sala);
+
+    public void actualizar(SalaDTO sala, String nombreJugador);
 }

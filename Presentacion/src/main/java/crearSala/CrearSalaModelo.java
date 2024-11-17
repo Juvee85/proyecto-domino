@@ -14,7 +14,10 @@ import java.util.List;
  */
 public class CrearSalaModelo {
 
-    private SalaDTO sala;
+    String nombreSala;
+    String contrasena;
+    int maxJugadores;
+    String nombreJugador;
 
     private List<ObservadorCrearSala> observadores;
 
@@ -27,22 +30,50 @@ public class CrearSalaModelo {
     }
 
     public void notificar() {
+        SalaDTO sala = new SalaDTO();
+        sala.setContrasena(contrasena);
+        sala.setMaxJugadores(maxJugadores);
+        sala.setNombre(nombreSala);
+        
         for (ObservadorCrearSala obs : observadores) {
-            obs.actualizar(getSala());
+            obs.actualizar(sala, nombreJugador);
         }
     }
 
-    /**
-     * @return the sala
-     */
-    public SalaDTO getSala() {
-        return sala;
+    public String getNombreSala() {
+        return nombreSala;
     }
 
-    /**
-     * @param sala the sala to set
-     */
-    public void setSala(SalaDTO sala) {
-        this.sala = sala;
+    public void setNombreSala(String nombreSala) {
+        this.nombreSala = nombreSala;
     }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public int getMaxJugadores() {
+        return maxJugadores;
+    }
+
+    public void setMaxJugadores(int maxJugadores) {
+        this.maxJugadores = maxJugadores;
+    }
+
+    public String getNombreJugador() {
+        return nombreJugador;
+    }
+
+    public void setNombreJugador(String nombreJugador) {
+        this.nombreJugador = nombreJugador;
+    }
+
+    public void setObservadores(List<ObservadorCrearSala> observadores) {
+        this.observadores = observadores;
+    }
+    
 }

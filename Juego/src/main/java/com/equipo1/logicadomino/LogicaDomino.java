@@ -5,6 +5,7 @@ import DTOS.SalaDTO;
 import com.equipo1.convertidores.FichaConverter;
 import com.equipo1.convertidores.JugadorConverter;
 import com.equipo1.convertidores.PartidaConverter;
+import com.equipo1.convertidores.SalaConverter;
 import conexion.Conexion;
 import entidades.ConfiguracionJuego;
 import entidades.Jugador;
@@ -15,7 +16,7 @@ import entidades.Tablero;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
-import interfacesObservador.ObservadorCrearSala;
+import interfacesObservador.salas.ObservadorCrearSala;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,11 +65,12 @@ public class LogicaDomino implements ObservadorConexion {
 
     public void crearSala() {
         ObservadorCrearSala crearSala
-                = (var nombre, var contrasenha, var numeroJugadores) -> {
-                    sala = new Sala();
-                    sala.setNombre(nombre);
-                    sala.setContrasena(contrasenha);
-                    sala.setMaxJugadores(numeroJugadores);
+                = (SalaDTO salaDTO, String nombreJugador) -> {
+                    sala = new SalaConverter().convertFromDTO(salaDTO);
+                    jugador = new Jugador();
+                    jugador.setNombre(nombreJugador);
+                    jugador.setNumero(0);
+                    jugador.setAvatar("");
 
                     try {
                         conexion.enviarEvento(crearEventoSolicitarCrearSala(sala));
@@ -263,5 +265,11 @@ public class LogicaDomino implements ObservadorConexion {
         // TODO: Detectar que evento es y actuar en consecuencia...
         System.out.println(evento.toString());
         System.out.println("HERE");
+
+        String nombreEvento = (String) evento.get("nombre_evento");
+
+        if (nombreEvento == "") {
+
+        }
     }
 }
