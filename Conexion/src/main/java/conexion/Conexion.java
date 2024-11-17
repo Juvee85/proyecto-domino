@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import observador.ObservableConexion;
 import observador.ObservadorConexion;
 import servicio.ContratoServicio;
@@ -21,7 +22,7 @@ import servicio.ContratoServicio;
  *
  * @author Juventino López García - 00000248547
  */
-public class Conexion implements Runnable, ObservableConexion {
+public class Conexion extends Thread implements ObservableConexion {
 
     /**
      * TODO: PARA EL JUEGO, DEBERIA DE HABER UNA MANERA DE ESPERAR SOLO UN TIPO
@@ -64,9 +65,8 @@ public class Conexion implements Runnable, ObservableConexion {
             
         } catch (IOException e) {
             System.out.print("IO Exception");
+            JOptionPane.showMessageDialog(null, "No se pudo conectar con el servidor... Porfavor intente mas tarde.", "Error de Conexion", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-            // TODO: Detener la presentacion...
-            
         }
     }
 

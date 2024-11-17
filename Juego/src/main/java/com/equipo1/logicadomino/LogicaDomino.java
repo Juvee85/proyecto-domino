@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import mediador.MediadorPantallas;
 import observador.ObservadorConexion;
 
@@ -37,7 +38,14 @@ public class LogicaDomino implements ObservadorConexion {
     private Partida partida;
     private Sala sala;
     private Jugador jugador;
+    private List<Sala> salasDisponibles;
     private Conexion conexion;
+
+    public LogicaDomino() {
+        this.conexion = new Conexion();
+        this.conexion.agregarObservador(this);
+        this.conexion.start();
+    }
 
     /**
      *
@@ -46,10 +54,6 @@ public class LogicaDomino implements ObservadorConexion {
         // TODO: ver si es mejor crear conexion al BUS desde el inicio
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
-            conexion = new Conexion();
-            conexion.agregarObservador(this);
-            Thread hilo = new Thread(conexion);
-            hilo.start();
         };
 
         ObservadorAbrirPantallaUnirASala observadorUnirASala = () -> {
@@ -72,6 +76,8 @@ public class LogicaDomino implements ObservadorConexion {
                     jugador.setNumero(0);
                     jugador.setAvatar("");
 
+                    System.out.println("### crearSala: %s".formatted(sala));
+                    
                     try {
                         conexion.enviarEvento(crearEventoSolicitarCrearSala(sala));
                     } catch (IOException ex) {
@@ -83,8 +89,6 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void obtenerSalasDisponibles() {
-        conexion = new Conexion();
-        conexion.agregarObservador(this);
         try {
             conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
         } catch (IOException ex) {
@@ -92,9 +96,9 @@ public class LogicaDomino implements ObservadorConexion {
         }
         // obtener salas desde observador a conexión
         // Poner lo siguiente dentro del update en el caso que reciba el evento con las salas disponibles
-        List<SalaDTO> salas = new ArrayList<>();
+        //List<SalaDTO> salas = new ArrayList<>();
         // Agregar datos de la respuesta
-        MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas);
+        //MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas);
     }
 
     /**
@@ -255,7 +259,7 @@ public class LogicaDomino implements ObservadorConexion {
     private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
         HashMap<String, Object> mapa = new HashMap<>();
 
-        mapa.put("nombre_evento", "SolicitarSalasDisponibles");
+        mapa.put("nombre_evento", "ObtenerSalasSolicitud");
 
         return mapa;
     }
@@ -266,12 +270,46 @@ public class LogicaDomino implements ObservadorConexion {
         System.out.println(evento.toString());
         System.out.println("HERE");
 
-        
-        
         String nombreEvento = (String) evento.get("nombre_evento");
-        if (nombreEvento.equals("CrearSalaRespuesta")) {
-            //System.out.println("### Jugador actual: %s".formatted(this.jugador));
-            MediadorPantallas.getInstance().mostrarSalaEspera(Arrays.asList(new JugadorConverter().convertFromEntity(this.jugador)));
+        switch (nombreEvento) {
+            case "CrearSalaRespuesta":
+                MediadorPantallas.getInstance().mostrarSalaEspera(Arrays.asList(new JugadorConverter().convertFromEntity(this.jugador)));
+                break;
+            case "ObtenerSalasRespuesta": {
+                System.out.println("### ObtenerSalasRespuesta CACHADO!!!");
+                System.out.println(evento.toString());
+
+                List<Map<String, Object>> mapasSalas = (List<Map<String, Object>>) evento.get("salas");
+                List<Sala> salasEncontradas = new ArrayList<>();
+
+                for (Map<String, Object> mapaSala : mapasSalas) {
+                    Sala sala = new Sala();
+                    sala.setNombre((String) mapaSala.get("nombre_sala"));
+                    sala.setMaxJugadores((int) mapaSala.get("max_jugadores"));
+                    sala.setJugadoresEnSala((int) mapaSala.get("jugadores_en_sala"));
+                    sala.setContrasena((String) mapaSala.get("contrasena"));
+                    // Asigna los jugadores de la sala si corresponde
+                    salasEncontradas.add(sala);
+                }
+
+//                List<Sala> salasEncontradas = (List<Sala>) evento.get("salas");
+
+                if (salasEncontradas.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No se encontraron salas abiertas en el servidor... Intentelo mas tarde.", "Unirse a Salas", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                SalaConverter convertidorSala = new SalaConverter();
+
+                this.salasDisponibles = salasEncontradas;
+
+                List<SalaDTO> salasDTO = new ArrayList<>();
+                this.salasDisponibles.forEach(sala -> salasDTO.add(convertidorSala.convertFromEntity(sala)));
+
+                MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salasDTO);
+            }
+
         }
+
     }
 }

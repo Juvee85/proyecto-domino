@@ -4,6 +4,7 @@
  */
 package salasDisponibles;
 
+import DTOS.SalaDTO;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import javax.swing.JOptionPane;
@@ -16,6 +17,7 @@ import salaEspera.TableGradientCell;
  *
  * @author Sebastian Murrieta
  */
+
 public class SalasDisponibles extends javax.swing.JFrame {
 
     private SalasDisponiblesModelo modelo;
@@ -38,8 +40,10 @@ public class SalasDisponibles extends javax.swing.JFrame {
                 + "border:3,0,3,0,$Table.background,10,10");
         scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "hoverTrackColor:null");
-        testData();
+        
 
+        this.cargarSalas();
+        
         // Agregar listener para habilitar o deshabilitar el botón "Unirse"
         table.getSelectionModel().addListSelectionListener(e -> unirseBtn.setEnabled(table.getSelectedRow() != -1));
 
@@ -52,13 +56,18 @@ public class SalasDisponibles extends javax.swing.JFrame {
      * Método para agregar datos de prueba a la tabla. Los datos incluyen el
      * nombre de la sala, el número de personas jugando y la capacidad máxima.
      */
-    private void testData() {
+    private void cargarSalas() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-        model.addRow(new Object[]{"Rancho Diana", 3, 4});
-        model.addRow(new Object[]{"Chapo Dogo", 4, 4});
-        model.addRow(new Object[]{"Juventino", 2, 4});
-        model.addRow(new Object[]{"Diana", 1, 4});
+        for (SalaDTO sala : modelo.getSalasDisponibles()) {
+            model.addRow(new Object[]{
+                sala.getNombre(), 
+                sala.getJugadoresEnSala(), 
+                sala.getMaxJugadores()
+            });
+        }
+        
+        this.table.repaint();
     }
 
     /**

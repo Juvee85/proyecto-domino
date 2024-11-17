@@ -50,6 +50,9 @@ public class MediadorPantallas {
         return instance;
     }
 
+    
+    
+    
     public void mostrarMenuPrincipal(ObservadorAbrirPantallaCrearSala observadorCrearSala,
             ObservadorAbrirPantallaUnirASala observadorUnirASala, ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles) {
         InicioModelo modelo = new InicioModelo();
@@ -61,10 +64,16 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
+    
+    
+    
     public void mostrarPantallaUnirASala(ObservadorUnirASala observador) {
 
     }
 
+    
+    
+    
     public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas) {
         SalasDisponiblesModelo modelo = new SalasDisponiblesModelo();
         modelo.setSalasDisponibles(salas);
@@ -73,6 +82,10 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
+    
+    
+    
+    
     public void mostrarMenuPantallaCrearSala(ObservadorCrearSala observador) {
         CrearSalaModelo modelo = new CrearSalaModelo();
         modelo.anhadirObservador(observador);
@@ -81,6 +94,10 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
+    
+    
+    
+    
     public void mostrarSalaEspera(List<JugadorDTO> jugadores) {
         SalaEsperaModelo modelo = new SalaEsperaModelo();
         modelo.setJugadores(jugadores);
@@ -90,6 +107,9 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
+    
+    
+    
     public void mostrarPantallaJuego(PartidaDTO partida) {
         modelo = new TableroModelo();
         FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
@@ -101,6 +121,9 @@ public class MediadorPantallas {
         ventana.setVisible(true);
     }
 
+    
+    
+    
     public void actualizarPantalla(PartidaDTO partida) {
         FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
         modelo.setFichaIzquierda(fichaIzquierda);
@@ -110,10 +133,14 @@ public class MediadorPantallas {
         modelo.notificar();
     }
 
+    
+    
     public void notificarObservadores(JugadorDTO jugador, FichaDTO ficha) {
         observador.actualizar(jugador, ficha);
     }
 
+    
+    
     public void anhadirObservador(ObservadorAnhadirFicha observador) {
         this.observador = observador;
     }

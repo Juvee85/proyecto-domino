@@ -38,6 +38,8 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
      */
     public CrearSalaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         //this.nombreEvento = nombreEvento;
+        this.setName(String.format("Thread [%s]", this.getClass().getSimpleName()));
+        
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
@@ -86,6 +88,9 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
         }
 
         try {
+            System.out.println("!!!");
+            System.out.println(this.eventoSerializado);
+            
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
             // Acceder a los valores directamente
@@ -93,6 +98,8 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
 
             Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
+            System.out.println(sala);
+            
             CrearSalaRespuestaEvento evento = this.crearSala(sala);
             
             String eventoJSON = objectMapper.writeValueAsString(evento);

@@ -32,6 +32,7 @@ public class ObtenerSalasSolicitudManejador extends ManejadorEvento {
      * @param eventoSerializado 
      */
     public ObtenerSalasSolicitudManejador(Socket clienteSck, String eventoSerializado) {
+        this.setName(String.format("Thread [%s]", this.getClass().getSimpleName()));
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
@@ -67,7 +68,7 @@ public class ObtenerSalasSolicitudManejador extends ManejadorEvento {
             respuesta.flush();
 
             // cierra la conexion
-            this.clienteSck.close();
+            //this.clienteSck.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

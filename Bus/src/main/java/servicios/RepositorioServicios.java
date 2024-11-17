@@ -57,6 +57,7 @@ public class RepositorioServicios {
             throw new IllegalArgumentException("El puerto del servicio no es valido");
         }
         
+        /*
         boolean servicioExiste = this.servicios.stream()
                 .filter(s -> s.getContrato()
                         .getNombreServicio()
@@ -66,7 +67,7 @@ public class RepositorioServicios {
                 .orElse(null) != null;
         if (servicioExiste) {
             throw new IllegalArgumentException("El servicio que se intenta agregar ya esta registrado");
-        }
+        }*/
         
         this.servicios.add(servicio);
     }

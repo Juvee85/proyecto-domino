@@ -52,6 +52,8 @@ public class ServicioManejador extends Thread {
      */
     public ServicioManejador(Servicio servicio) {
         
+        this.setName(String.format("Thread de manejador Servicio [%s]", servicio.getContrato().getNombreServicio()));
+        
         this.jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         
         try {
@@ -111,10 +113,12 @@ public class ServicioManejador extends Thread {
                 /*
                 TODO: MANEJAR LOS ERRORES DE LA MEJOR MANERA PARA QUE NO SE CAIGA EL BUS
                 */
-                System.out.println("[ERROR] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
-                return;
+                System.out.println("[ERROR - IO] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
+                ex.printStackTrace();
+                break;
             } catch (IllegalArgumentException ex) {
-                System.out.println("[ERROR] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
+                System.out.println("[ERROR - Arg] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
+                
             }
         }
     }
