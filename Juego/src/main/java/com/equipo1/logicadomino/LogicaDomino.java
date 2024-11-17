@@ -268,8 +268,8 @@ public class LogicaDomino implements ObservadorConexion {
 
         String nombreEvento = (String) evento.get("nombre_evento");
 
-        if (nombreEvento == "") {
-
+        if (nombreEvento == "evento") {
+            MediadorPantallas.getInstance().mostrarSalaEspera();
         }
     }
 }

@@ -81,11 +81,11 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
-    public void mostrarSalaEspera() {
+    public void mostrarSalaEspera(List<JugadorDTO> jugadores) {
         SalaEsperaModelo modelo = new SalaEsperaModelo();
+        modelo.setJugadores(jugadores);
         SalaEspera vista = new SalaEspera(modelo);
         SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
-
         vista.setVisible(true);
     }
 
