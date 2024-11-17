@@ -3,7 +3,8 @@
  */
 package crearSala;
 
-import interfacesObservador.ObservadorCrearSala;
+import DTOS.SalaDTO;
+import interfacesObservador.salas.ObservadorCrearSala;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +14,7 @@ import java.util.List;
  */
 public class CrearSalaModelo {
 
-    private String nombreSala;
-
-    private String contrasenhaSala;
-
-    private int numeroJugadores;
+    private SalaDTO sala;
 
     private List<ObservadorCrearSala> observadores;
 
@@ -25,38 +22,27 @@ public class CrearSalaModelo {
         observadores = new ArrayList<>();
     }
 
-    
-    public String getNombreSala() {
-        return nombreSala;
-    }
-
-    public void setNombreSala(String nombreSala) {
-        this.nombreSala = nombreSala;
-    }
-
-    public String getContrasenhaSala() {
-        return contrasenhaSala;
-    }
-
-    public void setContrasenhaSala(String contrasenhaSala) {
-        this.contrasenhaSala = contrasenhaSala;
-    }
-
-    public int getNumeroJugadores() {
-        return numeroJugadores;
-    }
-
-    public void setNumeroJugadores(int numeroJugadores) {
-        this.numeroJugadores = numeroJugadores;
-    }
-
     public void anhadirObservador(ObservadorCrearSala observador) {
         observadores.add(observador);
     }
 
     public void notificar() {
-        for (ObservadorCrearSala observadore : observadores) {
-            observadore.actualizar(nombreSala, contrasenhaSala, numeroJugadores);
+        for (ObservadorCrearSala obs : observadores) {
+            obs.actualizar(getSala());
         }
+    }
+
+    /**
+     * @return the sala
+     */
+    public SalaDTO getSala() {
+        return sala;
+    }
+
+    /**
+     * @param sala the sala to set
+     */
+    public void setSala(SalaDTO sala) {
+        this.sala = sala;
     }
 }

@@ -22,14 +22,6 @@ public class CrearSalaControlador implements Observador {
         this.modelo = modelo;
         this.vista.anhadirObservador(this);
 
-        vista.anhadirCrearSalaObservador(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modelo.setNombreSala(vista.obtenerNombre());
-                modelo.setContrasenhaSala(vista.obtenerContrasenha());
-                modelo.setNumeroJugadores(vista.obtenerNumeroJugadores());
-            }
-        });
     }
 
     @Override
@@ -38,7 +30,7 @@ public class CrearSalaControlador implements Observador {
         String contrasena = this.vista.contraSalaTxt.getText();
         int maxJugadores = (Integer) this.vista.noJugadoresSalaTxt.getValue();
         
-        modelo.setNombreSala(nombreSala);
+        //modelo.set
         modelo.setContrasenhaSala(contrasena);
         modelo.setNumeroJugadores(maxJugadores);
         

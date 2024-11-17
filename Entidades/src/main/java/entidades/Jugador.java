@@ -17,8 +17,6 @@ public class Jugador implements Serializable {
     private String avatar;
     @JsonProperty("fichas")
     private List<Ficha> fichas;
-    @JsonProperty("partidas_ganadas")
-    private int partidasGanadas;
     @JsonProperty("es_anfitrion")
     private boolean anfitrion;
     @JsonProperty("numero_jugador")
@@ -83,19 +81,6 @@ public class Jugador implements Serializable {
         return fichas;
     }
 
-    /**
-     * @return the partidasGanadas
-     */
-    public int getPartidasGanadas() {
-        return partidasGanadas;
-    }
-
-    /**
-     * @param partidasGanadas the partidasGanadas to set
-     */
-    public void setPartidasGanadas(int partidasGanadas) {
-        this.partidasGanadas = partidasGanadas;
-    }
 
     /**
      * @return the numero

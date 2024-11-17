@@ -42,6 +42,7 @@ public class LogicaDomino implements ObservadorConexion {
      *
      */
     public void inicio() {
+        // TODO: ver si es mejor crear conexion al BUS desde el inicio
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
             conexion = new Conexion();
@@ -109,7 +110,6 @@ public class LogicaDomino implements ObservadorConexion {
         Jugador anfitrion = new Jugador();
         anfitrion.setNombre("Alfonso");
         anfitrion.setAvatar("DonAlfonsoDestroyer");
-        anfitrion.setPartidasGanadas(0);
 
         Partida partida = new Partida(anfitrion);
 
@@ -121,7 +121,6 @@ public class LogicaDomino implements ObservadorConexion {
         Jugador jugador2 = new Jugador();
         jugador2.setNombre("Pedro");
         jugador2.setAvatar("ElPerroShesh14");
-        jugador2.setPartidasGanadas(0);
         boolean agregado = partida.agregarJugador(jugador2);
         System.out.println(agregado);
 
@@ -263,5 +262,6 @@ public class LogicaDomino implements ObservadorConexion {
     public void actualizar(Map evento) {
         // TODO: Detectar que evento es y actuar en consecuencia...
         System.out.println(evento.toString());
+        System.out.println("HERE");
     }
 }

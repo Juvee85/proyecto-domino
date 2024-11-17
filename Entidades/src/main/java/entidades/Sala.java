@@ -3,6 +3,7 @@ package entidades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class Sala implements Serializable {
      */
     public Sala() {
         this.tieneContrasena = false;
+        this.jugadores = new ArrayList<>();
     }
 
     /**

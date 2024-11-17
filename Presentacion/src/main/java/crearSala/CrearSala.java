@@ -6,6 +6,7 @@ import interfacesObservador.Observador;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 
 
@@ -17,6 +18,8 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
 
     private CrearSalaModelo modelo;
     private List<Observador> observadores;
+    
+    private String nombreJugador;
 
     /**
      * Creates new form CrearSala
@@ -160,6 +163,16 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
 
     private void crearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearBtnActionPerformed
         // TODO add your handling code here:
+        
+        // TODO: sacar informacion del jugador
+        String nombreJugador = JOptionPane.showInputDialog(this, "Ingresa tu nombre de juego");
+        if (nombreJugador.isBlank() || nombreJugador.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debes ingresar un nombre valido");
+            return;
+        }
+        
+        this.nombreJugador = nombreJugador;
+        
         this.notificar();
     }//GEN-LAST:event_crearBtnActionPerformed
     public void anhadirCrearSalaObservador(ActionListener l) {
@@ -204,5 +217,12 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
     @Override
     public void removerObservador(Observador observador) {
         this.observadores.remove(observador);
+    }
+
+    /**
+     * @return the nombreJugador
+     */
+    public String obtenerNombreJugador() {
+        return nombreJugador;
     }
 }

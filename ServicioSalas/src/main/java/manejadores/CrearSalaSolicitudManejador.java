@@ -52,7 +52,7 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
         // TODO: Realizar validaciones...
         repositorio.agregarSala(sala);
 
-        return new CrearSalaRespuestaEvento(sala);
+        return new CrearSalaRespuestaEvento();
     }
 
     /**
