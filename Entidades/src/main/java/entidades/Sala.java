@@ -3,6 +3,7 @@ package entidades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Representa una sala de juego
@@ -24,6 +25,8 @@ public class Sala implements Serializable {
     private String contrasena;
     @JsonProperty("tiene_contrasena")
     private boolean tieneContrasena;
+    @JsonProperty("jugadores")
+    private List<Jugador> jugadores;
     
     /**
      * Crea una sala nueva sin contrasena por defecto
@@ -143,6 +146,20 @@ public class Sala implements Serializable {
      */
     public void setJugadoresEnSala(int jugadoresEnSala) {
         this.jugadoresEnSala = jugadoresEnSala;
+    }
+
+    /**
+     * @return the jugadores
+     */
+    public List<Jugador> getJugadores() {
+        return jugadores;
+    }
+
+    /**
+     * @param jugadores the jugadores to set
+     */
+    public void setJugadores(List<Jugador> jugadores) {
+        this.jugadores = jugadores;
     }
     
     

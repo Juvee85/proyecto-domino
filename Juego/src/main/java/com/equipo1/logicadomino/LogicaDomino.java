@@ -1,9 +1,11 @@
 package com.equipo1.logicadomino;
 
 import DTOS.PartidaDTO;
+import DTOS.SalaDTO;
 import com.equipo1.convertidores.FichaConverter;
 import com.equipo1.convertidores.JugadorConverter;
 import com.equipo1.convertidores.PartidaConverter;
+import conexion.Conexion;
 import entidades.ConfiguracionJuego;
 import entidades.Jugador;
 import entidades.Partida;
@@ -11,32 +13,39 @@ import entidades.Pozo.Ficha;
 import entidades.Sala;
 import entidades.Tablero;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
+import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorCrearSala;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mediador.MediadorPantallas;
-import projects.conexion.Conexion;
+import observador.ObservadorConexion;
 
 /**
  *
  * @author
  */
-public class LogicaDomino {
+public class LogicaDomino implements ObservadorConexion {
 
     private Partida partida;
-
     private Sala sala;
-
+    private Jugador jugador;
     private Conexion conexion;
 
+    /**
+     *
+     */
     public void inicio() {
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
             conexion = new Conexion();
+            conexion.agregarObservador(this);
             Thread hilo = new Thread(conexion);
             hilo.start();
         };
@@ -45,12 +54,16 @@ public class LogicaDomino {
             unirASala();
         };
 
-        MediadorPantallas.getInstance().mostrarMenuPrincipal(observadorCrearSala, observadorUnirASala);
+        ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles = () -> {
+            obtenerSalasDisponibles();
+        };
+
+        MediadorPantallas.getInstance().mostrarMenuPrincipal(observadorCrearSala, observadorUnirASala, observadorSalasDisponibles);
     }
 
     public void crearSala() {
         ObservadorCrearSala crearSala
-                = (String nombre, String contrasenha, int numeroJugadores) -> {
+                = (var nombre, var contrasenha, var numeroJugadores) -> {
                     sala = new Sala();
                     sala.setNombre(nombre);
                     sala.setContrasena(contrasenha);
@@ -66,10 +79,31 @@ public class LogicaDomino {
         MediadorPantallas.getInstance().mostrarMenuPantallaCrearSala(crearSala);
     }
 
+    public void obtenerSalasDisponibles() {
+        conexion = new Conexion();
+        conexion.agregarObservador(this);
+        try {
+            conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
+        } catch (IOException ex) {
+            Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // obtener salas desde observador a conexión
+        // Poner lo siguiente dentro del update en el caso que reciba el evento con las salas disponibles
+        List<SalaDTO> salas = new ArrayList<>();
+        // Agregar datos de la respuesta
+        MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas);
+    }
+
+    /**
+     *
+     */
     public void unirASala() {
         // MediadorPantallas.getInstance().mostrarPantallaUnirASala(observador);
     }
 
+    /**
+     *
+     */
     public void inicializarJuego() {
 
         Jugador anfitrion = new Jugador();
@@ -168,6 +202,12 @@ public class LogicaDomino {
         });
     }
 
+    /**
+     *
+     * @param jugador
+     * @param ficha
+     * @throws IOException
+     */
     public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
         Tablero tablero = partida.getTablero();
 
@@ -181,6 +221,12 @@ public class LogicaDomino {
         conexion.enviarEvento(crearEvento(jugador, ficha));
     }
 
+    /**
+     *
+     * @param jugador
+     * @param ficha
+     * @return
+     */
     private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
         HashMap<String, Object> mapa = new HashMap<>();
 
@@ -190,10 +236,32 @@ public class LogicaDomino {
         return mapa;
     }
 
+    /**
+     *
+     * @param sala
+     * @return
+     */
     private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
         HashMap<String, Object> mapa = new HashMap<>();
 
+        mapa.put("nombre_evento", "CrearSalaSolicitud");
+        sala.setJugadores(Arrays.asList(this.jugador));
         mapa.put("sala", sala);
+
         return mapa;
+    }
+
+    private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "SolicitarSalasDisponibles");
+
+        return mapa;
+    }
+
+    @Override
+    public void actualizar(Map evento) {
+        // TODO: Detectar que evento es y actuar en consecuencia...
+        System.out.println(evento.toString());
     }
 }

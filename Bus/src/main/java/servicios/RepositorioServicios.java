@@ -3,15 +3,12 @@
  */
 package servicios;
 
-import projects.bus.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-import servicio.ContratoServicio;
 
 /**
- *
+ * Actua como el repositorio de servicios que se utiliza en las arquitecturas SOA por parte
+ * del BUS
  * @author neri
  */
 public class RepositorioServicios {
@@ -81,7 +78,7 @@ public class RepositorioServicios {
      */
     public List<Servicio> obtenerResponsablesEvento(String nombreEvento) {
         return this.servicios.stream()
-                .filter(s -> s.getContrato().getEventosEscuchables().contains(nombreEvento)).collect(Collectors.toList());
+                .filter(s -> s.getContrato().getEventosEscuchables().contains(nombreEvento)).toList();
     }
     
     /**

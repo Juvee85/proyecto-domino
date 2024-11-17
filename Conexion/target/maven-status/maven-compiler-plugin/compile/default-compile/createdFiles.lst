@@ -1,1 +1,3 @@
-projects\conexion\Conexion.class
+observador\ObservableConexion.class
+conexion\Conexion.class
+observador\ObservadorConexion.class

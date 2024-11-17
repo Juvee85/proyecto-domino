@@ -4,6 +4,7 @@
 package inicio;
 
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
+import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,12 @@ public class InicioModelo {
 
     List<ObservadorAbrirPantallaCrearSala> observadoresCrearSala;
 
+    List<ObservadorAbrirPantallaSalasDisponibles> observadoresAbrirPantallaSalasDisponibles;
+
     public InicioModelo() {
         observadoresUnir = new ArrayList<>();
         observadoresCrearSala = new ArrayList<>();
+        observadoresAbrirPantallaSalasDisponibles = new ArrayList<>();
     }
 
     public void anhadirObservadorUnirASala(ObservadorAbrirPantallaUnirASala observador) {
@@ -31,6 +35,10 @@ public class InicioModelo {
         observadoresCrearSala.add(observador);
     }
 
+    public void anhadirObservadorSalasDisponibles(ObservadorAbrirPantallaSalasDisponibles observador) {
+        observadoresAbrirPantallaSalasDisponibles.add(observador);
+    }
+
     public void notificarUnirASala() {
         for (ObservadorAbrirPantallaUnirASala observador : observadoresUnir) {
             observador.actualizar();
@@ -39,6 +47,12 @@ public class InicioModelo {
 
     public void notificarCrearSala() {
         for (ObservadorAbrirPantallaCrearSala observador : observadoresCrearSala) {
+            observador.actualizar();
+        }
+    }
+
+    public void notificarSalasDisponibles() {
+        for (ObservadorAbrirPantallaSalasDisponibles observador : observadoresAbrirPantallaSalasDisponibles) {
             observador.actualizar();
         }
     }

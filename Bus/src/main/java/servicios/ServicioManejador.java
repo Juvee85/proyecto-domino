@@ -72,7 +72,7 @@ public class ServicioManejador extends Thread {
         while (true) {
             try {
                 
-                System.out.println("ENTRO");
+                System.out.println("### ENTRO");
                 
                 String mensajeTexto = this.reader.readUTF();
                 
@@ -86,26 +86,31 @@ public class ServicioManejador extends Thread {
                 
                 System.out.println(mensaje.get("nombre_evento"));
                 
-                //System.out.println(nombreEvento);
-                
-                /**
-                 * 
-                 * TODO: NO SE OBTIENEN LOS RESPONSABLES DEL EVENTO DESDE EL REPOSITORIO
-                 */
-                
                 // redirije el evento del servicio recibido a los demas responsables de dicho evento
                 List<Servicio> responsables = repositorioServicios.obtenerResponsablesEvento(nombreEvento);
+                
                 System.out.println(responsables.size());
+                System.out.println(mensajeTexto);
+                
                 for (Servicio responsable: responsables) {
-                    System.out.println(responsable.getContrato().getNombreServicio());
+                    System.out.println("Servicio responsable encontrado: %s...".formatted(responsable.getContrato().getNombreServicio()));
+                    
+                    // se accede al buffer de entrada del socket del responsable
                     respuestaResponsable = new DataOutputStream(responsable.getSocket().getOutputStream());
-                    System.out.println("[MENSAJE RECIBIDO: %s]".formatted(mensajeTexto));
+                    
+                    System.out.println("\t[MENSAJE RECIBIDO: %s]".formatted(mensajeTexto));
+                    
+                    // se envia el mensaje al responsable
                     respuestaResponsable.writeUTF(mensajeTexto);
                     respuestaResponsable.flush();
-                    System.out.println("[REDIRIGIENDO MENSAJE A: %s".formatted(responsable.getContrato().getNombreServicio()));
+                    
+                    System.out.println("\t[REDIRIGIENDO MENSAJE A: %s".formatted(responsable.getContrato().getNombreServicio()));
                 }
              
             } catch (IOException ex) {
+                /*
+                TODO: MANEJAR LOS ERRORES DE LA MEJOR MANERA PARA QUE NO SE CAIGA EL BUS
+                */
                 System.out.println("[ERROR] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
                 return;
             } catch (IllegalArgumentException ex) {

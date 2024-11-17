@@ -20,10 +20,12 @@ public class InicioControlador {
         
         vista.anhadirCrearSalaObservador((ActionEvent e) -> {
             modelo.notificarCrearSala();
+            vista.setVisible(false);
         });
         
         vista.anhadirUnirSalaObservador((ActionEvent e) -> {
-            modelo.notificarUnirASala();
+            modelo.notificarSalasDisponibles();
+            vista.setVisible(false);
         });
     }
 
