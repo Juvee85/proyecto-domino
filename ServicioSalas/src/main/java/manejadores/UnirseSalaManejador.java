@@ -90,9 +90,15 @@ public class UnirseSalaManejador extends ManejadorEvento {
             // Extraer datos del evento
             String nombreSala = jsonNode.get("nombre_sala").asText();
             String idJugador = jsonNode.get("id_jugador").asText();
+            Sala salaObjetivo = repositorio.getSalas().stream()
+                    .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
+                    .findFirst()
+                    .orElseThrow(() -> new Exception("La sala especificada no existe"));
 
+            
             // Procesar la solicitud
             UnirseSalaRespuestaEvento evento = this.unirseSala(nombreSala, idJugador);
+            evento.setJugadores(salaObjetivo.getJugadores());
             String eventoJSON = objectMapper.writeValueAsString(evento);
 
             System.out.println("[*] Jugador %s se unió a la sala %s".formatted(idJugador, nombreSala));

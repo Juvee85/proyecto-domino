@@ -98,20 +98,16 @@ public class SalasDisponibles extends javax.swing.JFrame {
         this.table.repaint();
     }
 
+    public void notificarObservador() {
+        observador.actualizar();
+    }
+
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getContrasenha() {
         return contrasenha;
-    }
-
-    public void setContrasenha(String contrasenha) {
-        this.contrasenha = contrasenha;
     }
 
     /**
@@ -273,7 +269,10 @@ public class SalasDisponibles extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(null, panelInformacionJugador,
                 "Escriba los datos", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
+            nombre = nombreTxt.getText();
+            contrasenha = contrasenhaTxt.getText();
 
+            notificarObservador();
         }
     }
 }

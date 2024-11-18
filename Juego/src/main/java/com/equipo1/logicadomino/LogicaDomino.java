@@ -308,11 +308,24 @@ public class LogicaDomino implements ObservadorConexion {
 
                 desplegarSalasDisponibles(salasDTO);
             }
+            break;
+            case "UnirseSalaRespuesta": {
+                List<Map<String, Object>> mapasJugadores = (List<Map<String, Object>>) evento.get("jugadores");
+                List<Jugador> jugadoresEnSala = new ArrayList<>();
 
+                for (Map<String, Object> mapaJugador : mapasJugadores) {
+                    Jugador jugadorEnSala = new Jugador();
+                    jugadorEnSala.setNombre((String) mapaJugador.get("nombre"));
+                    jugadoresEnSala.add(jugador);
+                }
+
+                MediadorPantallas.getInstance().mostrarSalaEspera(new JugadorConverter().createFromEntities(jugadoresEnSala));
+            }
+            break;
         }
 
     }
-    
+
     public void desplegarSalasDisponibles(List<SalaDTO> salas) {
         ObservadorUnirASala observadorUnirASala = (nombreJugador, contrasenha, salaDTO) -> {
             Sala salaUnir = new SalaConverter().convertFromDTO(salaDTO);
@@ -322,14 +335,16 @@ public class LogicaDomino implements ObservadorConexion {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
             }
         };
-        
+
         MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas, observadorUnirASala);
     }
-    
+
     private Map<String, Object> crearEventoSolicitarUnirASala(String nombreJugador, String contrasenha, Sala salaUnir) {
         HashMap<String, Object> mapa = new HashMap<>();
 
-        mapa.put("nombre_evento", "ObtenerSalasSolicitud");
+        mapa.put("nombre_evento", "UnirseSalaSolicitud");
+        mapa.put("id_jugador", nombreJugador);
+        mapa.put("nombre_sala", salaUnir.getNombre());
 
         return mapa;
     }

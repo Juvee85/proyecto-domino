@@ -24,7 +24,6 @@ public class SalasDisponiblesControlador {
 
         vista.anhadirObservadorUnir((ActionEvent e) -> {
             modelo.setSalaUnir(vista.obtenerSalaSeleccionada());
-
             vista.desplegarDialogoUnirSala();
         });
     }
