@@ -16,6 +16,7 @@ import entidades.Tablero;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
+import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class LogicaDomino implements ObservadorConexion {
                     jugador.setAvatar("");
 
                     System.out.println("### crearSala: %s".formatted(sala));
-                    
+
                     try {
                         conexion.enviarEvento(crearEventoSolicitarCrearSala(sala));
                     } catch (IOException ex) {
@@ -293,7 +294,6 @@ public class LogicaDomino implements ObservadorConexion {
                 }
 
 //                List<Sala> salasEncontradas = (List<Sala>) evento.get("salas");
-
                 if (salasEncontradas.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "No se encontraron salas abiertas en el servidor... Intentelo mas tarde.", "Unirse a Salas", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -306,10 +306,31 @@ public class LogicaDomino implements ObservadorConexion {
                 List<SalaDTO> salasDTO = new ArrayList<>();
                 this.salasDisponibles.forEach(sala -> salasDTO.add(convertidorSala.convertFromEntity(sala)));
 
-                MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salasDTO);
+                desplegarSalasDisponibles(salasDTO);
             }
 
         }
 
+    }
+    
+    public void desplegarSalasDisponibles(List<SalaDTO> salas) {
+        ObservadorUnirASala observadorUnirASala = (nombreJugador, contrasenha, salaDTO) -> {
+            Sala salaUnir = new SalaConverter().convertFromDTO(salaDTO);
+            try {
+                conexion.enviarEvento(crearEventoSolicitarUnirASala(nombreJugador, contrasenha, salaUnir));
+            } catch (IOException ex) {
+                Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        };
+        
+        MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas, observadorUnirASala);
+    }
+    
+    private Map<String, Object> crearEventoSolicitarUnirASala(String nombreJugador, String contrasenha, Sala salaUnir) {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "ObtenerSalasSolicitud");
+
+        return mapa;
     }
 }
