@@ -1,146 +1,98 @@
-package repositorio;
+package manejadores;
 
-import entidades.Jugador;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entidades.Sala;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import eventos.UnirseSalaRespuestaEvento;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import repositorio.RepositorioSalas;
 import java.util.List;
-import repositorio.excepciones.RepositorioSalasException;
 
 /**
- * Aloja las salas de partidas de domino activas del juego
- *
- * @author Saul Neri
+ * Manejador que procesa las solicitudes de unirse a una sala de juego
+ * @author Sebastian Murrieta Verduzco - 233463
  */
-public class RepositorioSalas {
-
-    private static RepositorioSalas instance;
-
-    private List<Sala> salas;
-
+public class UnirseSalaManejador extends ManejadorEvento {
+    private final static RepositorioSalas repositorio = RepositorioSalas.getInstance();
+    
     /**
-     * Constructor privado oculto
+     * Crea un nuevo manejador para procesar solicitudes de unirse a una sala
+     * @param clienteSck Socket del cliente
+     * @param eventoSerializado Evento serializado en formato JSON
      */
-    private RepositorioSalas() {
-        this.salas = new ArrayList<>();
-
-        Sala s = new Sala();
-        s.setNombre("RCS Ack");
-        s.setMaxJugadores(4);
-        s.setContrasena("12345");
-        s.setJugadoresEnSala(1);
-        s.setJugadores(Arrays.asList());
-
-        Sala s2 = new Sala();
-        s2.setNombre("Domino Pro");
-        s2.setMaxJugadores(3);
-        s2.setContrasena(null);
-        s2.setJugadoresEnSala(1);
-        s2.setJugadores(Collections.emptyList());
-        salas.add(s2);
-
-        Sala s3 = new Sala();
-        s3.setNombre("Quick Match");
-        s3.setMaxJugadores(2);
-        s3.setContrasena("pass2");
-        s3.setJugadoresEnSala(2);
-        s3.setJugadores(Collections.emptyList());
-        salas.add(s3);
-
-        Sala s4 = new Sala();
-        s4.setNombre("Classic Domino");
-        s4.setMaxJugadores(4);
-        s4.setContrasena(null);
-        s4.setJugadoresEnSala(1);
-        s4.setJugadores(Collections.emptyList());
-        salas.add(s4);
-        
-        Sala s5 = new Sala();
-        s5.setNombre("Domino Challenge");
-        s5.setMaxJugadores(2);
-        s5.setContrasena("challenger");
-        s5.setJugadoresEnSala(1);
-        s5.setJugadores(Collections.emptyList());
-        salas.add(s5);
-
-// Añade las salas a tu lógica de negocio o lista global
-        this.salas.addAll(Arrays.asList(s, s2, s3, s4, s5));
+    public UnirseSalaManejador(Socket clienteSck, String eventoSerializado) {
+        this.setName(String.format("Thread [%s]", this.getClass().getSimpleName()));
+        this.eventoSerializado = eventoSerializado;
+        this.clienteSck = clienteSck;
     }
-
+    
     /**
-     * Obtiene la instancia del repositorio
-     *
-     * @return
+     * Procesa la solicitud de unirse a una sala específica
+     * @param nombreSala Nombre de la sala a la que se quiere unir
+     * @param idJugador ID del jugador que quiere unirse
+     * @return true si se unió exitosamente, false en caso contrario
      */
-    public static RepositorioSalas getInstance() {
-        if (instance == null) {
-            instance = new RepositorioSalas();
+    private boolean unirseSala(String nombreSala, String idJugador) {
+        List<Sala> salas = repositorio.getSalas();
+        Sala salaObjetivo = salas.stream()
+            .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
+            .findFirst()
+            .orElse(null);
+            
+        if (salaObjetivo != null && 
+            salaObjetivo.getJugadoresEnSala() < salaObjetivo.getMaxJugadores()) {
+            
+            // Incrementar el contador de jugadores en la sala
+            salaObjetivo.setJugadoresEnSala(salaObjetivo.getJugadoresEnSala() + 1);
+            
+            // Agregar el jugador a la lista de jugadores si es necesario
+            List<String> jugadores = salaObjetivo.getJugadores();
+            if (!jugadores.contains(idJugador)) {
+                jugadores.add(idJugador);
+            }
+            
+            return true;
         }
-
-        return instance;
+        return false;
     }
-
-    /**
-     * Indica si la partida con la direccion de red dada existe
-     *
-     * @param nombreSala Nombre de la asala a buscar
-     * @return true si existe la partida
-     */
-    public boolean existePartida(String nombreSala) {
-        return this.salas.stream()
-                .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
-                .count() > 0;
-    }
-
-    /**
-     * Obtiene todas las salas activas del juego
-     *
-     * @return Lista de salas
-     */
-    public List<Sala> getSalas() {
-        return this.salas;
-    }
-
-    /**
-     * Agrega una nueva sala al repositorio
-     *
-     * @param sala Sala nueva
-     * @throws repositorio.excepciones.RepositorioSalasException Si no se puede
-     * agregar la sala
-     */
-    public void agregarSala(Sala sala) throws RepositorioSalasException {
-        Sala encontrada = this.salas.stream()
-                .filter(s -> s.getNombre().equals(sala.getNombre()))
-                .findFirst().orElse(null);
-
-        if (encontrada == null) {
-            this.salas.add(sala);
-            return;
+    
+    @Override
+    public void run() {
+        DataOutputStream respuesta = null;
+        try {
+            respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
+            
+            // Extraer datos del evento
+            String nombreSala = jsonNode.get("nombre_sala").asText();
+            String idJugador = jsonNode.get("id_jugador").asText();
+            
+            // Procesar la solicitud
+            boolean exitoso = this.unirseSala(nombreSala, idJugador);
+            
+            // Crear y enviar respuesta
+            UnirseSalaRespuestaEvento evento = new UnirseSalaRespuestaEvento(
+                exitoso,
+                exitoso ? "Te has unido exitosamente a la sala " + nombreSala : 
+                         "No se pudo unir a la sala " + nombreSala + ". La sala puede estar llena o no existir.",
+                nombreSala,
+                idJugador
+            );
+            
+            String eventoJSON = objectMapper.writeValueAsString(evento);
+            
+            respuesta.writeUTF(eventoJSON);
+            respuesta.flush();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(UnirseSalaManejador.class.getName())
+                  .log(Level.SEVERE, "Error al procesar solicitud de unirse a sala", ex);
         }
-
-        throw new RepositorioSalasException("No se pudo crear la sala debido a un error, es probable que tengas una sala abierta...");
     }
-
-    /**
-     * Elimina la sala del repositorio de salas
-     *
-     * @return Sala si se logro eliminar
-     * @throws repositorio.excepciones.RepositorioSalasException si no se puede
-     * eliminar la sala del sistema
-     */
-    public Sala eliminarSala(String nombreSala) throws RepositorioSalasException {
-        Sala encontrada = this.salas.stream()
-                .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
-                .findFirst().orElse(null);
-
-        if (encontrada == null) {
-            throw new RepositorioSalasException("La sala que se intenta eliminar no existe...");
-        }
-
-        this.salas.remove(encontrada);
-
-        return encontrada;
-    }
-
 }
