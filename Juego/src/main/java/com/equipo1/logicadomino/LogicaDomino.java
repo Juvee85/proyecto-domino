@@ -310,15 +310,24 @@ public class LogicaDomino implements ObservadorConexion {
             }
             break;
             case "UnirseSalaRespuesta": {
-                List<Map<String, Object>> mapasJugadores = (List<Map<String, Object>>) evento.get("jugadores");
+                Map<String, Object> mapaSala = (Map<String, Object>) evento.get("sala");
+                Sala salaUnir = new Sala();
                 List<Jugador> jugadoresEnSala = new ArrayList<>();
 
+                salaUnir.setJugadoresEnSala((int) mapaSala.get("jugadores_en_sala"));
+                salaUnir.setNombre((String) mapaSala.get("nombre_sala"));
+                salaUnir.setMaxJugadores((int) mapaSala.get("max_jugadores"));
+
+                List<Map<String, Object>> mapasJugadores = (List<Map<String, Object>>) mapaSala.get("jugadores");
                 for (Map<String, Object> mapaJugador : mapasJugadores) {
                     Jugador jugadorEnSala = new Jugador();
                     jugadorEnSala.setNombre((String) mapaJugador.get("nombre"));
                     jugadoresEnSala.add(jugador);
                 }
 
+                salaUnir.setJugadores(jugadoresEnSala);
+
+                sala = salaUnir;
                 MediadorPantallas.getInstance().mostrarSalaEspera(new JugadorConverter().createFromEntities(jugadoresEnSala));
             }
             break;

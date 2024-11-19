@@ -1,8 +1,7 @@
 package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import entidades.Jugador;
-import java.util.List;
+import entidades.Sala;
 
 /**
  * Evento de respuesta para las solicitudes de unirse a una sala
@@ -13,16 +12,17 @@ public class UnirseSalaRespuestaEvento {
     private final String mensaje;
     @JsonProperty("nombre_evento")
     private String nombre;
-    private List<Jugador> jugadores;
+    private Sala sala;
     private final String nombreSala;
     private final String idJugador;
 
-    public UnirseSalaRespuestaEvento(boolean exitoso, String mensaje, String nombreSala, String idJugador) {
+    public UnirseSalaRespuestaEvento(boolean exitoso, String mensaje, String nombreSala, String idJugador, Sala sala) {
         this.exitoso = exitoso;
         this.mensaje = mensaje;
         this.nombreSala = nombreSala;
         this.idJugador = idJugador;
         this.nombre = "UnirseSalaRespuesta";
+        this.sala = sala;
     }
 
     // Getters necesarios para la serialización JSON
@@ -46,12 +46,8 @@ public class UnirseSalaRespuestaEvento {
         return nombre;
     }
 
-    public List<Jugador> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(List<Jugador> jugadores) {
-        this.jugadores = jugadores;
+    public Sala getSala() {
+        return sala;
     }
 
 }
