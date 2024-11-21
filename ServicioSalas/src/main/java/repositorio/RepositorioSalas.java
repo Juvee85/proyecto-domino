@@ -25,19 +25,24 @@ public class RepositorioSalas {
     private RepositorioSalas() {
         this.salas = new ArrayList<>();
 
+        List<Jugador> jugadores = new ArrayList<>();
+
         Sala s = new Sala();
+        Jugador jugador = new Jugador();
+        jugadores.add(jugador);
+        jugador.setNombre("Jugador 1");
         s.setNombre("RCS Ack");
         s.setMaxJugadores(4);
         s.setContrasena("12345");
         s.setJugadoresEnSala(1);
-        s.setJugadores(Arrays.asList());
+        s.setJugadores(Collections.emptyList());
 
         Sala s2 = new Sala();
         s2.setNombre("Domino Pro");
         s2.setMaxJugadores(3);
         s2.setContrasena(null);
         s2.setJugadoresEnSala(1);
-        s2.setJugadores(Collections.emptyList());
+        s2.setJugadores(jugadores);
         salas.add(s2);
 
         Sala s3 = new Sala();
@@ -55,7 +60,7 @@ public class RepositorioSalas {
         s4.setJugadoresEnSala(1);
         s4.setJugadores(Collections.emptyList());
         salas.add(s4);
-        
+
         Sala s5 = new Sala();
         s5.setNombre("Domino Challenge");
         s5.setMaxJugadores(2);

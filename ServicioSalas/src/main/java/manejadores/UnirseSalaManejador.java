@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import entidades.Jugador;
 import entidades.Sala;
+import eventos.JugadorUnidoASalaEvento;
 import eventos.SalaErrorEvento;
 import eventos.UnirseSalaRespuestaEvento;
 import java.io.DataOutputStream;
@@ -60,6 +62,10 @@ public class UnirseSalaManejador extends ManejadorEvento {
         // Incrementar el contador de jugadores en la sala
         salaObjetivo.setJugadoresEnSala(salaObjetivo.getJugadoresEnSala() + 1);
 
+        Jugador jugador = new Jugador();
+        jugador.setNombre(idJugador);
+        salaObjetivo.getJugadores().add(jugador);
+
         return new UnirseSalaRespuestaEvento(true, "Te has unido exitosamente a la sala " + nombreSala, nombreSala, idJugador, salaObjetivo);
     }
 
@@ -80,6 +86,17 @@ public class UnirseSalaManejador extends ManejadorEvento {
         }
     }
 
+    private JugadorUnidoASalaEvento obtenerEventoJugadorUnido(String nombreSala, String idJugador) throws Exception {
+        JugadorUnidoASalaEvento evento = new JugadorUnidoASalaEvento();
+        evento.setNombreSala(nombreSala);
+
+        Jugador jugador = new Jugador();
+        jugador.setNombre(idJugador);
+        evento.setJugador(jugador);
+
+        return evento;
+    }
+
     @Override
     public void run() {
         try {
@@ -90,7 +107,7 @@ public class UnirseSalaManejador extends ManejadorEvento {
             // Extraer datos del evento
             String nombreSala = jsonNode.get("nombre_sala").asText();
             String idJugador = jsonNode.get("id_jugador").asText();
-            
+
             // Procesar la solicitud
             UnirseSalaRespuestaEvento evento = this.unirseSala(nombreSala, idJugador);
             String eventoJSON = objectMapper.writeValueAsString(evento);
@@ -100,6 +117,12 @@ public class UnirseSalaManejador extends ManejadorEvento {
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
 
+            //Se manda la notificación de jugador unido a los demás jugadores en partida
+            JugadorUnidoASalaEvento eventoNotificacion = this.obtenerEventoJugadorUnido(nombreSala, idJugador);
+            eventoJSON = objectMapper.writeValueAsString(eventoNotificacion);
+
+            respuesta.writeUTF(eventoJSON);
+            respuesta.flush();
         } catch (Exception ex) {
             Logger.getLogger(UnirseSalaManejador.class.getName())
                     .log(Level.SEVERE, "Error al procesar solicitud de unirse a sala", ex);
