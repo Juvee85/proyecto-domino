@@ -1,5 +1,6 @@
 package com.equipo1.logicadomino;
 
+import DTOS.JugadorDTO;
 import DTOS.PartidaDTO;
 import DTOS.SalaDTO;
 import com.equipo1.convertidores.FichaConverter;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import mediador.MediadorPantallas;
 import observador.ObservadorConexion;
@@ -335,20 +337,14 @@ public class LogicaDomino implements ObservadorConexion {
             }
             break;
             case "JugadorUnidoASala": {
-                /*
-  "nombreSala" : " sjadkskdk",
-  "jugador" : {
-    "nombre" : "pedro11",
-    "avatar" : null,
-    "fichas" : [ ],
-    "es_anfitrion" : false,
-    "numero_jugador" : 0
-  },
-  "nombre_evento" : "JugadorUnidoASala"
-}
+                
+                /**
+                 * Cuando un nuevo jugador se une a la sala...
                  */
+                
                 String nombreSala = (String) evento.get("nombreSala");
 
+                // si no hay sala es porque no se esta en esta parte del flujo del programa...
                 if (sala != null) {
                     if (!sala.getNombre().equals(nombreSala)) {
                         return;
@@ -357,23 +353,41 @@ public class LogicaDomino implements ObservadorConexion {
                     return;
                 }
 
-                Jugador jugador = new Jugador();
+                final Jugador jugadorNuevo = new Jugador();
 
                 if (evento.get("jugador") instanceof LinkedHashMap) {
                     LinkedHashMap<String, Object> jugadorMap = (LinkedHashMap<String, Object>) evento.get("jugador");
-                    jugador.setNombre((String) jugadorMap.get("nombre"));
-                    jugador.setAvatar((String) jugadorMap.get("avatar"));
-                    jugador.setNumero(0);
+                    jugadorNuevo.setNombre((String) jugadorMap.get("nombre"));
+                    jugadorNuevo.setAvatar((String) jugadorMap.get("avatar"));
+                    jugadorNuevo.setNumero(0);
                     // Configura los demás campos de la clase Jugador...
-                    MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
-                } else {
+                } /*else {
                     // Si no es LinkedHashMap, asume que ya es un Jugador
-                    jugador = (Jugador) evento.get("jugador");
-                    MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
+                    jugadorNuevo = (Jugador) evento.get("jugador");
+                    MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugadorNuevo));
+                }*/
+                
+                // verificar si el jugador ya esta en la sala
+                boolean jugadorRegistrado = this.sala.getJugadores()
+                        .stream()
+                        .filter(j -> j.getNombre().equals(jugadorNuevo.getNombre()))
+                        .findFirst()
+                        .orElse(null) != null;
+                
+                if (!jugadorRegistrado) {
+                    this.sala.getJugadores().add(jugador);
                 }
-     
-                MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
-
+                
+                JugadorConverter convertidor = new JugadorConverter();
+                
+                // convierte a todos los jugadores a DTO
+                List<JugadorDTO> nuevaListaJugadores = this.sala.getJugadores()
+                        .stream()
+                        .map(j -> convertidor.convertFromEntity(j))
+                        .collect(Collectors.toList());
+                
+                // actualiza el frame...
+                MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             }
             break;
         }

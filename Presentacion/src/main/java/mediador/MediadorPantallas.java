@@ -110,8 +110,14 @@ public class MediadorPantallas {
         modelo.notificar();
     }
 
-    public void actualizarPantallaSalaEspera(JugadorDTO jugador) {
-        modeloSalaEspera.getJugadores().add(jugador);
+    /**
+     * Actualiza la tabla de dos maneras, en caso de que un jugador haya abandonado la partida,
+     * la lista contendra a todos menos a ese jugador. En caso de que un nuevo jugador se haya unido,
+     * se mostrara en la tabla.
+     * @param nuevosjugadores Lista de los jugadores actuales en la sala
+     */
+    public void actualizarPantallaSalaEspera(List<JugadorDTO> nuevosjugadores) {
+        modeloSalaEspera.setJugadores(nuevosjugadores);
         modeloSalaEspera.notificarObservadores();
     }
 
