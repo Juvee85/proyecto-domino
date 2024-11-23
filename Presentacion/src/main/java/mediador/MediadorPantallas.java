@@ -37,6 +37,7 @@ import tablero.TableroModelo;
 public class MediadorPantallas {
 
     private TableroModelo modelo;
+    private SalaEsperaModelo modeloSalaEspera;
     private static MediadorPantallas instance;
     private ObservadorAnhadirFicha observador;
 
@@ -83,6 +84,7 @@ public class MediadorPantallas {
         modelo.setJugadores(jugadores);
         //System.out.println("### modelo: %s".formatted(modelo));
         SalaEspera vista = new SalaEspera(modelo);
+        modelo.anhadirObservador(vista);
         SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
         vista.setVisible(true);
     }
@@ -105,6 +107,11 @@ public class MediadorPantallas {
         modelo.setJugadores(partida.getJugadores());
         modelo.setFichaSeleccionada(modelo.getJugadores().get(0).getFichas().get(0));
         modelo.notificar();
+    }
+
+    public void actualizarPantallaSalaEspera(JugadorDTO jugador) {
+        modeloSalaEspera.getJugadores().add(jugador);
+        modeloSalaEspera.notificarObservadores();
     }
 
     public void notificarObservadores(JugadorDTO jugador, FichaDTO ficha) {

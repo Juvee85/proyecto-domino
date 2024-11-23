@@ -334,7 +334,7 @@ public class LogicaDomino implements ObservadorConexion {
             }
             break;
             case "JugadorUnidoASala": {
-                                /*
+                /*
   "nombreSala" : " sjadkskdk",
   "jugador" : {
     "nombre" : "pedro11",
@@ -345,7 +345,7 @@ public class LogicaDomino implements ObservadorConexion {
   },
   "nombre_evento" : "JugadorUnidoASala"
 }
-*/
+                 */
                 String nombreSala = (String) evento.get("nombreSala");
 
                 if (sala != null) {
@@ -355,8 +355,8 @@ public class LogicaDomino implements ObservadorConexion {
                 }
 
                 Jugador jugador = (Jugador) evento.get("jugador");
-                
-                
+
+                MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
 
             }
             break;

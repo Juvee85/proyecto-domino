@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Sebastian Murrieta Verduzco - 233463
  */
-public class SalaEspera extends javax.swing.JFrame implements Observable {
+public class SalaEspera extends javax.swing.JFrame implements Observable, Observador {
 
     private SalaEsperaModelo modelo;
     private List<Observador> observadores;
@@ -222,5 +222,10 @@ public class SalaEspera extends javax.swing.JFrame implements Observable {
     @Override
     public void removerObservador(Observador observador) {
         this.observadores.remove(observador);
+    }
+
+    @Override
+    public void actualizar() {
+        mostrarTabla();
     }
 }
