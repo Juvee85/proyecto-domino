@@ -310,7 +310,8 @@ public class LogicaDomino implements ObservadorConexion {
             }
             break;
             case "UnirseSalaRespuesta": {
-                System.out.println("### UnisrseSalaRespuesta CACHADO");
+                System.out.println("### UnirseSalaRespuesta CACHADO");
+
                 Map<String, Object> mapaSala = (Map<String, Object>) evento.get("sala");
                 Sala salaUnir = new Sala();
                 List<Jugador> jugadoresEnSala = new ArrayList<>();
@@ -330,6 +331,33 @@ public class LogicaDomino implements ObservadorConexion {
 
                 sala = salaUnir;
                 MediadorPantallas.getInstance().mostrarSalaEspera(new JugadorConverter().createFromEntities(jugadoresEnSala));
+            }
+            break;
+            case "JugadorUnidoASala": {
+                                /*
+  "nombreSala" : " sjadkskdk",
+  "jugador" : {
+    "nombre" : "pedro11",
+    "avatar" : null,
+    "fichas" : [ ],
+    "es_anfitrion" : false,
+    "numero_jugador" : 0
+  },
+  "nombre_evento" : "JugadorUnidoASala"
+}
+*/
+                String nombreSala = (String) evento.get("nombreSala");
+
+                if (sala != null) {
+                    if (!sala.getNombre().equals(nombreSala)) {
+                        return;
+                    }
+                }
+
+                Jugador jugador = (Jugador) evento.get("jugador");
+                
+                
+
             }
             break;
         }
