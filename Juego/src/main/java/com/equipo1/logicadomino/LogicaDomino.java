@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -352,10 +353,25 @@ public class LogicaDomino implements ObservadorConexion {
                     if (!sala.getNombre().equals(nombreSala)) {
                         return;
                     }
+                } else {
+                    return;
                 }
 
-                Jugador jugador = (Jugador) evento.get("jugador");
+                Jugador jugador = new Jugador();
 
+                if (evento.get("jugador") instanceof LinkedHashMap) {
+                    LinkedHashMap<String, Object> jugadorMap = (LinkedHashMap<String, Object>) evento.get("jugador");
+                    jugador.setNombre((String) jugadorMap.get("nombre"));
+                    jugador.setAvatar((String) jugadorMap.get("avatar"));
+                    jugador.setNumero(0);
+                    // Configura los demás campos de la clase Jugador...
+                    MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
+                } else {
+                    // Si no es LinkedHashMap, asume que ya es un Jugador
+                    jugador = (Jugador) evento.get("jugador");
+                    MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
+                }
+     
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugador));
 
             }

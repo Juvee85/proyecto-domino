@@ -85,6 +85,7 @@ public class MediadorPantallas {
         //System.out.println("### modelo: %s".formatted(modelo));
         SalaEspera vista = new SalaEspera(modelo);
         modelo.anhadirObservador(vista);
+        this.modeloSalaEspera = modelo;
         SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
         vista.setVisible(true);
     }
