@@ -121,6 +121,8 @@ public class UnirseSalaManejador extends ManejadorEvento {
             JugadorUnidoASalaEvento eventoNotificacion = this.obtenerEventoJugadorUnido(nombreSala, idJugador);
             eventoJSON = objectMapper.writeValueAsString(eventoNotificacion);
 
+            System.out.println("[*] Se envio notificacion a los jugadores en sala");
+            
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
         } catch (Exception ex) {

@@ -310,6 +310,7 @@ public class LogicaDomino implements ObservadorConexion {
             }
             break;
             case "UnirseSalaRespuesta": {
+                System.out.println("### UnisrseSalaRespuesta CACHADO");
                 Map<String, Object> mapaSala = (Map<String, Object>) evento.get("sala");
                 Sala salaUnir = new Sala();
                 List<Jugador> jugadoresEnSala = new ArrayList<>();
@@ -322,7 +323,7 @@ public class LogicaDomino implements ObservadorConexion {
                 for (Map<String, Object> mapaJugador : mapasJugadores) {
                     Jugador jugadorEnSala = new Jugador();
                     jugadorEnSala.setNombre((String) mapaJugador.get("nombre"));
-                    jugadoresEnSala.add(jugador);
+                    jugadoresEnSala.add(jugadorEnSala);
                 }
 
                 salaUnir.setJugadores(jugadoresEnSala);
