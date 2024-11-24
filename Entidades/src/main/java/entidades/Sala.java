@@ -149,6 +149,7 @@ public class Sala implements Serializable {
      * @return the jugadoresEnSala
      */
     public int getJugadoresEnSala() {
+        this.jugadoresEnSala = (this.jugadores != null) ? this.jugadores.size() : 0;
         return jugadoresEnSala;
     }
 

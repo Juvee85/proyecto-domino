@@ -125,6 +125,7 @@ public class RepositorioSalas {
         }
         
         sala.getJugadores().getFirst().esAnfitrion(true);
+        sala.setJugadoresEnSala(sala.getJugadores().size());
 
         throw new RepositorioSalasException("No se pudo crear la sala debido a un error, es probable que tengas una sala abierta...");
     }
