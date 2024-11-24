@@ -18,7 +18,7 @@ public class SalaEsperaModelo {
     private List<JugadorDTO> jugadores;
 
     private List<Observador> observadores;
-    
+
     private List<ObservadorSalirSala> observadoresSalirSala;
 
     public SalaEsperaModelo() {
@@ -37,13 +37,13 @@ public class SalaEsperaModelo {
     public void anhadirObservador(Observador observador) {
         observadores.add(observador);
     }
-    
+
     public void notificarObservadores() {
         for (Observador observador : observadores) {
             observador.actualizar();
         }
     }
-    
+
     public void anhadirObservadorSalirSala(ObservadorSalirSala observador) {
         observadoresSalirSala.add(observador);
     }

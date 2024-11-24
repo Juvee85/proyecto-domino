@@ -8,7 +8,6 @@ import interfacesObservador.Observador;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -159,14 +158,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
 
     private void salirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBtnActionPerformed
         
-        int confirmado = JOptionPane.showConfirmDialog(this, "¿Deseas abandonar la partida?", "Abandonar Sala", JOptionPane.YES_NO_OPTION);
-        if (confirmado == JOptionPane.CANCEL_OPTION) {
-            return;
-        }
         
-        this.modelo.notificarObservadoresSalirSala();
-        
-        dispose();
     }//GEN-LAST:event_salirBtnActionPerformed
 
     private void listoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoBtnActionPerformed
