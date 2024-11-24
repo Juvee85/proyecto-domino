@@ -5,6 +5,7 @@
 package manejadores.fabrica;
 
 import java.net.Socket;
+import manejadores.AbandonarSalaSolicitudManejador;
 import manejadores.CrearSalaSolicitudManejador;
 import manejadores.EliminarSalaSolicitudManejador;
 import manejadores.FabricaManejadorEventoAbstracto;
@@ -47,6 +48,8 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto {
                 return new ObtenerSalasSolicitudManejador(socket, eventoSerializado);
             case "UnirseSalaSolicitud":
                 return new UnirseSalaManejador(socket, eventoSerializado);
+            case "AbandonarSalaSolicitud":
+                return new AbandonarSalaSolicitudManejador(socket, eventoSerializado);
 
         }
 
