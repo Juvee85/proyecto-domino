@@ -89,4 +89,16 @@ public class RepositorioServicios {
     public List<Servicio> obtenerServicios() {
         return this.servicios;
     }
+    
+    /**
+     * Elimina el servicio en el repositorio
+     * @param servicio 
+     */
+    public void eliminarServicio(Servicio servicio) {
+        boolean eliminado = this.servicios.remove(servicio);
+        if (eliminado) {
+            System.out.println("### SE ELIMINO EL SERVICIO");
+            // mostrar excepcion
+        }
+    }
 }

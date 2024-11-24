@@ -2,6 +2,7 @@ package conexion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import filtro.FiltroEventos;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,6 +35,8 @@ public class Conexion extends Thread implements ObservableConexion {
 
     private Map evento;
 
+    private FiltroEventos filtro = FiltroEventos.getInstance();
+    
     public Conexion() {
 
         this.observadores = new ArrayList<>();
@@ -44,7 +47,7 @@ public class Conexion extends Thread implements ObservableConexion {
             writer = new DataOutputStream(s1.getOutputStream());
             mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
-            ContratoServicio contrato = this.getContratoServicio();
+            ContratoServicio contrato = Conexion.getContratoServicio();
 
             contrato.setHost(s1.getInetAddress().getHostAddress());
             contrato.setPuerto(s1.getPort());
@@ -69,7 +72,7 @@ public class Conexion extends Thread implements ObservableConexion {
      *
      * @return
      */
-    public ContratoServicio getContratoServicio() {
+    public static ContratoServicio getContratoServicio() {
         ContratoServicio contrato = new ContratoServicio();
 
         contrato.setNombreServicio("Cliente");
@@ -88,8 +91,8 @@ public class Conexion extends Thread implements ObservableConexion {
     }
 
     /**
-     *
-     * @param evento
+     *Envia el evento dado al ESB
+     * @param evento Evento en formato Map
      * @throws IOException
      */
     public void enviarEvento(Map<String, Object> evento) throws IOException {
@@ -107,8 +110,18 @@ public class Conexion extends Thread implements ObservableConexion {
         try {
             while (true) {
                 Map evento = mapper.readValue(reader.readUTF(), Map.class);
-                this.evento = evento;
-                notificarEvento();
+                
+                String nombreEvento = (String) evento.get("nombre_evento");
+                
+                if (filtro.eventoPermitido(nombreEvento)) { 
+                    this.evento = evento;
+                    notificarEvento();
+                }
+                
+                // DEBUG
+                else {
+                    System.out.println("EVENTO DESCARTADO: %s".formatted(nombreEvento));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

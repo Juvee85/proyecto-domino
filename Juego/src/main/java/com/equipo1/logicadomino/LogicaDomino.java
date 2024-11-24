@@ -14,6 +14,7 @@ import entidades.Partida;
 import entidades.Pozo.Ficha;
 import entidades.Sala;
 import entidades.Tablero;
+import filtro.FiltroEventos;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
@@ -45,6 +46,7 @@ public class LogicaDomino implements ObservadorConexion {
     private Jugador jugador;
     private List<Sala> salasDisponibles;
     private Conexion conexion;
+    private FiltroEventos filtro = FiltroEventos.getInstance();
 
     public LogicaDomino() {
         this.conexion = new Conexion();
@@ -56,6 +58,9 @@ public class LogicaDomino implements ObservadorConexion {
      *
      */
     public void inicio() {
+        
+        filtro.restringirEventosPorEstado(FiltroEventos.Estado.INICIO);
+        
         // TODO: ver si es mejor crear conexion al BUS desde el inicio
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
@@ -73,6 +78,10 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void crearSala() {
+        
+        // TODO: RESTRINGIR FILTRO "INICIO"
+        filtro.restringirEventosPorEstado(FiltroEventos.Estado.CREAR_SALA);
+        
         ObservadorCrearSala crearSala
                 = (SalaDTO salaDTO, String nombreJugador) -> {
                     sala = new SalaConverter().convertFromDTO(salaDTO);
@@ -94,6 +103,10 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void obtenerSalasDisponibles() {
+        
+        // TODO: RESTRINGIR FILTRO SALAS_DISPONIBLES
+        filtro.restringirEventosPorEstado(FiltroEventos.Estado.SALAS_DISPONIBLES);
+        
         try {
             conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
         } catch (IOException ex) {
@@ -231,43 +244,6 @@ public class LogicaDomino implements ObservadorConexion {
         conexion.enviarEvento(crearEvento(jugador, ficha));
     }
 
-    /**
-     *
-     * @param jugador
-     * @param ficha
-     * @return
-     */
-    private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
-        HashMap<String, Object> mapa = new HashMap<>();
-
-        mapa.put("jugador", jugador);
-        mapa.put("ficha", ficha);
-
-        return mapa;
-    }
-
-    /**
-     *
-     * @param sala
-     * @return
-     */
-    private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
-        HashMap<String, Object> mapa = new HashMap<>();
-
-        mapa.put("nombre_evento", "CrearSalaSolicitud");
-        sala.setJugadores(Arrays.asList(this.jugador));
-        mapa.put("sala", sala);
-
-        return mapa;
-    }
-
-    private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
-        HashMap<String, Object> mapa = new HashMap<>();
-
-        mapa.put("nombre_evento", "ObtenerSalasSolicitud");
-
-        return mapa;
-    }
 
     @Override
     public void actualizar(Map evento) {
@@ -343,7 +319,7 @@ public class LogicaDomino implements ObservadorConexion {
                 /**
                  * Cuando un nuevo jugador se une a la sala...
                  */
-                String nombreSala = (String) evento.get("nombreSala");
+                String nombreSala = (String) evento.get("nombre_sala");
 
                 // si no hay sala es porque no se esta en esta parte del flujo del programa...
                 if (sala != null) {
@@ -354,7 +330,7 @@ public class LogicaDomino implements ObservadorConexion {
                     return;
                 }
 
-                final Jugador jugadorNuevo = new Jugador();
+                Jugador jugadorNuevo = new Jugador();
 
                 if (evento.get("jugador") instanceof LinkedHashMap) {
                     LinkedHashMap<String, Object> jugadorMap = (LinkedHashMap<String, Object>) evento.get("jugador");
@@ -363,32 +339,26 @@ public class LogicaDomino implements ObservadorConexion {
                     jugadorNuevo.setNumero(0);
                     // Configura los demás campos de la clase Jugador...
                 }
-                /*else {
-                    // Si no es LinkedHashMap, asume que ya es un Jugador
-                    jugadorNuevo = (Jugador) evento.get("jugador");
-                    MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugadorNuevo));
-                }*/
 
+                String nombreJugador = jugadorNuevo.getNombre();
+                
                 // verificar si el jugador ya esta en la sala
                 boolean jugadorRegistrado = this.sala.getJugadores()
                         .stream()
-                        .filter(j -> j.getNombre().equals(jugadorNuevo.getNombre()))
-                        .findFirst()
-                        .orElse(null) != null;
-
+                        .anyMatch(j -> j.getNombre().equals(nombreJugador));
+                
                 if (!jugadorRegistrado) {
-                    this.sala.getJugadores().add(jugador);
+                    List<Jugador> listaNuevaJugadores = new ArrayList<>(this.sala.getJugadores());
+                    listaNuevaJugadores.add(jugadorNuevo);
+                    this.sala.setJugadores(listaNuevaJugadores);
                 }
-
                 JugadorConverter convertidor = new JugadorConverter();
 
                 // convierte a todos los jugadores a DTO
                 List<JugadorDTO> nuevaListaJugadores = this.sala.getJugadores()
                         .stream()
-                        .map(j -> convertidor.convertFromEntity(j))
+                        .map(convertidor::convertFromEntity)
                         .collect(Collectors.toList());
-
-                // actualiza el frame...
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             }
             break;
@@ -418,6 +388,9 @@ public class LogicaDomino implements ObservadorConexion {
                     //return;
                 }
                 
+                System.out.println(nombreJugador);
+                
+                // verificar si el jugador ya esta en la sala
                 Jugador jugador = this.sala.getJugadores().stream()
                         .filter(j -> j.getNombre().equals(nombreJugador))
                         .findFirst()
@@ -438,7 +411,6 @@ public class LogicaDomino implements ObservadorConexion {
                         .stream()
                         .map(j -> convertidor.convertFromEntity(j))
                         .collect(Collectors.toList());
-                
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             }
             break;
@@ -447,6 +419,9 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void desplegarPantallaSalaEspera(List<JugadorDTO> listaJugadores) {
+        
+        filtro.restringirEventosPorEstado(FiltroEventos.Estado.SALA_ESPERA);
+        
         ObservadorSalirSala observadorSalirSala = () -> {
             try {
                 conexion.enviarEvento(crearEventoSolicitarSalirSala());
@@ -496,6 +471,45 @@ public class LogicaDomino implements ObservadorConexion {
         this.sala = null;
         this.partida = null;
         
+        return mapa;
+    }
+    
+    
+    /**
+     *
+     * @param jugador
+     * @param ficha
+     * @return
+     */
+    private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("jugador", jugador);
+        mapa.put("ficha", ficha);
+
+        return mapa;
+    }
+
+    /**
+     *
+     * @param sala
+     * @return
+     */
+    private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "CrearSalaSolicitud");
+        sala.setJugadores(Arrays.asList(this.jugador));
+        mapa.put("sala", sala);
+
+        return mapa;
+    }
+
+    private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "ObtenerSalasSolicitud");
+
         return mapa;
     }
 }
