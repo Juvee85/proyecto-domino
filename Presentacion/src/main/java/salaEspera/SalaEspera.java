@@ -5,6 +5,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import interfacesObservador.Observable;
 import interfacesObservador.Observador;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -160,7 +161,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
     }//GEN-LAST:event_salirBtnActionPerformed
 
     private void listoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoBtnActionPerformed
-        
+
     }//GEN-LAST:event_listoBtnActionPerformed
 
     private void mostrarTabla() {
@@ -184,7 +185,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
         }
 
         this.table.repaint();
-        
+
         /*
 
         List<JugadorDTO> jugadores = modelo.getJugadores();
@@ -195,7 +196,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
         }
 
         this.table.repaint();
-*/
+         */
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Fondo;
@@ -208,6 +209,10 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
+    public void anhadirObservadorSalirSala(ActionListener l) {
+        salirBtn.addActionListener(l);
+    }
 
     @Override
     public void notificar() {

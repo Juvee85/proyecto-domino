@@ -4,6 +4,7 @@
 package salaEspera;
 
 import interfacesObservador.Observador;
+import java.awt.event.ActionEvent;
 
 /**
  * 
@@ -18,6 +19,10 @@ public class SalaEsperaControlador implements Observador {
         this.vista = vista;
         this.modelo = modelo;
         this.vista.anhadirObservador(this);
+        this.vista.anhadirObservadorSalirSala((ActionEvent e) -> {
+            this.modelo.notificarObservadoresSalirSala();
+            this.vista.dispose();
+        });
     }
 
     @Override

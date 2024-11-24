@@ -17,6 +17,7 @@ import entidades.Tablero;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
+import interfacesObservador.ObservadorSalirSala;
 import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
 import java.io.IOException;
@@ -277,7 +278,8 @@ public class LogicaDomino implements ObservadorConexion {
         String nombreEvento = (String) evento.get("nombre_evento");
         switch (nombreEvento) {
             case "CrearSalaRespuesta":
-                MediadorPantallas.getInstance().mostrarSalaEspera(Arrays.asList(new JugadorConverter().convertFromEntity(this.jugador)));
+                desplegarPantallaSalaEspera(Arrays.asList(new JugadorConverter().convertFromEntity(this.jugador)));
+
                 break;
             case "ObtenerSalasRespuesta": {
                 System.out.println("### ObtenerSalasRespuesta CACHADO!!!");
@@ -333,15 +335,14 @@ public class LogicaDomino implements ObservadorConexion {
                 salaUnir.setJugadores(jugadoresEnSala);
 
                 sala = salaUnir;
-                MediadorPantallas.getInstance().mostrarSalaEspera(new JugadorConverter().createFromEntities(jugadoresEnSala));
+                desplegarPantallaSalaEspera(new JugadorConverter().createFromEntities(jugadoresEnSala));
             }
             break;
             case "JugadorUnidoASala": {
-                
+
                 /**
                  * Cuando un nuevo jugador se une a la sala...
                  */
-                
                 String nombreSala = (String) evento.get("nombreSala");
 
                 // si no hay sala es porque no se esta en esta parte del flujo del programa...
@@ -361,31 +362,32 @@ public class LogicaDomino implements ObservadorConexion {
                     jugadorNuevo.setAvatar((String) jugadorMap.get("avatar"));
                     jugadorNuevo.setNumero(0);
                     // Configura los demás campos de la clase Jugador...
-                } /*else {
+                }
+                /*else {
                     // Si no es LinkedHashMap, asume que ya es un Jugador
                     jugadorNuevo = (Jugador) evento.get("jugador");
                     MediadorPantallas.getInstance().actualizarPantallaSalaEspera(new JugadorConverter().convertFromEntity(jugadorNuevo));
                 }*/
-                
+
                 // verificar si el jugador ya esta en la sala
                 boolean jugadorRegistrado = this.sala.getJugadores()
                         .stream()
                         .filter(j -> j.getNombre().equals(jugadorNuevo.getNombre()))
                         .findFirst()
                         .orElse(null) != null;
-                
+
                 if (!jugadorRegistrado) {
                     this.sala.getJugadores().add(jugador);
                 }
-                
+
                 JugadorConverter convertidor = new JugadorConverter();
-                
+
                 // convierte a todos los jugadores a DTO
                 List<JugadorDTO> nuevaListaJugadores = this.sala.getJugadores()
                         .stream()
                         .map(j -> convertidor.convertFromEntity(j))
                         .collect(Collectors.toList());
-                
+
                 // actualiza el frame...
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             }
@@ -394,9 +396,24 @@ public class LogicaDomino implements ObservadorConexion {
 
     }
 
+    public void desplegarPantallaSalaEspera(List<JugadorDTO> listaJugadores) {
+        ObservadorSalirSala observadorSalirSala = () -> {
+            try {
+                conexion.enviarEvento(crearEventoSolicitarSalirSala());
+                conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
+            } catch (IOException ex) {
+                Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        };
+
+        MediadorPantallas.getInstance().mostrarSalaEspera(listaJugadores, observadorSalirSala);
+    }
+
     public void desplegarSalasDisponibles(List<SalaDTO> salas) {
         ObservadorUnirASala observadorUnirASala = (nombreJugador, contrasenha, salaDTO) -> {
             Sala salaUnir = new SalaConverter().convertFromDTO(salaDTO);
+            jugador = new Jugador();
+            jugador.setNombre(nombreJugador);
             try {
                 conexion.enviarEvento(crearEventoSolicitarUnirASala(nombreJugador, contrasenha, salaUnir));
             } catch (IOException ex) {
@@ -413,6 +430,16 @@ public class LogicaDomino implements ObservadorConexion {
         mapa.put("nombre_evento", "UnirseSalaSolicitud");
         mapa.put("id_jugador", nombreJugador);
         mapa.put("nombre_sala", salaUnir.getNombre());
+
+        return mapa;
+    }
+
+    private Map<String, Object> crearEventoSolicitarSalirSala() {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "SalirSalaSolicitud");
+        mapa.put("id_jugador", jugador.getNombre());
+        mapa.put("nombre_sala", sala.getNombre());
 
         return mapa;
     }
