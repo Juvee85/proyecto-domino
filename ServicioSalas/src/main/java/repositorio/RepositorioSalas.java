@@ -123,6 +123,9 @@ public class RepositorioSalas {
             this.salas.add(sala);
             return;
         }
+        
+        sala.getJugadores().getFirst().esAnfitrion(true);
+        sala.setJugadoresEnSala(sala.getJugadores().size());
 
         throw new RepositorioSalasException("No se pudo crear la sala debido a un error, es probable que tengas una sala abierta...");
     }
@@ -130,6 +133,7 @@ public class RepositorioSalas {
     /**
      * Elimina la sala del repositorio de salas
      *
+     * @param nombreSala Nombre de la sala a eliminar
      * @return Sala si se logro eliminar
      * @throws repositorio.excepciones.RepositorioSalasException si no se puede
      * eliminar la sala del sistema
@@ -146,6 +150,38 @@ public class RepositorioSalas {
         this.salas.remove(encontrada);
 
         return encontrada;
+    }
+    
+    /**
+     * Elimina a un jugador de la sala, ya sea por peticion o por decision del host
+     * @param nombreJugador Nombre del jugador a sacar
+     * @param nombreSala Nombre de la sala en cuestion
+     * @throws RepositorioSalasException 
+     */
+    public void sacarJugadorDeSala(String nombreJugador, String nombreSala) throws RepositorioSalasException {
+        Sala encontrada = this.salas.stream()
+                .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
+                .findFirst().orElse(null);
+
+        if (encontrada == null) {
+            throw new RepositorioSalasException("La sala no existe...");
+        }
+        
+        Jugador jugador = encontrada.getJugadores().stream()
+                .filter(j -> j.getNombre().equals(nombreJugador))
+                .findFirst()
+                .orElse(null);
+        
+        if (jugador == null) {
+            throw new RepositorioSalasException("No existe el jugador especificado en la sala...");
+        }
+        
+        boolean eliminado = encontrada.getJugadores().remove(jugador);
+        
+        if (!eliminado) {
+            //throw new RepositorioSalasException("No se pudo sacar al jugador de la sala");
+            System.out.println("### NO SE PUDO ELIMINAR AL JUGADOR DE LA SALA");
+        }
     }
 
 }

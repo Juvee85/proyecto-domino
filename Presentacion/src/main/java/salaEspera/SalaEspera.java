@@ -57,6 +57,8 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
         listoBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jugadoresEnSalaLbl = new javax.swing.JLabel();
+        jugadoresTotalesLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -118,7 +120,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
         FondoLayout.setHorizontalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FondoLayout.createSequentialGroup()
-                .addContainerGap(471, Short.MAX_VALUE)
+                .addContainerGap(418, Short.MAX_VALUE)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -130,9 +132,13 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
                         .addGap(40, 40, 40))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(46, 46, 46)
+                        .addGap(3, 3, 3)
+                        .addComponent(jugadoresEnSalaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
-                        .addGap(277, 277, 277))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jugadoresTotalesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(203, 203, 203))))
         );
         FondoLayout.setVerticalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,9 +146,12 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
                 .addGap(85, 85, 85)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 351, Short.MAX_VALUE)
-                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel3)
+                        .addComponent(jugadoresEnSalaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jugadoresTotalesLbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(108, 108, 108)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(listoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,7 +166,8 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
     }// </editor-fold>//GEN-END:initComponents
 
     private void salirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBtnActionPerformed
-        dispose();
+        
+        
     }//GEN-LAST:event_salirBtnActionPerformed
 
     private void listoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoBtnActionPerformed
@@ -177,6 +187,8 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
             return;
         }
 
+       
+        
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Limpia la tabla antes de agregar filas
 
@@ -204,6 +216,8 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jugadoresEnSalaLbl;
+    private javax.swing.JLabel jugadoresTotalesLbl;
     private javax.swing.JButton listoBtn;
     private javax.swing.JButton salirBtn;
     private javax.swing.JScrollPane scroll;

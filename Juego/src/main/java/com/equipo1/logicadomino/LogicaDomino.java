@@ -392,6 +392,56 @@ public class LogicaDomino implements ObservadorConexion {
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             }
             break;
+            case "JugadorAbandonaSala": {
+                /**
+                 * Se actualiza la tabla de los jugadores que siguen en la sala
+                 * de espera
+                 */
+                String nombreSala = (String) evento.get("nombre_sala");
+                String nombreJugador = (String) evento.get("id_jugador");
+
+                // si no hay sala es porque no se esta en esta parte del flujo del programa...
+                if (sala != null) {
+                    if (!sala.getNombre().equals(nombreSala)) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
+                if (this.jugador == null) {
+                    return;
+                }
+                
+                // si el anfitrion se va elimina la sala del repositorio...
+                if (this.jugador.getNombre().equals(nombreJugador)) {
+                    //return;
+                }
+                
+                Jugador jugador = this.sala.getJugadores().stream()
+                        .filter(j -> j.getNombre().equals(nombreJugador))
+                        .findFirst()
+                        .orElse(null);
+                if (jugador == null) {
+                    return;
+                }
+                
+                // quita al jugador con el nombre especificado de la lista...
+                if (this.sala.getJugadores().removeIf(j -> j.getNombre().equals(nombreJugador))) {
+                    System.out.println("### Se elimino el jugador de la lista de jugadores interna...");
+                }
+                
+                JugadorConverter convertidor = new JugadorConverter();
+
+                // convierte a todos los jugadores a DTO
+                List<JugadorDTO> nuevaListaJugadores = this.sala.getJugadores()
+                        .stream()
+                        .map(j -> convertidor.convertFromEntity(j))
+                        .collect(Collectors.toList());
+                
+                MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
+            }
+            break;
         }
 
     }
@@ -437,10 +487,15 @@ public class LogicaDomino implements ObservadorConexion {
     private Map<String, Object> crearEventoSolicitarSalirSala() {
         HashMap<String, Object> mapa = new HashMap<>();
 
-        mapa.put("nombre_evento", "SalirSalaSolicitud");
+        mapa.put("nombre_evento", "AbandonarSalaSolicitud");
         mapa.put("id_jugador", jugador.getNombre());
         mapa.put("nombre_sala", sala.getNombre());
 
+        // se quita esta informacion para que no ejecute el evento de JugadorAbandonaSala
+        this.jugador = null;
+        this.sala = null;
+        this.partida = null;
+        
         return mapa;
     }
 }
