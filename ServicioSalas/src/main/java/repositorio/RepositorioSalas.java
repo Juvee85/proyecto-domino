@@ -175,7 +175,12 @@ public class RepositorioSalas {
             throw new RepositorioSalasException("No existe el jugador especificado en la sala...");
         }
         
-        encontrada.getJugadores().remove(jugador);
+        boolean eliminado = encontrada.getJugadores().remove(jugador);
+        
+        if (!eliminado) {
+            //throw new RepositorioSalasException("No se pudo sacar al jugador de la sala");
+            System.out.println("### NO SE PUDO ELIMINAR AL JUGADOR DE LA SALA");
+        }
     }
 
 }

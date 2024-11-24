@@ -16,7 +16,8 @@ import java.util.List;
 public class SalaEsperaModelo {
 
     private List<JugadorDTO> jugadores;
-
+    private int jugadoresMaximo;
+    
     private List<Observador> observadores;
 
     private List<ObservadorSalirSala> observadoresSalirSala;
@@ -24,6 +25,7 @@ public class SalaEsperaModelo {
     public SalaEsperaModelo() {
         observadores = new ArrayList<>();
         observadoresSalirSala = new ArrayList<>();
+        this.jugadoresMaximo = 0;
     }
 
     public List<JugadorDTO> getJugadores() {
@@ -32,6 +34,14 @@ public class SalaEsperaModelo {
 
     public void setJugadores(List<JugadorDTO> jugadores) {
         this.jugadores = jugadores;
+    }
+    
+    public void setJugadoresMaximo(int numero) {
+        this.jugadoresMaximo = numero;
+    }
+    
+    public int getJugadoresMaximo() {
+        return this.jugadoresMaximo;
     }
 
     public void anhadirObservador(Observador observador) {

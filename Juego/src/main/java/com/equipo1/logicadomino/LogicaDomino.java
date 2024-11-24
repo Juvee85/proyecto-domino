@@ -397,7 +397,7 @@ public class LogicaDomino implements ObservadorConexion {
                  * Se actualiza la tabla de los jugadores que siguen en la sala
                  * de espera
                  */
-                String nombreSala = (String) evento.get("nombreSala");
+                String nombreSala = (String) evento.get("nombre_sala");
                 String nombreJugador = (String) evento.get("id_jugador");
 
                 // si no hay sala es porque no se esta en esta parte del flujo del programa...
@@ -409,17 +409,27 @@ public class LogicaDomino implements ObservadorConexion {
                     return;
                 }
 
+                if (this.jugador == null) {
+                    return;
+                }
+                
+                // si el anfitrion se va elimina la sala del repositorio...
+                if (this.jugador.getNombre().equals(nombreJugador)) {
+                    //return;
+                }
+                
                 Jugador jugador = this.sala.getJugadores().stream()
                         .filter(j -> j.getNombre().equals(nombreJugador))
                         .findFirst()
                         .orElse(null);
-                
                 if (jugador == null) {
                     return;
                 }
                 
                 // quita al jugador con el nombre especificado de la lista...
-                this.sala.getJugadores().remove(jugador);
+                if (this.sala.getJugadores().removeIf(j -> j.getNombre().equals(nombreJugador))) {
+                    System.out.println("### Se elimino el jugador de la lista de jugadores interna...");
+                }
                 
                 JugadorConverter convertidor = new JugadorConverter();
 
@@ -484,6 +494,7 @@ public class LogicaDomino implements ObservadorConexion {
         // se quita esta informacion para que no ejecute el evento de JugadorAbandonaSala
         this.jugador = null;
         this.sala = null;
+        this.partida = null;
         
         return mapa;
     }
