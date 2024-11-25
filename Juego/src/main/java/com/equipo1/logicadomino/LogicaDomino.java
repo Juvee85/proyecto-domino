@@ -58,9 +58,9 @@ public class LogicaDomino implements ObservadorConexion {
      *
      */
     public void inicio() {
-        
+
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.INICIO);
-        
+
         // TODO: ver si es mejor crear conexion al BUS desde el inicio
         ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
             crearSala();
@@ -78,10 +78,10 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void crearSala() {
-        
+
         // TODO: RESTRINGIR FILTRO "INICIO"
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.CREAR_SALA);
-        
+
         ObservadorCrearSala crearSala
                 = (SalaDTO salaDTO, String nombreJugador) -> {
                     sala = new SalaConverter().convertFromDTO(salaDTO);
@@ -103,20 +103,14 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void obtenerSalasDisponibles() {
-        
         // TODO: RESTRINGIR FILTRO SALAS_DISPONIBLES
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.SALAS_DISPONIBLES);
-        
+
         try {
             conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
         } catch (IOException ex) {
             Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // obtener salas desde observador a conexión
-        // Poner lo siguiente dentro del update en el caso que reciba el evento con las salas disponibles
-        //List<SalaDTO> salas = new ArrayList<>();
-        // Agregar datos de la respuesta
-        //MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas);
     }
 
     /**
@@ -244,7 +238,6 @@ public class LogicaDomino implements ObservadorConexion {
         conexion.enviarEvento(crearEvento(jugador, ficha));
     }
 
-
     @Override
     public void actualizar(Map evento) {
         // TODO: Detectar que evento es y actuar en consecuencia...
@@ -341,12 +334,12 @@ public class LogicaDomino implements ObservadorConexion {
                 }
 
                 String nombreJugador = jugadorNuevo.getNombre();
-                
+
                 // verificar si el jugador ya esta en la sala
                 boolean jugadorRegistrado = this.sala.getJugadores()
                         .stream()
                         .anyMatch(j -> j.getNombre().equals(nombreJugador));
-                
+
                 if (!jugadorRegistrado) {
                     List<Jugador> listaNuevaJugadores = new ArrayList<>(this.sala.getJugadores());
                     listaNuevaJugadores.add(jugadorNuevo);
@@ -382,14 +375,14 @@ public class LogicaDomino implements ObservadorConexion {
                 if (this.jugador == null) {
                     return;
                 }
-                
+
                 // si el anfitrion se va elimina la sala del repositorio...
                 if (this.jugador.getNombre().equals(nombreJugador)) {
                     //return;
                 }
-                
+
                 System.out.println(nombreJugador);
-                
+
                 // verificar si el jugador ya esta en la sala
                 Jugador jugador = this.sala.getJugadores().stream()
                         .filter(j -> j.getNombre().equals(nombreJugador))
@@ -398,12 +391,12 @@ public class LogicaDomino implements ObservadorConexion {
                 if (jugador == null) {
                     return;
                 }
-                
+
                 // quita al jugador con el nombre especificado de la lista...
                 if (this.sala.getJugadores().removeIf(j -> j.getNombre().equals(nombreJugador))) {
                     System.out.println("### Se elimino el jugador de la lista de jugadores interna...");
                 }
-                
+
                 JugadorConverter convertidor = new JugadorConverter();
 
                 // convierte a todos los jugadores a DTO
@@ -419,13 +412,13 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void desplegarPantallaSalaEspera(List<JugadorDTO> listaJugadores) {
-        
+
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.SALA_ESPERA);
-        
+
         ObservadorSalirSala observadorSalirSala = () -> {
             try {
                 conexion.enviarEvento(crearEventoSolicitarSalirSala());
-                conexion.enviarEvento(crearEventoSolicitarSalasDisponibles());
+                obtenerSalasDisponibles();
             } catch (IOException ex) {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -470,11 +463,10 @@ public class LogicaDomino implements ObservadorConexion {
         this.jugador = null;
         this.sala = null;
         this.partida = null;
-        
+
         return mapa;
     }
-    
-    
+
     /**
      *
      * @param jugador

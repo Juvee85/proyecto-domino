@@ -123,7 +123,7 @@ public class RepositorioSalas {
             this.salas.add(sala);
             return;
         }
-        
+
         sala.getJugadores().getFirst().esAnfitrion(true);
         sala.setJugadoresEnSala(sala.getJugadores().size());
 
@@ -151,12 +151,14 @@ public class RepositorioSalas {
 
         return encontrada;
     }
-    
+
     /**
-     * Elimina a un jugador de la sala, ya sea por peticion o por decision del host
+     * Elimina a un jugador de la sala, ya sea por peticion o por decision del
+     * host
+     *
      * @param nombreJugador Nombre del jugador a sacar
      * @param nombreSala Nombre de la sala en cuestion
-     * @throws RepositorioSalasException 
+     * @throws RepositorioSalasException
      */
     public void sacarJugadorDeSala(String nombreJugador, String nombreSala) throws RepositorioSalasException {
         Sala encontrada = this.salas.stream()
@@ -166,21 +168,23 @@ public class RepositorioSalas {
         if (encontrada == null) {
             throw new RepositorioSalasException("La sala no existe...");
         }
-        
+
         Jugador jugador = encontrada.getJugadores().stream()
                 .filter(j -> j.getNombre().equals(nombreJugador))
                 .findFirst()
                 .orElse(null);
-        
+
         if (jugador == null) {
             throw new RepositorioSalasException("No existe el jugador especificado en la sala...");
         }
-        
+
         boolean eliminado = encontrada.getJugadores().remove(jugador);
-        
+
         if (!eliminado) {
             //throw new RepositorioSalasException("No se pudo sacar al jugador de la sala");
             System.out.println("### NO SE PUDO ELIMINAR AL JUGADOR DE LA SALA");
+        } else {
+            encontrada.setJugadoresEnSala(encontrada.getJugadoresEnSala() - 1);
         }
     }
 

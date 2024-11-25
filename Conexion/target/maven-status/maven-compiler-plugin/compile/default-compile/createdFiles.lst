@@ -1,0 +1,5 @@
+conexion\Conexion.class
+filtro\FiltroEventos.class
+observador\ObservableConexion.class
+filtro\FiltroEventos$Estado.class
+observador\ObservadorConexion.class
