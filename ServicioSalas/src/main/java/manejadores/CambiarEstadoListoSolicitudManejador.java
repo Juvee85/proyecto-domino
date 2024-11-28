@@ -95,7 +95,7 @@ public class CambiarEstadoListoSolicitudManejador extends ManejadorEvento {
             
             String  nombreSala      = (String)  jsonNode.get("nombre_sala").asText();
             String  nombreJugador   = (String)  jsonNode.get("id_jugador").asText();
-            boolean estadoListo     = (Boolean) jsonNode.asBoolean();
+            boolean estadoListo     = (Boolean) jsonNode.get("listo").asBoolean();
             
             CambiarEstadoListoRespuestaEvento evento = this.cambiarEstadoJugador(nombreSala, nombreJugador, estadoListo);
             

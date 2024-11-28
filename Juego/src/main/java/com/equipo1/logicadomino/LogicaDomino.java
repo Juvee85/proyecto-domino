@@ -410,32 +410,40 @@ public class LogicaDomino implements ObservadorConexion {
             }
             break;
             case "JugadorCambioEstadoListo": {
-                
+
                 /**
-                 * Cuando un jugador en la sala cambia su estado
-                 * empezar la partida.
+                 * Cuando un jugador en la sala cambia su estado empezar la
+                 * partida.
                  */
                 JugadorConverter convertidor = new JugadorConverter();
-                
-                String  nombreSala      = (String) evento.get("nombre_sala");
-                String  nombreJugador   = (String) evento.get("id_jugador");
-                Boolean estaListo       = (Boolean) evento.get("listo");
-                
+
+                String nombreSala = (String) evento.get("nombre_sala");
+                String nombreJugador = (String) evento.get("id_jugador");
+                Boolean estaListo = (Boolean) evento.get("listo");
+
                 /*
                  * Descartar evento en caso de no estar en una sala 
                  */
                 if (this.sala != null) {
-                    if (!this.sala.getNombre().equals(nombreSala)) return;
-                } else { return; }
-                
+                    if (!this.sala.getNombre().equals(nombreSala)) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
                 /*
                  * Descartar evento en caso de que el cambio se duplique
                  * (que no se reciba el evento que nosotros mismos mandamos)
                  */
                 if (this.jugador != null) {
-                    if (!this.jugador.getNombre().equals(nombreJugador)) return;
-                } else { return; }
-                
+                    if (this.jugador.getNombre().equals(nombreJugador)) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
                 // verificar si el jugador ya esta en la sala
                 Jugador jugadorEncontrado = this.sala.getJugadores().stream()
                         .filter(j -> j.getNombre().equals(nombreJugador))
@@ -444,22 +452,22 @@ public class LogicaDomino implements ObservadorConexion {
                 if (jugadorEncontrado == null) {
                     return;
                 }
-                
+
                 jugadorEncontrado.setListo(estaListo);
-                
+
                 int posicion = this.sala.getJugadores().indexOf(jugadorEncontrado);
-                
+
                 if (posicion < 0) {
                     System.out.println("### No se encontro el jugador a cambiar el estado a LISTO");
                     return;
                 }
-                
+
                 Jugador anteriorJugador = this.sala.getJugadores().set(posicion, jugadorEncontrado);
                 if (anteriorJugador == null) {
                     System.out.println("### No se pudo agregar el jugador a la lista de jugadores");
                     return;
                 }
-                
+
                 // convierte a todos los jugadores a DTO
                 List<JugadorDTO> nuevaListaJugadores = this.sala.getJugadores()
                         .stream()
@@ -484,15 +492,55 @@ public class LogicaDomino implements ObservadorConexion {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
             }
         };
-        
+
         ObservadorCambiarEstadoListo observadorCambiarEstado = () -> {
             try {
-                if (jugador == null) return;
-                
-                boolean estadoJugador = !jugador.estaListo();
+                if (jugador == null) {
+                    return;
+                }
+
+                jugador.setListo(!jugador.estaListo());
+
+                boolean estadoJugador = jugador.estaListo();
                 String nombreJugador = jugador.getNombre();
+
+                conexion.enviarEvento(crearEventoJugadorListoEmpezarPartida(nombreJugador, estadoJugador));
+
+                System.out.println("####>>>>> AFTER");
+
+                // se cambia el estado del jugador en local...
+                JugadorConverter convertidor = new JugadorConverter();
+
+                Jugador jugadorEncontrado = sala.getJugadores().stream()
+                        .filter(j -> j.getNombre().equals(nombreJugador))
+                        .findFirst()
+                        .orElse(null);
+
+                if (jugadorEncontrado == null) {
+                    System.out.println("#### NO ENCONTRADO!!!!");
+                    return;
+                }
                 
-                conexion.enviarEvento(this.crearEventoJugadorListoEmpezarPartida(nombreJugador, estadoJugador));
+                int posicion = sala.getJugadores().indexOf(jugadorEncontrado);
+
+                if (posicion < 0) {
+                    System.out.println("### No se encontro el jugador a cambiar el estado a LISTO");
+                    return;
+                }
+
+                Jugador anteriorJugador = sala.getJugadores().set(posicion, jugador);
+                if (anteriorJugador == null) {
+                    System.out.println("### No se pudo agregar el jugador a la lista de jugadores");
+                    return;
+                }
+
+                // se convierte la lsita de jugadores y se actualiza la pantalla
+                // convierte a todos los jugadores a DTO
+                List<JugadorDTO> nuevaListaJugadores = sala.getJugadores()
+                        .stream()
+                        .map(convertidor::convertFromEntity)
+                        .collect(Collectors.toList());
+                MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             } catch (IOException ex) {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -516,16 +564,9 @@ public class LogicaDomino implements ObservadorConexion {
         MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas, observadorUnirASala);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Crea un evento para indicar que el jugador se quiere unir a una sala.
+     *
      * @param nombreJugador Nombre del jugador en local.
      * @param contrasenha Contrasena de la sala.
      * @param salaUnir Sala a unirse.
@@ -572,8 +613,9 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     /**
-     * Crea un evento para solicitar la creacion de una nueva sala por parte
-     * del jugador local.
+     * Crea un evento para solicitar la creacion de una nueva sala por parte del
+     * jugador local.
+     *
      * @param sala Informacion de la sala a crear
      * @return Map con la informacion del evento
      */
@@ -588,7 +630,9 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     /**
-     * Crea un evento para cuando solicitamos ver las salas abiertas en el juego.
+     * Crea un evento para cuando solicitamos ver las salas abiertas en el
+     * juego.
+     *
      * @return Map con la informacion del evento.
      */
     private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
@@ -598,9 +642,10 @@ public class LogicaDomino implements ObservadorConexion {
 
         return mapa;
     }
-    
+
     /**
      * Crea un evento para indicar que estamos listos para iniciar la partida.
+     *
      * @param nombreJugador Nombre del jugador en local.
      * @param estadoListo Estado del jugador.
      * @return Map con la informacion del evento.

@@ -192,8 +192,16 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Limpia la tabla antes de agregar filas
 
+        int i=1;
+        
         for (JugadorDTO jugador : jugadores) {
-            model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager", (jugador.estaListo()) ? "LISTO" : ""});
+            model.addRow(new Object[]{
+                i++, 
+                jugador.getNombre(), 
+                jugador.getPartidasGanadas(), 
+                (jugador.esAnfitrion()) ? "Manager" : "Invitado", 
+                (jugador.estaListo()) ? "LISTO" : ""
+            });
         }
 
         this.table.repaint();
