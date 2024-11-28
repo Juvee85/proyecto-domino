@@ -4,6 +4,7 @@
  */
 package avatar;
 
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -36,6 +37,7 @@ private Color avatarColor = Color.WHITE;
     private JPanel avatarPanel;
     
     public PerfilUsuario() {
+        FlatMacDarkLaf.setup();
         setTitle("PERFIL DE USUARIO");
         setSize(800, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
