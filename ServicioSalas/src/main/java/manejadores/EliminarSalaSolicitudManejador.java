@@ -21,8 +21,6 @@ import repositorio.RepositorioSalas;
  */
 public class EliminarSalaSolicitudManejador extends ManejadorEvento {
     
-    
-
     private static final RepositorioSalas repositorio = RepositorioSalas.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;

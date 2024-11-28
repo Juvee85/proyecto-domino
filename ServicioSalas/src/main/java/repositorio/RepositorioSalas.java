@@ -25,24 +25,20 @@ public class RepositorioSalas {
     private RepositorioSalas() {
         this.salas = new ArrayList<>();
 
-        List<Jugador> jugadores = new ArrayList<>();
 
         Sala s = new Sala();
-        Jugador jugador = new Jugador();
-        jugadores.add(jugador);
-        jugador.setNombre("Jugador 1");
         s.setNombre("RCS Ack");
         s.setMaxJugadores(4);
         s.setContrasena("12345");
         s.setJugadoresEnSala(1);
-        s.setJugadores(Collections.emptyList());
+        s.setJugadores(new ArrayList<>());
 
         Sala s2 = new Sala();
         s2.setNombre("Domino Pro");
         s2.setMaxJugadores(3);
         s2.setContrasena(null);
-        s2.setJugadoresEnSala(1);
-        s2.setJugadores(jugadores);
+        s2.setJugadoresEnSala(0);
+        s2.setJugadores(new ArrayList());
         salas.add(s2);
 
         Sala s3 = new Sala();
@@ -50,27 +46,13 @@ public class RepositorioSalas {
         s3.setMaxJugadores(2);
         s3.setContrasena("pass2");
         s3.setJugadoresEnSala(2);
-        s3.setJugadores(Collections.emptyList());
+        s3.setJugadores(new ArrayList<>());
         salas.add(s3);
 
-        Sala s4 = new Sala();
-        s4.setNombre("Classic Domino");
-        s4.setMaxJugadores(4);
-        s4.setContrasena(null);
-        s4.setJugadoresEnSala(1);
-        s4.setJugadores(Collections.emptyList());
-        salas.add(s4);
-
-        Sala s5 = new Sala();
-        s5.setNombre("Domino Challenge");
-        s5.setMaxJugadores(2);
-        s5.setContrasena("challenger");
-        s5.setJugadoresEnSala(1);
-        s5.setJugadores(Collections.emptyList());
-        salas.add(s5);
-
 // Añade las salas a tu lógica de negocio o lista global
-        this.salas.addAll(Arrays.asList(s, s2, s3, s4, s5));
+        this.salas.add(s);
+        this.salas.add(s2);
+        this.salas.add(s3);
     }
 
     /**
@@ -186,6 +168,60 @@ public class RepositorioSalas {
         } else {
             encontrada.setJugadoresEnSala(encontrada.getJugadoresEnSala() - 1);
         }
+    }
+
+    /**
+     * Cambia el estado listo de un jugador de una sala con el estado dado.
+     *
+     * @param nombreSala Nombre de la sala.
+     * @param nombreJugador Nombre del jugador en la sala.
+     * @param estadoListo Estado del jugador a cambiar.
+     * @throws RepositorioSalasException si ocurre un error al cambiar el
+     * estado.
+     */
+    public void cambiarEstadoListoJugador(String nombreSala, String nombreJugador, boolean estadoListo) throws RepositorioSalasException {
+
+        if (nombreSala == null || nombreSala.isBlank() || nombreSala.isEmpty()) {
+            throw new RepositorioSalasException("El campo 'nombre_sala' esta vacio, no se pudo cambiar el estado del jugador");
+        }
+
+        if (nombreJugador == null || nombreJugador.isBlank() || nombreJugador.isEmpty()) {
+            throw new RepositorioSalasException("El campo 'id_jugador' esta vacio, no se pudo cambiar el estado del jugador");
+        }
+
+        Sala encontrada = this.salas.stream()
+                .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
+                .findFirst().orElse(null);
+
+        if (encontrada == null) {
+            throw new RepositorioSalasException("La sala no existe...");
+        }
+
+        Jugador jugador = encontrada.getJugadores().stream()
+                .filter(j -> j.getNombre().equals(nombreJugador))
+                .findFirst()
+                .orElse(null);
+
+        if (jugador == null) {
+            throw new RepositorioSalasException("No existe el jugador especificado en la sala...");
+        }
+
+        jugador.setListo(estadoListo);
+
+        int posicion = encontrada.getJugadores().indexOf(jugador);
+
+        if (posicion < 0) {
+            System.out.println("### No se encontro el jugador a cambiar el estado a LISTO");
+            throw new RepositorioSalasException("No se pudo cambiar el estado del jugador en la sala.");
+        }
+
+        Jugador anteriorJugador = encontrada.getJugadores().set(posicion, jugador);
+        if (anteriorJugador == null) {
+            System.out.println("### No se pudo agregar el jugador a la lista de jugadores");
+            throw new RepositorioSalasException("No se pudo cambiar el estado del jugador en la sala.");
+        }
+        
+        System.out.println("### ESTADO JUGADOR %s: %s".formatted(jugador.getNombre(), estadoListo));
     }
 
 }

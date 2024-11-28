@@ -18,6 +18,7 @@ import filtro.FiltroEventos;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
+import interfacesObservador.ObservadorCambiarEstadoListo;
 import interfacesObservador.ObservadorSalirSala;
 import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
@@ -89,6 +90,7 @@ public class LogicaDomino implements ObservadorConexion {
                     jugador.setNombre(nombreJugador);
                     jugador.setNumero(0);
                     jugador.setAvatar("");
+                    jugador.setListo(false);
 
                     System.out.println("### crearSala: %s".formatted(sala));
 
@@ -407,6 +409,65 @@ public class LogicaDomino implements ObservadorConexion {
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             }
             break;
+            case "JugadorCambioEstadoListo": {
+                
+                /**
+                 * Cuando un jugador en la sala cambia su estado
+                 * empezar la partida.
+                 */
+                JugadorConverter convertidor = new JugadorConverter();
+                
+                String  nombreSala      = (String) evento.get("nombre_sala");
+                String  nombreJugador   = (String) evento.get("id_jugador");
+                Boolean estaListo       = (Boolean) evento.get("listo");
+                
+                /*
+                 * Descartar evento en caso de no estar en una sala 
+                 */
+                if (this.sala != null) {
+                    if (!this.sala.getNombre().equals(nombreSala)) return;
+                } else { return; }
+                
+                /*
+                 * Descartar evento en caso de que el cambio se duplique
+                 * (que no se reciba el evento que nosotros mismos mandamos)
+                 */
+                if (this.jugador != null) {
+                    if (!this.jugador.getNombre().equals(nombreJugador)) return;
+                } else { return; }
+                
+                // verificar si el jugador ya esta en la sala
+                Jugador jugadorEncontrado = this.sala.getJugadores().stream()
+                        .filter(j -> j.getNombre().equals(nombreJugador))
+                        .findFirst()
+                        .orElse(null);
+                if (jugadorEncontrado == null) {
+                    return;
+                }
+                
+                jugadorEncontrado.setListo(estaListo);
+                
+                int posicion = this.sala.getJugadores().indexOf(jugadorEncontrado);
+                
+                if (posicion < 0) {
+                    System.out.println("### No se encontro el jugador a cambiar el estado a LISTO");
+                    return;
+                }
+                
+                Jugador anteriorJugador = this.sala.getJugadores().set(posicion, jugadorEncontrado);
+                if (anteriorJugador == null) {
+                    System.out.println("### No se pudo agregar el jugador a la lista de jugadores");
+                    return;
+                }
+                
+                // convierte a todos los jugadores a DTO
+                List<JugadorDTO> nuevaListaJugadores = this.sala.getJugadores()
+                        .stream()
+                        .map(j -> convertidor.convertFromEntity(j))
+                        .collect(Collectors.toList());
+                MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
+            }
+            break;
         }
 
     }
@@ -423,8 +484,21 @@ public class LogicaDomino implements ObservadorConexion {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
             }
         };
+        
+        ObservadorCambiarEstadoListo observadorCambiarEstado = () -> {
+            try {
+                if (jugador == null) return;
+                
+                boolean estadoJugador = !jugador.estaListo();
+                String nombreJugador = jugador.getNombre();
+                
+                conexion.enviarEvento(this.crearEventoJugadorListoEmpezarPartida(nombreJugador, estadoJugador));
+            } catch (IOException ex) {
+                Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        };
 
-        MediadorPantallas.getInstance().mostrarSalaEspera(listaJugadores, observadorSalirSala);
+        MediadorPantallas.getInstance().mostrarSalaEspera(listaJugadores, observadorSalirSala, observadorCambiarEstado);
     }
 
     public void desplegarSalasDisponibles(List<SalaDTO> salas) {
@@ -442,6 +516,21 @@ public class LogicaDomino implements ObservadorConexion {
         MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas, observadorUnirASala);
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Crea un evento para indicar que el jugador se quiere unir a una sala.
+     * @param nombreJugador Nombre del jugador en local.
+     * @param contrasenha Contrasena de la sala.
+     * @param salaUnir Sala a unirse.
+     * @return Map con la informacion del evento
+     */
     private Map<String, Object> crearEventoSolicitarUnirASala(String nombreJugador, String contrasenha, Sala salaUnir) {
         HashMap<String, Object> mapa = new HashMap<>();
 
@@ -483,9 +572,10 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     /**
-     *
-     * @param sala
-     * @return
+     * Crea un evento para solicitar la creacion de una nueva sala por parte
+     * del jugador local.
+     * @param sala Informacion de la sala a crear
+     * @return Map con la informacion del evento
      */
     private Map<String, Object> crearEventoSolicitarCrearSala(Sala sala) {
         HashMap<String, Object> mapa = new HashMap<>();
@@ -497,10 +587,31 @@ public class LogicaDomino implements ObservadorConexion {
         return mapa;
     }
 
+    /**
+     * Crea un evento para cuando solicitamos ver las salas abiertas en el juego.
+     * @return Map con la informacion del evento.
+     */
     private Map<String, Object> crearEventoSolicitarSalasDisponibles() {
         HashMap<String, Object> mapa = new HashMap<>();
 
         mapa.put("nombre_evento", "ObtenerSalasSolicitud");
+
+        return mapa;
+    }
+    
+    /**
+     * Crea un evento para indicar que estamos listos para iniciar la partida.
+     * @param nombreJugador Nombre del jugador en local.
+     * @param estadoListo Estado del jugador.
+     * @return Map con la informacion del evento.
+     */
+    private Map<String, Object> crearEventoJugadorListoEmpezarPartida(String nombreJugador, boolean estadoListo) {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "CambiarEstadoJugadorListoSolicitud");
+        mapa.put("id_jugador", nombreJugador);
+        mapa.put("nombre_sala", this.sala.getNombre());
+        mapa.put("listo", estadoListo);
 
         return mapa;
     }

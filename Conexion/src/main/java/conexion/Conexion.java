@@ -86,6 +86,7 @@ public class Conexion extends Thread implements ObservableConexion {
         contrato.agregarEventoEscuchable("UnirseSalaRespuesta");
         contrato.agregarEventoEscuchable("JugadorUnidoASala");
         contrato.agregarEventoEscuchable("JugadorAbandonaSala");
+        contrato.agregarEventoEscuchable("JugadorCambioEstadoListo");
 
         return contrato;
     }

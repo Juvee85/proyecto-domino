@@ -100,6 +100,7 @@ public class FiltroEventos {
                 this.permitirSolamenteEventos(Arrays.asList(
                         "JugadorUnidoASala",
                         "JugadorAbandonaSala",
+                        "JugadorCambioEstadoListo",
                         "SalaError"
                 ));
             }

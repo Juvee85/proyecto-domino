@@ -20,6 +20,7 @@ public class JugadorConverter extends Converter<JugadorDTO, Jugador> {
         dto.setAvatar(jugador.getAvatar());
         dto.setNombre(jugador.getNombre());
         dto.setNumero(jugador.getNumero());
+        dto.setListo(jugador.estaListo());
 
         return dto;
     }
@@ -30,6 +31,7 @@ public class JugadorConverter extends Converter<JugadorDTO, Jugador> {
         jugador.setAvatar(dto.getAvatar());
         jugador.setNombre(dto.getNombre());
         jugador.setNumero(dto.getNumero());
+        jugador.setListo(dto.estaListo());
 
         return jugador;
     }

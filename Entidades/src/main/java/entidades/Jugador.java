@@ -23,6 +23,8 @@ public class Jugador implements Serializable {
     private boolean anfitrion;
     @JsonProperty("numero_jugador")
     private int numero;
+    @JsonProperty("listo")
+    private boolean isListo;
 
     public Jugador() {
         this.fichas = new ArrayList<>();
@@ -37,6 +39,10 @@ public class Jugador implements Serializable {
         this.anfitrion = anfitrion;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public boolean esAnfitrion() {
         return this.anfitrion;
     }
@@ -122,8 +128,24 @@ public class Jugador implements Serializable {
                 + "nombre='" + nombre + '\''
                 + ", avatar='" + avatar + '\''
                 + ", fichas=" + (fichas != null ? fichas : "[]")
-                + ", anfitrion=" + anfitrion
+                + ", anfitrion=" + this.anfitrion
                 + ", numero=" + numero
                 + '}';
+    }
+
+    /**
+     * Devuelve el estado de si el jugador esta listo
+     * @return the isListo
+     */
+    public boolean estaListo() {
+        return isListo;
+    }
+
+    /**
+     * Asigna el estado del jugador, si esta listo o no
+     * @param listo Bandera de si esta listo
+     */
+    public void setListo(boolean listo) {
+        this.isListo = listo;
     }
 }
