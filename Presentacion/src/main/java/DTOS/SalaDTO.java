@@ -58,12 +58,15 @@ public class SalaDTO {
      * @param contrasena Contrasena a asignar
      */
     public void setContrasena(String contrasena) {
+        /*
         if (contrasena.isBlank() || contrasena.isEmpty()) {
             this.tieneContrasena = false;
             this.contrasena = null;
         } else if (contrasena.length() >= 5 && contrasena.length() <= 18) {
             this.contrasena = contrasena;
-        }
+            this.tieneContrasena = true;
+        }*/
+        this.contrasena = contrasena;
     }
 
     /**
@@ -72,7 +75,11 @@ public class SalaDTO {
      * @return tieneContrasena
      */
     public boolean tieneContrasena() {
-        return tieneContrasena;
+        if (this.contrasena != null) {
+            return tieneContrasena;
+        }
+        
+        return false;
     }
 
     /**

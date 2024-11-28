@@ -16,28 +16,14 @@ public class CrearSalaRespuestaEvento implements Serializable {
     @JsonProperty("nombre_evento")
     private String nombre;
     
-    @JsonProperty("sala")
-    private Sala sala;
+    //@JsonProperty("sala")
+    //private Sala sala;
     
-    public CrearSalaRespuestaEvento(Sala sala) {
-        this.sala = sala;
+    public CrearSalaRespuestaEvento() {
+        //this.sala = sala;
+        this.nombre = "CrearSalaRespuesta";
     } 
 
-    /**
-     * Devuelve la sala
-     * @return the sala
-     */
-    public Sala getSala() {
-        return sala;
-    }
-
-    /**
-     * Asigna la sala al evento
-     * @param sala Sala a asignar
-     */
-    public void setSala(Sala sala) {
-        this.sala = sala;
-    }
 
     /**
      * @return the nombre

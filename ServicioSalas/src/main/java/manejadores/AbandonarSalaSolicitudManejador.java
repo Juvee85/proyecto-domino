@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Sala;
 import eventos.CrearSalaRespuestaEvento;
+import eventos.JugadorAbandonaSalaRespuestaEvento;
 import eventos.SalaErrorEvento;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,7 +26,7 @@ import repositorio.excepciones.RepositorioSalasException;
  *
  * @author Saul Neri
  */
-public class CrearSalaSolicitudManejador extends ManejadorEvento {
+public class AbandonarSalaSolicitudManejador extends ManejadorEvento {
 
     private static final RepositorioSalas repositorio = RepositorioSalas.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -36,7 +37,7 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
      * @param clienteSck
      * @param eventoSerializado 
      */
-    public CrearSalaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
+    public AbandonarSalaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         //this.nombreEvento = nombreEvento;
         this.setName(String.format("Thread [%s]", this.getClass().getSimpleName()));
         
@@ -45,16 +46,17 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
     }
 
     /**
-     * 
-     * @param sala
-     * @return
-     * @throws RepositorioSalasException 
+     * Efecuta la operacion de sacar a un jugador de una sala y devuelve un objeto respuesta
+     * @param nombreJugador Nombre del jugador a sacar
+     * @param nombreSala Nombre de la sala en cuestion
+     * @return Respuesta del evento
+     * @throws RepositorioSalasException Si ocurre un error en la operacion
      */
-    private CrearSalaRespuestaEvento crearSala(Sala sala) throws RepositorioSalasException {
+    private JugadorAbandonaSalaRespuestaEvento abandonarSala(String nombreJugador, String nombreSala) throws RepositorioSalasException {
         // TODO: Realizar validaciones...
-        repositorio.agregarSala(sala);
+        repositorio.sacarJugadorDeSala(nombreJugador, nombreSala);
 
-        return new CrearSalaRespuestaEvento();
+        return new JugadorAbandonaSalaRespuestaEvento(nombreJugador, nombreSala);
     }
 
     /**
@@ -84,7 +86,7 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
             //peticion = new DataInputStream(this.clienteSck.getInputStream());
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
         } catch (IOException ex) {
-            Logger.getLogger(CrearSalaSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbandonarSalaSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
@@ -94,24 +96,21 @@ public class CrearSalaSolicitudManejador extends ManejadorEvento {
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
             // Acceder a los valores directamente
-            JsonNode salaSerializada = jsonNode.get("sala");
-
-            Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
-
-            System.out.println(sala);
+            String nombreSala = jsonNode.get("nombre_sala").asText();
+            String nombreJugador = jsonNode.get("id_jugador").asText();
             
-            CrearSalaRespuestaEvento evento = this.crearSala(sala);
+            JugadorAbandonaSalaRespuestaEvento respuestaEvento = this.abandonarSala(nombreJugador, nombreSala);
             
-            String eventoJSON = objectMapper.writeValueAsString(evento);
+            String eventoJSON = objectMapper.writeValueAsString(respuestaEvento);
             
-            System.out.println("[*] Se creo una nueva sala...");
+            System.out.println("[*] Se saco al jugador de la sala...");
             
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
-            this.enviaRespuestaError("No se puedo crear la sala debido a un error en el servidor, porfavor intente mas tarde...");
+            this.enviaRespuestaError("No se puedo abandonar la sala debido a un error en el servidor, porfavor intente mas tarde...");
         } catch (RepositorioSalasException ex) {
            this.enviaRespuestaError(ex.getMessage());
         }

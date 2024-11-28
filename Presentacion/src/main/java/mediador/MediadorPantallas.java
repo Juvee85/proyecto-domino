@@ -17,9 +17,14 @@ import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorAnhadirFicha;
-import interfacesObservador.ObservadorCrearSala;
+import interfacesObservador.ObservadorCambiarEstadoListo;
+import interfacesObservador.ObservadorSalirSala;
 import interfacesObservador.ObservadorUnirASala;
+import interfacesObservador.salas.ObservadorCrearSala;
 import java.util.List;
+import salaEspera.SalaEspera;
+import salaEspera.SalaEsperaControlador;
+import salaEspera.SalaEsperaModelo;
 import salasDisponibles.SalasDisponibles;
 import salasDisponibles.SalasDisponiblesControlador;
 import salasDisponibles.SalasDisponiblesModelo;
@@ -34,6 +39,7 @@ import tablero.TableroModelo;
 public class MediadorPantallas {
 
     private TableroModelo modelo;
+    private SalaEsperaModelo modeloSalaEspera;
     private static MediadorPantallas instance;
     private ObservadorAnhadirFicha observador;
 
@@ -58,13 +64,10 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
-    public void mostrarPantallaUnirASala(ObservadorUnirASala observador) {
-        
-    }
-
-    public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas) {
+    public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas, ObservadorUnirASala observador) {
         SalasDisponiblesModelo modelo = new SalasDisponiblesModelo();
         modelo.setSalasDisponibles(salas);
+        modelo.anhadirObservador(observador);
         SalasDisponibles vista = new SalasDisponibles(modelo);
         SalasDisponiblesControlador controlador = new SalasDisponiblesControlador(modelo, vista);
         vista.setVisible(true);
@@ -75,6 +78,19 @@ public class MediadorPantallas {
         modelo.anhadirObservador(observador);
         CrearSala vista = new CrearSala(modelo);
         CrearSalaControlador controlador = new CrearSalaControlador(vista, modelo);
+        vista.setVisible(true);
+    }
+
+    public void mostrarSalaEspera(List<JugadorDTO> jugadores, ObservadorSalirSala observadorSalirSala, ObservadorCambiarEstadoListo observadorCambiarEstado) {
+        SalaEsperaModelo modelo = new SalaEsperaModelo();
+        modelo.setJugadores(jugadores);
+        //System.out.println("### modelo: %s".formatted(modelo));
+        SalaEspera vista = new SalaEspera(modelo);
+        modelo.anhadirObservador(vista);
+        modelo.anhadirObservadorSalirSala(observadorSalirSala);
+        modelo.anhadirObservadorCambiarEstado(observadorCambiarEstado);
+        this.modeloSalaEspera = modelo;
+        SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
         vista.setVisible(true);
     }
 
@@ -96,6 +112,17 @@ public class MediadorPantallas {
         modelo.setJugadores(partida.getJugadores());
         modelo.setFichaSeleccionada(modelo.getJugadores().get(0).getFichas().get(0));
         modelo.notificar();
+    }
+
+    /**
+     * Actualiza la tabla de dos maneras, en caso de que un jugador haya abandonado la partida,
+     * la lista contendra a todos menos a ese jugador. En caso de que un nuevo jugador se haya unido,
+     * se mostrara en la tabla.
+     * @param nuevosjugadores Lista de los jugadores actuales en la sala
+     */
+    public void actualizarPantallaSalaEspera(List<JugadorDTO> nuevosjugadores) {
+        modeloSalaEspera.setJugadores(nuevosjugadores);
+        modeloSalaEspera.notificarObservadores();
     }
 
     public void notificarObservadores(JugadorDTO jugador, FichaDTO ficha) {

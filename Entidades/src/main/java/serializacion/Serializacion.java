@@ -91,7 +91,6 @@ public class Serializacion {
         System.out.println("-----------------[JUGADOR]------------------");
         
         Jugador j = new Jugador();
-        j.setPartidasGanadas(0);
         j.setNombre("chacal45");
         j.setAvatar("Leopardo");
         j.setNumero(1);

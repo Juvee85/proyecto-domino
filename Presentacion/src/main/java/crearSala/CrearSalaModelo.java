@@ -3,7 +3,8 @@
  */
 package crearSala;
 
-import interfacesObservador.ObservadorCrearSala;
+import DTOS.SalaDTO;
+import interfacesObservador.salas.ObservadorCrearSala;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +14,10 @@ import java.util.List;
  */
 public class CrearSalaModelo {
 
-    private String nombreSala;
-
-    private String contrasenhaSala;
-
-    private int numeroJugadores;
+    String nombreSala;
+    String contrasena;
+    int maxJugadores;
+    String nombreJugador;
 
     private List<ObservadorCrearSala> observadores;
 
@@ -25,7 +25,21 @@ public class CrearSalaModelo {
         observadores = new ArrayList<>();
     }
 
-    
+    public void anhadirObservador(ObservadorCrearSala observador) {
+        observadores.add(observador);
+    }
+
+    public void notificar() {
+        SalaDTO sala = new SalaDTO();
+        sala.setContrasena(contrasena);
+        sala.setMaxJugadores(maxJugadores);
+        sala.setNombre(nombreSala);
+        
+        for (ObservadorCrearSala obs : observadores) {
+            obs.actualizar(sala, nombreJugador);
+        }
+    }
+
     public String getNombreSala() {
         return nombreSala;
     }
@@ -34,29 +48,32 @@ public class CrearSalaModelo {
         this.nombreSala = nombreSala;
     }
 
-    public String getContrasenhaSala() {
-        return contrasenhaSala;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setContrasenhaSala(String contrasenhaSala) {
-        this.contrasenhaSala = contrasenhaSala;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
-    public int getNumeroJugadores() {
-        return numeroJugadores;
+    public int getMaxJugadores() {
+        return maxJugadores;
     }
 
-    public void setNumeroJugadores(int numeroJugadores) {
-        this.numeroJugadores = numeroJugadores;
+    public void setMaxJugadores(int maxJugadores) {
+        this.maxJugadores = maxJugadores;
     }
 
-    public void anhadirObservador(ObservadorCrearSala observador) {
-        observadores.add(observador);
+    public String getNombreJugador() {
+        return nombreJugador;
     }
 
-    public void notificar() {
-        for (ObservadorCrearSala observadore : observadores) {
-            observadore.actualizar(nombreSala, contrasenhaSala, numeroJugadores);
-        }
+    public void setNombreJugador(String nombreJugador) {
+        this.nombreJugador = nombreJugador;
     }
+
+    public void setObservadores(List<ObservadorCrearSala> observadores) {
+        this.observadores = observadores;
+    }
+    
 }

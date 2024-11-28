@@ -1,19 +1,33 @@
 package salaEspera;
 
+import DTOS.JugadorDTO;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import interfacesObservador.Observable;
+import interfacesObservador.Observador;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Sebastian Murrieta Verduzco - 233463
  */
-public class SalaEspera extends javax.swing.JFrame {
+public class SalaEspera extends javax.swing.JFrame implements Observable, Observador {
+
+    private SalaEsperaModelo modelo;
+    private List<Observador> observadores;
 
     /**
      * Creates new form SalaEspera
+     *
+     * @param modelo
      */
-    public SalaEspera() {
+    public SalaEspera(SalaEsperaModelo modelo) {
+        this.modelo = modelo;
+        this.observadores = new ArrayList<>();
+
         FlatMacDarkLaf.setup();
         initComponents();
         table.setDefaultRenderer(Object.class, new TableGradientCell());
@@ -27,7 +41,7 @@ public class SalaEspera extends javax.swing.JFrame {
                 + "border:3,0,3,0,$Table.background,10,10");
         scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "hoverTrackColor:null");
-        testData();
+        mostrarTabla();
     }
 
     @SuppressWarnings("unchecked")
@@ -43,6 +57,8 @@ public class SalaEspera extends javax.swing.JFrame {
         listoBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jugadoresEnSalaLbl = new javax.swing.JLabel();
+        jugadoresTotalesLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -55,7 +71,7 @@ public class SalaEspera extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Jugador", "Nombre", "Victorias", "Rol"
+                "Jugador", "Nombre", "Victorias", "Rol", "Listo"
             }
         ));
         scroll.setViewportView(table);
@@ -87,6 +103,11 @@ public class SalaEspera extends javax.swing.JFrame {
         listoBtn.setBackground(new java.awt.Color(102, 102, 102));
         listoBtn.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         listoBtn.setText("Listo");
+        listoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listoBtnActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Jugadores :");
@@ -99,7 +120,7 @@ public class SalaEspera extends javax.swing.JFrame {
         FondoLayout.setHorizontalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FondoLayout.createSequentialGroup()
-                .addContainerGap(471, Short.MAX_VALUE)
+                .addContainerGap(418, Short.MAX_VALUE)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -111,9 +132,13 @@ public class SalaEspera extends javax.swing.JFrame {
                         .addGap(40, 40, 40))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(46, 46, 46)
+                        .addGap(3, 3, 3)
+                        .addComponent(jugadoresEnSalaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
-                        .addGap(277, 277, 277))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jugadoresTotalesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(203, 203, 203))))
         );
         FondoLayout.setVerticalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,9 +146,12 @@ public class SalaEspera extends javax.swing.JFrame {
                 .addGap(85, 85, 85)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 351, Short.MAX_VALUE)
-                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel3)
+                        .addComponent(jugadoresEnSalaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jugadoresTotalesLbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(108, 108, 108)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(listoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -138,41 +166,97 @@ public class SalaEspera extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void salirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBtnActionPerformed
-        dispose();
+        
+        
     }//GEN-LAST:event_salirBtnActionPerformed
 
-    private void testData() {
+    private void listoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoBtnActionPerformed
+
+    }//GEN-LAST:event_listoBtnActionPerformed
+
+    private void mostrarTabla() {
+        // TODO: Manejar errores correctamente
+        if (modelo == null) {
+            System.err.println("El modelo es nulo. No se puede mostrar la tabla.");
+            return;
+        }
+
+        List<JugadorDTO> jugadores = modelo.getJugadores();
+        if (jugadores == null || jugadores.isEmpty()) {
+            System.out.println("No hay jugadores para mostrar en la tabla.");
+            return;
+        }
+
+       
+        
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0); // Limpia la tabla antes de agregar filas
+
+        int i=1;
+        
+        for (JugadorDTO jugador : jugadores) {
+            model.addRow(new Object[]{
+                i++, 
+                jugador.getNombre(), 
+                jugador.getPartidasGanadas(), 
+                (jugador.esAnfitrion()) ? "Manager" : "Invitado", 
+                (jugador.estaListo()) ? "LISTO" : ""
+            });
+        }
+
+        this.table.repaint();
+
+        /*
+
+        List<JugadorDTO> jugadores = modelo.getJugadores();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-        model.addRow(new Object[]{1, "John Smith", "john.smith@example.com", "123 Main St, City", "Manager"});
-        model.addRow(new Object[]{2, "Sarah Jones", "sarah.jones@example.com", "456 Elm St, Town", "Salesperson"});
-        model.addRow(new Object[]{3, "David Brown", "david.b@example.com", "789 Oak St, Village", "Technician"});
-        model.addRow(new Object[]{4, "Lisa Davis", "lisa.d@example.com", "101 Pine St, Town", "Receptionist"});
-        model.addRow(new Object[]{5, "Mark Wilson", "mark.w@example.com", "555 Cedar St, City", "Accountant"});
-        model.addRow(new Object[]{6, "Alice Johnson", "alice.j@example.com", "222 Elm St, Village", "Marketing"});
+        for (JugadorDTO jugador : jugadores) {
+            model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager"});
+        }
+
+        this.table.repaint();
+         */
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SalaEspera().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Fondo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jugadoresEnSalaLbl;
+    private javax.swing.JLabel jugadoresTotalesLbl;
     private javax.swing.JButton listoBtn;
     private javax.swing.JButton salirBtn;
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
+    public void anhadirObservadorSalirSala(ActionListener l) {
+        salirBtn.addActionListener(l);
+    }
+    
+    public void anhadirObservadorCambiarEstadoListo(ActionListener l) {
+        this.listoBtn.addActionListener(l);
+    }
+
+    @Override
+    public void notificar() {
+        this.observadores.forEach(obs -> obs.actualizar());
+    }
+
+    @Override
+    public void anhadirObservador(Observador observador) {
+        this.observadores.add(observador);
+    }
+
+    @Override
+    public void removerObservador(Observador observador) {
+        this.observadores.remove(observador);
+    }
+
+    @Override
+    public void actualizar() {
+        mostrarTabla();
+    }
 }

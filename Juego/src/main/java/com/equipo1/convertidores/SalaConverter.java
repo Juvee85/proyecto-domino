@@ -19,8 +19,10 @@ public class SalaConverter extends Converter<SalaDTO, Sala> {
     private static SalaDTO convertToDto(Sala sala) {
         SalaDTO dto = new SalaDTO();
         dto.setNombre(sala.getNombre());
+        /*
         dto.setHost(sala.getHost());
         dto.setPuerto(sala.getPuerto());
+*/
         dto.setContrasena(sala.getContrasena());
         dto.setMaxJugadores(sala.getMaxJugadores());
         dto.setJugadoresEnSala(sala.getJugadoresEnSala());
@@ -31,8 +33,10 @@ public class SalaConverter extends Converter<SalaDTO, Sala> {
     private static Sala convertToEntity(SalaDTO dto) {
         Sala sala = new Sala();
         sala.setNombre(dto.getNombre());
+        /*
         sala.setHost(dto.getHost());
         sala.setPuerto(dto.getPuerto());
+*/
         sala.setContrasena(dto.getContrasena());
         sala.setMaxJugadores(dto.getMaxJugadores());
         sala.setJugadoresEnSala(dto.getJugadoresEnSala());

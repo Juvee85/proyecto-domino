@@ -4,9 +4,16 @@
  */
 package salasDisponibles;
 
+import DTOS.SalaDTO;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import interfacesObservador.Observador;
+import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import salaEspera.TableGradientCell;
 
@@ -19,6 +26,9 @@ import salaEspera.TableGradientCell;
 public class SalasDisponibles extends javax.swing.JFrame {
 
     private SalasDisponiblesModelo modelo;
+    private String nombre;
+    private String contrasenha;
+    private Observador observador;
 
     /**
      * Crea una nueva instancia de la ventana SalasDisponibles y configura la
@@ -38,7 +48,8 @@ public class SalasDisponibles extends javax.swing.JFrame {
                 + "border:3,0,3,0,$Table.background,10,10");
         scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "hoverTrackColor:null");
-        testData();
+
+        this.cargarSalas();
 
         // Agregar listener para habilitar o deshabilitar el botón "Unirse"
         table.getSelectionModel().addListSelectionListener(e -> unirseBtn.setEnabled(table.getSelectedRow() != -1));
@@ -48,17 +59,55 @@ public class SalasDisponibles extends javax.swing.JFrame {
 
     }
 
+    public SalaDTO obtenerSalaSeleccionada() {
+        int indice = table.getSelectedRow();
+        String nombre = (String) table.getModel().getValueAt(indice, 0);
+
+        for (SalaDTO sala : modelo.getSalasDisponibles()) {
+            if (sala.getNombre().equals(nombre)) {
+                return sala;
+            }
+        }
+
+        return null;
+    }
+
+    public void anhadirObservadorUnir(ActionListener l) {
+        unirseBtn.addActionListener(l);
+    }
+
+    public void anhadirObservador(Observador observador) {
+        this.observador = observador;
+    }
+
     /**
      * Método para agregar datos de prueba a la tabla. Los datos incluyen el
      * nombre de la sala, el número de personas jugando y la capacidad máxima.
      */
-    private void testData() {
+    private void cargarSalas() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-        model.addRow(new Object[]{"Rancho Diana", 3, 4});
-        model.addRow(new Object[]{"Chapo Dogo", 4, 4});
-        model.addRow(new Object[]{"Juventino", 2, 4});
-        model.addRow(new Object[]{"Diana", 1, 4});
+        for (SalaDTO sala : modelo.getSalasDisponibles()) {
+            model.addRow(new Object[]{
+                sala.getNombre(),
+                sala.getJugadoresEnSala(),
+                sala.getMaxJugadores()
+            });
+        }
+
+        this.table.repaint();
+    }
+
+    public void notificarObservador() {
+        observador.actualizar();
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getContrasenha() {
+        return contrasenha;
     }
 
     /**
@@ -193,26 +242,7 @@ public class SalasDisponibles extends javax.swing.JFrame {
      * @param evt El evento generado al hacer clic en el botón "Unirse".
      */
     private void unirseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unirseBtnActionPerformed
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            int jugadoresActuales = (int) table.getValueAt(selectedRow, 1);
-            int capacidadMaxima = (int) table.getValueAt(selectedRow, 2);
 
-            if (jugadoresActuales < capacidadMaxima) {
-                // Incrementar el número de jugadores y actualizar la tabla
-                table.setValueAt(jugadoresActuales + 1, selectedRow, 1);
-                JOptionPane.showMessageDialog(this, "Te has unido a la sala " + table.getValueAt(selectedRow, 0),
-                        "Confirmación", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                // Mostrar un mensaje de error si la sala está llena
-                JOptionPane.showMessageDialog(this, "La sala " + table.getValueAt(selectedRow, 0) + " está llena.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            // Mostrar un mensaje de advertencia si no se ha seleccionado ninguna sala
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona una sala para unirte.",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_unirseBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -224,4 +254,25 @@ public class SalasDisponibles extends javax.swing.JFrame {
     private javax.swing.JTable table;
     private javax.swing.JButton unirseBtn;
     // End of variables declaration//GEN-END:variables
+
+    public void desplegarDialogoUnirSala() {
+        JTextField nombreTxt = new JTextField();
+        JTextField contrasenhaTxt = new JTextField();
+
+        JPanel panelInformacionJugador = new JPanel();
+        panelInformacionJugador.add(new JLabel("Nombre:"));
+        panelInformacionJugador.add(nombreTxt);
+        panelInformacionJugador.add(Box.createHorizontalStrut(15)); // Deja un espacio
+        panelInformacionJugador.add(new JLabel("Contraseña:"));
+        panelInformacionJugador.add(contrasenhaTxt);
+
+        int result = JOptionPane.showConfirmDialog(null, panelInformacionJugador,
+                "Escriba los datos", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            nombre = nombreTxt.getText();
+            contrasenha = contrasenhaTxt.getText();
+
+            notificarObservador();
+        }
+    }
 }

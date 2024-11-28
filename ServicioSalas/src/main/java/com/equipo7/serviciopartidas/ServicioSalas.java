@@ -1,27 +1,18 @@
 package com.equipo7.serviciopartidas;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import entidades.Sala;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import manejadores.CrearSalaSolicitudManejador;
 import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
 import manejadores.fabrica.FabricaManejadorEvento;
-import repositorio.RepositorioSalas;
 import servicio.ContratoServicio;
 
 /**
@@ -34,7 +25,6 @@ public class ServicioSalas extends Thread {
     private static final int BUS_PUERTO = 15_001;
 
     //private static final Scanner in = new Scanner(System.in);
-
     private Socket socket = null;
 
     public ServicioSalas() {
@@ -53,9 +43,11 @@ public class ServicioSalas extends Thread {
         contrato.setNombreServicio("Servicio Salas");
         contrato.setEventosEscuchables(Arrays.asList(
                 "CrearSalaSolicitud",
-                //"CrearSalaRespuesta",
                 "EliminarSalaSolicitud",
-                "ObtenerSalasSolicitud"
+                "ObtenerSalasSolicitud",
+                "UnirseSalaSolicitud",
+                "AbandonarSalaSolicitud",
+                "CambiarEstadoJugadorListoSolicitud"
         ));
 
         return contrato;
@@ -65,7 +57,7 @@ public class ServicioSalas extends Thread {
     public void run() {
 
         FabricaManejadorEventoAbstracto fabricaManejadorEventos = new FabricaManejadorEvento();
-        
+
         try {
             socket = new Socket(ServicioSalas.BUS_HOSTNAME, ServicioSalas.BUS_PUERTO);
             System.out.println("[*] CONECTADO AL BUS(%s, %d)...".formatted(ServicioSalas.BUS_HOSTNAME, ServicioSalas.BUS_PUERTO));
@@ -89,7 +81,6 @@ public class ServicioSalas extends Thread {
             respuesta.flush();
 
             // TODO: Evaluar la respuesta del servidor
-            
             while (true) {
                 String mensajeJSON = mensaje.readUTF();
 
@@ -100,14 +91,15 @@ public class ServicioSalas extends Thread {
 
                 System.out.println("Nombre del evento: " + nombreEvento);
 
-                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, contratoServicioJSON);
-                
+                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, mensajeJSON);
+
                 if (manejador != null) {
                     manejador.start();
                 }
             }
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO SALAS]: Ocurrio un error -> " + ex.getMessage());
+            ex.printStackTrace();
         } finally {
 
         }

@@ -57,6 +57,7 @@ public class RepositorioServicios {
             throw new IllegalArgumentException("El puerto del servicio no es valido");
         }
         
+        /*
         boolean servicioExiste = this.servicios.stream()
                 .filter(s -> s.getContrato()
                         .getNombreServicio()
@@ -66,7 +67,7 @@ public class RepositorioServicios {
                 .orElse(null) != null;
         if (servicioExiste) {
             throw new IllegalArgumentException("El servicio que se intenta agregar ya esta registrado");
-        }
+        }*/
         
         this.servicios.add(servicio);
     }
@@ -87,5 +88,17 @@ public class RepositorioServicios {
      */
     public List<Servicio> obtenerServicios() {
         return this.servicios;
+    }
+    
+    /**
+     * Elimina el servicio en el repositorio
+     * @param servicio 
+     */
+    public void eliminarServicio(Servicio servicio) {
+        boolean eliminado = this.servicios.remove(servicio);
+        if (eliminado) {
+            System.out.println("### SE ELIMINO EL SERVICIO");
+            // mostrar excepcion
+        }
     }
 }

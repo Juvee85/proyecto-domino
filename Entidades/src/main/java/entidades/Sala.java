@@ -3,6 +3,7 @@ package entidades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,10 +18,12 @@ public class Sala implements Serializable {
     private int maxJugadores;
     @JsonProperty("jugadores_en_sala")
     private int jugadoresEnSala;
+    /*
     @JsonProperty("host")
     private String host;
     @JsonProperty("puerto")
     private int puerto;
+    */
     @JsonProperty("contrasena")
     private String contrasena;
     @JsonProperty("tiene_contrasena")
@@ -33,6 +36,7 @@ public class Sala implements Serializable {
      */
     public Sala() {
         this.tieneContrasena = false;
+        this.jugadores = new ArrayList<>();
     }
 
     /**
@@ -64,12 +68,19 @@ public class Sala implements Serializable {
      * @param contrasena Contrasena a asignar
      */
     public void setContrasena(String contrasena) {
-        if (contrasena.isBlank() || contrasena.isEmpty()) {
+        /*
+        if (contrasena == null) {
             this.tieneContrasena = false;
             this.contrasena = null;
-        } else if (contrasena.length() >= 5 && contrasena.length() <= 18) {
+        }
+        else if (contrasena.isBlank() || contrasena.isEmpty()) {
+            this.tieneContrasena = false;
+            this.contrasena = null;
+        } else if (contrasena.length() >= 4 && contrasena.length() <= 18) {
             this.contrasena = contrasena;
         }
+        */
+        this.contrasena = contrasena;
     }
 
     /**
@@ -84,7 +95,7 @@ public class Sala implements Serializable {
      * Obtiene el host de la partida
      *
      * @return el host de de la partida
-     */
+     
     public String getHost() {
         return host;
     }
@@ -93,7 +104,7 @@ public class Sala implements Serializable {
      * Establece el host de la partida
      *
      * @param host el host a establecer.
-     */
+     
     public void setHost(String host) {
         this.host = host;
     }
@@ -102,7 +113,7 @@ public class Sala implements Serializable {
      * Obtiene el puerto de la sala
      *
      * @return el puerto la sala
-     */
+     
     public int getPuerto() {
         return puerto;
     }
@@ -111,10 +122,11 @@ public class Sala implements Serializable {
      * Establece el puerto de la sala
      *
      * @param puerto el puerto a establecer.
-     */
+     
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
+    */
 
     /**
      * Obtiene la cantidad maxima de jugadores permitidos en la sala
@@ -137,6 +149,7 @@ public class Sala implements Serializable {
      * @return the jugadoresEnSala
      */
     public int getJugadoresEnSala() {
+        this.jugadoresEnSala = (this.jugadores != null) ? this.jugadores.size() : 0;
         return jugadoresEnSala;
     }
 
