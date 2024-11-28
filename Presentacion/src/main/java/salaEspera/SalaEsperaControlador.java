@@ -27,6 +27,10 @@ public class SalaEsperaControlador implements Observador {
                 this.vista.dispose();
             }
         });
+        
+        this.vista.anhadirObservadorCambiarEstadoListo((ActionEvent e) -> {
+            this.modelo.notificarObservadorCambiarEstadoListo();
+        });
     }
 
     @Override

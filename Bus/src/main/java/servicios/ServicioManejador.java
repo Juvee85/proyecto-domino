@@ -114,7 +114,8 @@ public class ServicioManejador extends Thread {
                 TODO: MANEJAR LOS ERRORES DE LA MEJOR MANERA PARA QUE NO SE CAIGA EL BUS
                 */
                 System.out.println("[ERROR - IO] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));
-                ex.printStackTrace();
+                //ex.printStackTrace();
+                repositorioServicios.eliminarServicio(this.servicio);
                 break;
             } catch (IllegalArgumentException ex) {
                 System.out.println("[ERROR - Arg] Ocurrio un error de recepcion de mensaje: %s".formatted(ex.getMessage()));

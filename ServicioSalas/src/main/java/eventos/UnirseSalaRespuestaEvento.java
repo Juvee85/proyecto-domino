@@ -12,8 +12,11 @@ public class UnirseSalaRespuestaEvento {
     private final String mensaje;
     @JsonProperty("nombre_evento")
     private String nombre;
+    @JsonProperty("sala")
     private Sala sala;
+    @JsonProperty("nombre_sala")
     private final String nombreSala;
+    @JsonProperty("id_jugador")
     private final String idJugador;
 
     public UnirseSalaRespuestaEvento(boolean exitoso, String mensaje, String nombreSala, String idJugador, Sala sala) {

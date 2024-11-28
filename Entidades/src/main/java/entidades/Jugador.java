@@ -8,9 +8,11 @@ import java.util.List;
 
 /**
  * Representa un jugador en el juego
+ *
  * @author Equipo 1
  */
 public class Jugador implements Serializable {
+
     @JsonProperty("nombre")
     private String nombre;
     @JsonProperty("avatar")
@@ -21,23 +23,30 @@ public class Jugador implements Serializable {
     private boolean anfitrion;
     @JsonProperty("numero_jugador")
     private int numero;
-    
+    @JsonProperty("listo")
+    private boolean isListo;
+
     public Jugador() {
         this.fichas = new ArrayList<>();
     }
-    
+
     /**
      * Asigna si el jugador es un anfitrion o no
-     * @param anfitrion 
+     *
+     * @param anfitrion
      */
     public void esAnfitrion(boolean anfitrion) {
         this.anfitrion = anfitrion;
-    } 
-    
+    }
+
+    /**
+     * 
+     * @return 
+     */
     public boolean esAnfitrion() {
         return this.anfitrion;
     }
-    
+
     /**
      * @return the nombre
      */
@@ -65,9 +74,10 @@ public class Jugador implements Serializable {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-    
+
     /**
      * Asigna fichas al jugador
+     *
      * @param juegoFichas
      */
     public void asignarFichas(List<Ficha> juegoFichas) {
@@ -80,7 +90,6 @@ public class Jugador implements Serializable {
     public List<Ficha> obtenerFichas() {
         return fichas;
     }
-
 
     /**
      * @return the numero
@@ -95,7 +104,7 @@ public class Jugador implements Serializable {
     public void setNumero(int numero) {
         this.numero = numero;
     }
-    
+
     public Ficha sacarFicha(Ficha ficha) {
         Ficha removida = null;
         for (Ficha ficha1 : fichas) {
@@ -105,11 +114,38 @@ public class Jugador implements Serializable {
             }
         }
         fichas.remove(removida);
-        
+
         return removida;
     }
-    
+
     public void agregarFicha(Ficha ficha) {
         fichas.add(ficha);
+    }
+
+    @Override
+    public String toString() {
+        return "Jugador{"
+                + "nombre='" + nombre + '\''
+                + ", avatar='" + avatar + '\''
+                + ", fichas=" + (fichas != null ? fichas : "[]")
+                + ", anfitrion=" + this.anfitrion
+                + ", numero=" + numero
+                + '}';
+    }
+
+    /**
+     * Devuelve el estado de si el jugador esta listo
+     * @return the isListo
+     */
+    public boolean estaListo() {
+        return isListo;
+    }
+
+    /**
+     * Asigna el estado del jugador, si esta listo o no
+     * @param listo Bandera de si esta listo
+     */
+    public void setListo(boolean listo) {
+        this.isListo = listo;
     }
 }

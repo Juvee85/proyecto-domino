@@ -14,6 +14,7 @@ public class JugadorUnidoASalaEvento {
 
     @JsonProperty("nombre_evento")
     private String nombre;
+    @JsonProperty("nombre_sala")
     private String nombreSala;
     private Jugador jugador;
 

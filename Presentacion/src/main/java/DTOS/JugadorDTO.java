@@ -17,7 +17,10 @@ public class JugadorDTO {
     private int partidasGanadas;
     private boolean anfitrion;
     private int numero;
+    private boolean listo;
 
+    
+    
     public String getNombre() {
         return nombre;
     }
@@ -81,5 +84,21 @@ public class JugadorDTO {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 
+     * @return the listo
+     */
+    public boolean estaListo() {
+        return listo;
+    }
+
+    /**
+     * 
+     * @param listo the listo to set
+     */
+    public void setListo(boolean listo) {
+        this.listo = listo;
     }
 }

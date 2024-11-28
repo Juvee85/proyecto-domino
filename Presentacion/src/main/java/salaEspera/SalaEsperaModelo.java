@@ -5,6 +5,7 @@ package salaEspera;
 
 import DTOS.JugadorDTO;
 import interfacesObservador.Observador;
+import interfacesObservador.ObservadorCambiarEstadoListo;
 import interfacesObservador.ObservadorSalirSala;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class SalaEsperaModelo {
     private List<Observador> observadores;
 
     private List<ObservadorSalirSala> observadoresSalirSala;
+    private ObservadorCambiarEstadoListo observadorCambiarEstado;
 
     public SalaEsperaModelo() {
         observadores = new ArrayList<>();
@@ -57,10 +59,20 @@ public class SalaEsperaModelo {
     public void anhadirObservadorSalirSala(ObservadorSalirSala observador) {
         observadoresSalirSala.add(observador);
     }
+    
+    public void anhadirObservadorCambiarEstado(ObservadorCambiarEstadoListo observador) {
+        this.observadorCambiarEstado = observador;
+    }
 
     public void notificarObservadoresSalirSala() {
         for (ObservadorSalirSala observadorSalirSala : observadoresSalirSala) {
             observadorSalirSala.actualizar();
+        }
+    }
+    
+    public void notificarObservadorCambiarEstadoListo() {
+        if (this.observadorCambiarEstado != null) {
+            this.observadorCambiarEstado.actualizarEstadoJugador();
         }
     }
 }

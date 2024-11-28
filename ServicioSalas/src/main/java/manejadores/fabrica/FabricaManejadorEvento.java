@@ -6,6 +6,7 @@ package manejadores.fabrica;
 
 import java.net.Socket;
 import manejadores.AbandonarSalaSolicitudManejador;
+import manejadores.CambiarEstadoListoSolicitudManejador;
 import manejadores.CrearSalaSolicitudManejador;
 import manejadores.EliminarSalaSolicitudManejador;
 import manejadores.FabricaManejadorEventoAbstracto;
@@ -40,17 +41,24 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto {
     @Override
     public ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
         switch (nombreEvento) {
-            case "CrearSalaSolicitud":
+            case "CrearSalaSolicitud" -> {
                 return new CrearSalaSolicitudManejador(socket, eventoSerializado);
-            case "EliminarSalaSolicitud":
+            }
+            case "EliminarSalaSolicitud" -> {
                 return new EliminarSalaSolicitudManejador(socket, eventoSerializado);
-            case "ObtenerSalasSolicitud":
+            }
+            case "ObtenerSalasSolicitud" -> {
                 return new ObtenerSalasSolicitudManejador(socket, eventoSerializado);
-            case "UnirseSalaSolicitud":
+            }
+            case "UnirseSalaSolicitud" -> {
                 return new UnirseSalaManejador(socket, eventoSerializado);
-            case "AbandonarSalaSolicitud":
+            }
+            case "AbandonarSalaSolicitud" -> {
                 return new AbandonarSalaSolicitudManejador(socket, eventoSerializado);
-
+            }
+            case "CambiarEstadoJugadorListoSolicitud" -> {
+                return new CambiarEstadoListoSolicitudManejador(socket, eventoSerializado);
+            }
         }
 
         return null;

@@ -17,6 +17,7 @@ import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
 import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorAnhadirFicha;
+import interfacesObservador.ObservadorCambiarEstadoListo;
 import interfacesObservador.ObservadorSalirSala;
 import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
@@ -80,13 +81,14 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
-    public void mostrarSalaEspera(List<JugadorDTO> jugadores, ObservadorSalirSala observadorSalirSala) {
+    public void mostrarSalaEspera(List<JugadorDTO> jugadores, ObservadorSalirSala observadorSalirSala, ObservadorCambiarEstadoListo observadorCambiarEstado) {
         SalaEsperaModelo modelo = new SalaEsperaModelo();
         modelo.setJugadores(jugadores);
         //System.out.println("### modelo: %s".formatted(modelo));
         SalaEspera vista = new SalaEspera(modelo);
         modelo.anhadirObservador(vista);
         modelo.anhadirObservadorSalirSala(observadorSalirSala);
+        modelo.anhadirObservadorCambiarEstado(observadorCambiarEstado);
         this.modeloSalaEspera = modelo;
         SalaEsperaControlador controlador = new SalaEsperaControlador(vista, modelo);
         vista.setVisible(true);

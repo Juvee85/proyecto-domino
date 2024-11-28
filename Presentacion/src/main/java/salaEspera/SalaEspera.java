@@ -71,7 +71,7 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
 
             },
             new String [] {
-                "Jugador", "Nombre", "Victorias", "Rol"
+                "Jugador", "Nombre", "Victorias", "Rol", "Listo"
             }
         ));
         scroll.setViewportView(table);
@@ -192,8 +192,16 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Limpia la tabla antes de agregar filas
 
+        int i=1;
+        
         for (JugadorDTO jugador : jugadores) {
-            model.addRow(new Object[]{1, jugador.getNombre(), jugador.getPartidasGanadas(), "Manager"});
+            model.addRow(new Object[]{
+                i++, 
+                jugador.getNombre(), 
+                jugador.getPartidasGanadas(), 
+                (jugador.esAnfitrion()) ? "Manager" : "Invitado", 
+                (jugador.estaListo()) ? "LISTO" : ""
+            });
         }
 
         this.table.repaint();
@@ -226,6 +234,10 @@ public class SalaEspera extends javax.swing.JFrame implements Observable, Observ
 
     public void anhadirObservadorSalirSala(ActionListener l) {
         salirBtn.addActionListener(l);
+    }
+    
+    public void anhadirObservadorCambiarEstadoListo(ActionListener l) {
+        this.listoBtn.addActionListener(l);
     }
 
     @Override
