@@ -1,0 +1,3 @@
+com\equipo7\serviciopartidas\ServicioPartidas.class
+com\equipo7\serviciopartidas\Main.class
+repositorios\excepciones\RepositorioPartidasException.class
