@@ -28,10 +28,12 @@ import repositorios.RepositorioPozos;
  * @author diana
  */
 public class CrearPozoSolicitudManejador extends ManejadorEvento {
+
     private static final RepositorioPozos repositorio = RepositorioPozos.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
-    
+
+    private static int CANTIDAD_FICHAS_PRUEBA = 4;
     
 //    
     public CrearPozoSolicitudManejador(Socket clienteSck, String eventoSerializado) {
@@ -39,32 +41,46 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
         this.clienteSck = clienteSck;
     }
 //    
-     private CrearPozoRespuestaEvento crearPozo(Sala sala) throws RepositorioPozoException {
-         return null;
-//
-//    int fichasTotales = repositorio.obtenerJuegoFicha(sala).size();
-//
-//    int jugadoresEnSala = sala.getJugadoresEnSala(); 
-//    int fichasPorJugador = 4; 
-//    int fichasRepartidas = jugadoresEnSala * fichasPorJugador;
-//
-//    int fichasRestantes = fichasTotales - fichasRepartidas;
-//
-//    if (fichasRestantes < 0) {
-//        throw new RepositorioPozoException("No hay suficientes fichas para crear el pozo.");
-//    }
-//
-//    // Crear el pozo en el repositorio
-//    repositorio.crearPozo(sala);
-//
-//    // Retornar el evento con la respuesta
-//    return new CrearPozoRespuestaEvento("Pozo creado exitosamente.",
-//        fichasRestantes
-//    );
+
+    /**
+     * Se crea el pozo y se hace la reparticion de fichas.
+     * @param sala
+     * @return
+     * @throws RepositorioPozoException 
+     */
+    private CrearPozoRespuestaEvento crearPozo(Sala sala) throws RepositorioPozoException {
+
+        Pozo pozo = repositorio.crearPozo(sala);
+        if (pozo == null) {
+            throw new RepositorioPozoException("No se encontro el pozo asociado a la sala");
+        }
+        
+        if (sala.getJugadores() == null) {
+            throw new RepositorioPozoException("La sala no cuenta con jugadores");
+        }
+        
+        // NOTE: debug
+        System.out.println("### Fichas restantes ANTES de la reparticion: %s".formatted(pozo.fichasRestantes()));
+        
+        for (int i=0; i < sala.getJugadores().size(); i++) {
+            // TODO: CAMBIAR 4 FICHAS POR UNA CUSTOM DE SALA
+            sala.getJugadores().get(i).asignarFichas(pozo.obtenerJuegoDeFichas(CANTIDAD_FICHAS_PRUEBA));
+            // muestra las fichas
+            System.out.println("### Fichas: %s".formatted(sala.getJugadores().get(i).obtenerFichas()));
+                    
+        }
+        
+        System.out.println("### Fichas restantes del pozo: %s".formatted(pozo.fichasRestantes()));
+        
+        // Retornar el evento con la respuesta
+        return new CrearPozoRespuestaEvento(sala, pozo.fichasRestantes());
     }
 
-      
-     private void enviaRespuestaError(String mensaje) {
+    /**
+     * 
+     * @param mensaje 
+     */
+    private void enviaRespuestaError(String mensaje) {
         PozoErrorEvento error = new PozoErrorEvento(mensaje);
 
         String errorSerializado;
@@ -81,39 +97,33 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
         }
     }
 
-     
-     
     @Override
-    
-            public void run() {
-                try {
-                    respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
-                    
-                    JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
+    public void run() {
+        try {
+            respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
 
-                    JsonNode salaSerializada = jsonNode.get("pozo");
-                    
-                    Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
+            JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
-                    CrearPozoRespuestaEvento evento = this.crearPozo(sala);
-                    
-                    String eventoJSON = objectMapper.writeValueAsString(evento);
+            JsonNode salaSerializada = jsonNode.get("pozo");
 
-                    respuesta.writeUTF(eventoJSON);
-                    
-                    respuesta.flush();
+            Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                
-                    this.enviaRespuestaError("No se pudo crear el pozo debido a un error en el servidor, por favor intente más tarde...");
-                
-                } catch (RepositorioPozoException ex) {
-                    this.enviaRespuestaError(ex.getMessage());
-                }
-            }
+            CrearPozoRespuestaEvento evento = this.crearPozo(sala);
+
+            String eventoJSON = objectMapper.writeValueAsString(evento);
+
+            respuesta.writeUTF(eventoJSON);
+
+            respuesta.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            this.enviaRespuestaError("No se pudo crear el pozo debido a un error en el servidor, por favor intente más tarde...");
+
+        } catch (RepositorioPozoException ex) {
+            this.enviaRespuestaError(ex.getMessage());
+        }
+    }
 
 }
-    
-    
-
