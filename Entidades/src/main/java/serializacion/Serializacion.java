@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  */
 public class Serializacion {
     public static void main(String[] args) {
+        /*
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         
         Pozo pozo = new Pozo();
@@ -127,6 +128,6 @@ public class Serializacion {
         } catch (JsonProcessingException ex) {
             Logger.getLogger(Serializacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        */
     }
 }

@@ -94,25 +94,6 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
-    public void mostrarPantallaJuego(PartidaDTO partida, ObservadorAnhadirFicha observador) {
-        modeloTableroJuego = new TableroModelo();
-        FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
-        modeloTableroJuego.setFichaIzquierda(fichaIzquierda);
-        modeloTableroJuego.setFichasEnJuego(partida.getTablero().getFichas());
-        modeloTableroJuego.setJugadores(partida.getJugadores());
-        modeloTableroJuego.setFichaSeleccionada(modeloTableroJuego.getJugadores().get(0).getFichas().get(0));
-        TableroGUI ventana = new TableroGUI(partida, modeloTableroJuego);
-        ventana.setVisible(true);
-    }
-
-    public void actualizarPantalla(PartidaDTO partida) {
-        FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
-        modeloTableroJuego.setFichaIzquierda(fichaIzquierda);
-        modeloTableroJuego.setFichasEnJuego(partida.getTablero().getFichas());
-        modeloTableroJuego.setJugadores(partida.getJugadores());
-        modeloTableroJuego.setFichaSeleccionada(modeloTableroJuego.getJugadores().get(0).getFichas().get(0));
-        modeloTableroJuego.notificar();
-    }
 
     /**
      * Actualiza la tabla de dos maneras, en caso de que un jugador haya

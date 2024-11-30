@@ -51,10 +51,11 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
     }
 
     private void mostrarJugadores() {
+        /*
         List<JugadorDTO> jugadores = this.partida.getJugadores();
 
         for (JugadorDTO j : jugadores) {
-            /*
+            
             if (j.esAnfitrion())
                 this.player1.setEnabled(true);
             else if (j.getNumero() == 2)
@@ -63,7 +64,9 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
                 this.player3.setEnabled(true);
             else if (j.getNumero() == 4)
                 this.player4.setEnabled(true);
-             */
+             
+        
+        
             if (j.esAnfitrion()) {
                 this.player1.setVisible(true);
             } else if (j.getNumero() == 2) {
@@ -74,6 +77,7 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
                 this.player4.setVisible(true);
             }
         }
+        */
 
     }
 

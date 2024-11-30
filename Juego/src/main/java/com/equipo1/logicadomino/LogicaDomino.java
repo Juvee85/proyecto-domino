@@ -111,6 +111,13 @@ public class LogicaDomino implements ObservadorConexion {
     /**
      *
      */
+    public void unirASala() {
+        // MediadorPantallas.getInstance().mostrarPantallaUnirASala(observador);
+    }
+
+    /**
+     *
+     
     public void inicializarJuego() {
 
         Jugador anfitrion = new Jugador();
@@ -207,12 +214,12 @@ public class LogicaDomino implements ObservadorConexion {
         MediadorPantallas.getInstance().mostrarPantallaJuego(dto, observador);
     }
 
-    /**
+    **
      *
      * @param jugador
      * @param ficha
      * @throws IOException
-     */
+     *
     public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
         Tablero tablero = partida.getTablero();
 
@@ -224,7 +231,7 @@ public class LogicaDomino implements ObservadorConexion {
         MediadorPantallas.getInstance().actualizarPantalla(new PartidaConverter().convertFromEntity(partida));
 
         conexion.enviarEvento(crearEvento(jugador, ficha));
-    }
+    }*/
 
     @Override
     public void actualizar(Map evento) {

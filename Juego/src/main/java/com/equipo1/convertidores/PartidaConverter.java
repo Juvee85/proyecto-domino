@@ -12,21 +12,17 @@ import entidades.Partida;
  * @author diana
  */
 public class PartidaConverter extends Converter<PartidaDTO, Partida> {
-
     
     public PartidaConverter(){
         super(PartidaConverter::convertToEntity, PartidaConverter::convertToDto);
     }
    
     private static PartidaDTO convertToDto(Partida partida) {
-        PartidaDTO dto = new  PartidaDTO();
-        dto.setJugadores(new JugadorConverter().createFromEntities(partida.getJugadores()));
-        dto.setTablero(new TableroConverter().convertFromEntity(partida.getTablero()));
-        return dto;
+        return new PartidaDTO(partida.getPuntajes());
     }
 
     private static Partida convertToEntity(PartidaDTO DTO) {
-        return null;
+        return new Partida(DTO.getPuntajes());
     }
     
     

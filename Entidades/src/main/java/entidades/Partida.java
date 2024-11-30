@@ -1,129 +1,99 @@
 package entidades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import entidades.Pozo.Ficha;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Representa la informacion completa de una partida
+ * Contiene la informacion de puntajes en la partida.
  * @author Equipo 1
  */
 public class Partida implements Serializable {
-    @JsonProperty("jugadores")
-    private List<Jugador> jugadores;
-    @JsonProperty("tablero")
-    private Tablero tablero;
-    @JsonProperty("configuracion")
-    private ConfiguracionJuego configuracion;
-    @JsonProperty("estado")
-    private EstadoPartida estado;
-    @JsonProperty("pozo")
-    private Pozo pozo;
+    @JsonProperty("puntajes")
+    private Map<String, Integer> puntajes;
+    
+    /**
+     * Crea una nueva partida vacia.
+     */
+    public Partida() {
+        this.puntajes = new HashMap<>();
+    }
     
     /**
      * Constructor utilizado para permitir la serializacion
+     * @param jugadores Lista de jugadores
      */
-    public Partida() {
+    public Partida(List<String> jugadores) {
+        this.puntajes = new HashMap<>();
         
+        jugadores.forEach(jugador -> {
+            this.puntajes.put(jugador, 0);
+        });
     }
     
     /**
-     * Crea una nueva partida con un jugador anfitrion como el jugador numero 1
-     * @param anfitrion Objeto jugador el cual es el anfitrion
+     * Se crea una partida con la informacion ya cargada de puntajes de los 
+     * jugadores.
+     * @param puntajes Mapa con los puntajes y jugadores.
      */
-    public Partida(Jugador anfitrion) {
-        this.jugadores = new ArrayList<>();
-        this.jugadores.add(anfitrion);
-        anfitrion.esAnfitrion(true);
-        this.estado = EstadoPartida.EN_ESPERA;
-        this.pozo = new Pozo();
+    public Partida(Map<String, Integer> puntajes) {
+        this.puntajes = puntajes;
     }
-   
+
     /**
-     * Agrega un nuevo jugador a la partida
-     * @param jugador Jugador que sera parte de la partida
-     * @return  
+     * Obtiene los puntajes de todos los jugadores.
+     * @return Lista de puntajes.
      */
-    public boolean agregarJugador(Jugador jugador) {
-        if (!this.jugadores.isEmpty() && this.jugadores.size() < this.configuracion.getMaximoJugadores()) {
-            jugador.setNumero(this.jugadores.size()+1);
-            return this.jugadores.add(jugador);
-        }
-       
-        return false;
+    public Map<String, Integer> getPuntajes() {
+        return puntajes;
+    }
+
+    /**
+     * @param puntajes the puntajes to set
+     */
+    public void setPuntajes(Map<String, Integer> puntajes) {
+        this.puntajes = puntajes;
     }
     
     /**
-     * @return the jugadores
+     * Agrega un nuevo jugador a la partida con el nombre dado.
+     * @param jugador Nombre del jugador.
      */
-    public List<Jugador> getJugadores() {
-        return Collections.unmodifiableList(jugadores);
-    }
-
-    /**
-     * @return the tablero
-     */
-    public Tablero getTablero() {
-        return tablero;
-    }
-
-    public void setTablero(Tablero tablero) {
-        this.tablero = tablero;
-    }
-
-    /**
-     * @return the configuracion
-     */
-    public ConfiguracionJuego getConfiguracion() {
-        return configuracion;
-    }
-
-    /**
-     * @param configuracion the configuracion to set
-     */
-    public void setConfiguracion(ConfiguracionJuego configuracion) {
-        this.configuracion = configuracion;
-    }
-
-    /**
-     * @return the estado
-     */
-    public EstadoPartida getEstado() {
-        return estado;
-    }
-
-    /**
-     * @param estado the estado to set
-     */
-    public void setEstado(EstadoPartida estado) {
-        this.estado = estado;
-    }
-
-    /**
-     * @return the pozo
-     */
-    public Pozo getPozo() {
-        return pozo;
+    public void agregarJugador(String jugador) {
+        if (!this.puntajes.containsKey(jugador)) {
+            this.puntajes.put(jugador, 0);
+        }
     }
     
-    public void iniciar() {
-        
-        if (this.jugadores.size() < 2) {
-            this.estado = EstadoPartida.EN_ESPERA;
-            return;
+    /**
+     * Elimina al jugador de la partida con el nombre especificado.
+     * @param jugador Nombre del jugador.
+     * @return true Si se pudo eliminar el jugador, false en caso contrario.
+     */
+    public boolean eliminarJugador(String jugador) {
+        return this.puntajes.remove(jugador) != null;
+    }
+    
+    /**
+     * Actualiza el puintaje de un jugador en la partida con el nombre dado.
+     * @param jugador Nombre del jugador.
+     * @param puntaje Puntaje a asignar.
+     */
+    public void actualizarPuntajeJugador(String jugador, int puntaje) {
+        if (this.puntajes.containsKey(jugador)) {
+            this.puntajes.put(jugador, puntaje);
         }
-        
-        int fichasPorJugador = this.configuracion.getFichasPorJugador();
-        
-        for (Jugador j: this.jugadores) {
-            List<Ficha> fichasPozo = this.getPozo().obtenerJuegoDeFichas(fichasPorJugador);
-            System.out.println(fichasPozo.size());
-            j.asignarFichas(fichasPozo);
-        }
-        
-        this.estado = EstadoPartida.EN_CURSO;
-    }       
+    }
+    
+    /**
+     * Obtiene el puntaje del jugador con el nombre dado en la partida.
+     * @param jugador Nombre del jugador.
+     * @return Puntaje del jugador.
+     */
+    public int obtenerPuntajeJugador(String jugador) {
+        return this.puntajes.get(jugador);
+    }
+    
 }
