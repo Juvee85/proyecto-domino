@@ -63,13 +63,11 @@ public class RepositorioPozos {
         if (pozoExiste) {
             throw new RepositorioPozoException("La sala \"" + sala.getNombre() + "\" ya cuenta con un pozo activo en el sistema.");
         }
+        
         Pozo nuevoPozo = new Pozo();
-        for (Jugador jugador: sala.getJugadores()) { 
-            List<Ficha> fichas = nuevoPozo.obtenerJuegoDeFichas(4); 
-            jugador.asignarFichas(fichas);
-        }
-
+        
         this.pozos.put(sala.getNombre(), nuevoPozo);
+        
         return nuevoPozo;
     } catch (RepositorioPozoException e) {
         System.err.println("Error al crear el pozo: " + e.getMessage());

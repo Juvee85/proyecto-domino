@@ -13,14 +13,14 @@ import java.io.Serializable;
  * @author diana
  */
 public class CrearPozoRespuestaEvento implements Serializable {
-     @JsonProperty("nombre_evento")
+    @JsonProperty("nombre_evento")
     private String nombre;
    
     @JsonProperty("sala")
     private Sala sala;
     
     @JsonProperty("fichas_restantes")
-      private int fichas_restantes;
+    private int fichas_restantes;
 
     
     public CrearPozoRespuestaEvento(Sala sala, int fichas_restantes) {
