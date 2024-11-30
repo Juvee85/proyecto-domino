@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package manejadores;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +9,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Sala;
+import entidades.Tablero;
+import eventos.CrearTableroPartidaRespuestaEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -23,22 +24,38 @@ import repositorio.excepciones.RepositorioTablerosException;
  * @author Saul Neri
  */
 public class CrearTableroPartidaSolicitudManejador extends ManejadorEvento {
-private static final RepositorioTableros repositorio = RepositorioTableros.getInstance();
+
+    private static final RepositorioTableros repositorio = RepositorioTableros.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
 
     /**
-     * Se crea un nuevo manejador para manejar el mensaje de creacion de tablero para
-     * una sala activa
+     * Se crea un nuevo manejador para manejar el mensaje de creacion de tablero
+     * para una sala activa
+     *
      * @param clienteSck
-     * @param eventoSerializado 
+     * @param eventoSerializado
      */
     public CrearTableroPartidaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         //this.nombreEvento = nombreEvento;
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
-    
+
+    /**
+     * Devuelve el evento de respuesta que sera enviado al servicio salas.
+     *
+     * @param sala Objeto sala
+     * @return Evento de respuesta.
+     * @throws RepositorioTablerosException si ocurre un error en la creacion
+     * del tablero.
+     */
+    public CrearTableroPartidaRespuestaEvento crearTablero(Sala sala) throws RepositorioTablerosException {
+        Tablero tablero = repositorio.crearTablero(sala);
+
+        return new CrearTableroPartidaRespuestaEvento(sala, tablero);
+    }
+
     /**
      * Envia el error al consumidor de los servicios (jugador)
      */
@@ -58,7 +75,7 @@ private static final RepositorioTableros repositorio = RepositorioTableros.getIn
             System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
         }
     }
-    
+
     @Override
     public void run() {
         try {
@@ -76,16 +93,16 @@ private static final RepositorioTableros repositorio = RepositorioTableros.getIn
 
             Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
-            //CrearSalaRespuestaEvento evento = this.crearSala(sala);
-            
-            //String eventoJSON = objectMapper.writeValueAsString(evento);
-            
-            //respuesta.writeUTF(eventoJSON);
-            //respuesta.flush();
+            CrearTableroPartidaRespuestaEvento evento = this.crearTablero(sala);
+            String eventoJSON = objectMapper.writeValueAsString(evento);
+            respuesta.writeUTF(eventoJSON);
+            respuesta.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
-            this.enviaRespuestaError("No se puedo crear la sala debido a un error en el servidor, porfavor intente mas tarde...");
-        } //catch (RepositorioTablerosException ex) {this.enviaRespuestaError(ex.getMessage());}
+            this.enviaRespuestaError("### No se puedo crear la sala debido a un error en el servidor, porfavor intente mas tarde...");
+        } catch (RepositorioTablerosException ex) {
+            this.enviaRespuestaError(ex.getMessage());
+        }
     }
 }
