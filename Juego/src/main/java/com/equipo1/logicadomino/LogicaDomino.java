@@ -17,8 +17,9 @@ import entidades.Tablero;
 import filtro.FiltroEventos;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
-import interfacesObservador.ObservadorAbrirPantallaUnirASala;
+import interfacesObservador.ObservadorAnhadirFicha;
 import interfacesObservador.ObservadorCambiarEstadoListo;
+import interfacesObservador.ObservadorRegresarPantallaAnterior;
 import interfacesObservador.ObservadorSalirSala;
 import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
@@ -59,27 +60,17 @@ public class LogicaDomino implements ObservadorConexion {
      *
      */
     public void inicio() {
-
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.INICIO);
 
         // TODO: ver si es mejor crear conexion al BUS desde el inicio
-        ObservadorAbrirPantallaCrearSala observadorCrearSala = () -> {
-            crearSala();
-        };
+        ObservadorAbrirPantallaCrearSala observadorCrearSala = this::crearSala;
 
-        ObservadorAbrirPantallaUnirASala observadorUnirASala = () -> {
-            unirASala();
-        };
+        ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles = this::obtenerSalasDisponibles;
 
-        ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles = () -> {
-            obtenerSalasDisponibles();
-        };
-
-        MediadorPantallas.getInstance().mostrarMenuPrincipal(observadorCrearSala, observadorUnirASala, observadorSalasDisponibles);
+        MediadorPantallas.getInstance().mostrarMenuPrincipal(observadorCrearSala, observadorSalasDisponibles);
     }
 
     public void crearSala() {
-
         // TODO: RESTRINGIR FILTRO "INICIO"
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.CREAR_SALA);
 
@@ -101,7 +92,9 @@ public class LogicaDomino implements ObservadorConexion {
                     }
                 };
 
-        MediadorPantallas.getInstance().mostrarMenuPantallaCrearSala(crearSala);
+        ObservadorRegresarPantallaAnterior observadorRegresar = this::inicio;
+
+        MediadorPantallas.getInstance().mostrarMenuPantallaCrearSala(crearSala, observadorRegresar);
     }
 
     public void obtenerSalasDisponibles() {
@@ -113,13 +106,6 @@ public class LogicaDomino implements ObservadorConexion {
         } catch (IOException ex) {
             Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    /**
-     *
-     */
-    public void unirASala() {
-        // MediadorPantallas.getInstance().mostrarPantallaUnirASala(observador);
     }
 
     /**
@@ -209,9 +195,7 @@ public class LogicaDomino implements ObservadorConexion {
 
         PartidaDTO dto = new PartidaConverter().convertFromEntity(partida);
 
-        MediadorPantallas.getInstance().mostrarPantallaJuego(dto);
-
-        MediadorPantallas.getInstance().anhadirObservador((jugador, ficha) -> {
+        ObservadorAnhadirFicha observador = ((jugador, ficha) -> {
             try {
                 anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
                         new FichaConverter().convertFromDTO(ficha));
@@ -219,6 +203,8 @@ public class LogicaDomino implements ObservadorConexion {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+
+        MediadorPantallas.getInstance().mostrarPantallaJuego(dto, observador);
     }
 
     /**
@@ -520,7 +506,7 @@ public class LogicaDomino implements ObservadorConexion {
                     System.out.println("#### NO ENCONTRADO!!!!");
                     return;
                 }
-                
+
                 int posicion = sala.getJugadores().indexOf(jugadorEncontrado);
 
                 if (posicion < 0) {
@@ -561,7 +547,9 @@ public class LogicaDomino implements ObservadorConexion {
             }
         };
 
-        MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas, observadorUnirASala);
+        ObservadorRegresarPantallaAnterior observadorRegresar = this::inicio;
+
+        MediadorPantallas.getInstance().mostrarPantallaSalasDisponibles(salas, observadorUnirASala, observadorRegresar);
     }
 
     /**

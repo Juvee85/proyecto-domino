@@ -4,6 +4,7 @@
 package salasDisponibles;
 
 import DTOS.SalaDTO;
+import interfacesObservador.ObservadorRegresarPantallaAnterior;
 import interfacesObservador.ObservadorUnirASala;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,11 @@ public class SalasDisponiblesModelo {
 
     private List<ObservadorUnirASala> observadores;
 
+    private List<ObservadorRegresarPantallaAnterior> observadoresRegresar;
+
     public SalasDisponiblesModelo() {
         observadores = new ArrayList<>();
+        observadoresRegresar = new ArrayList<>();
     }
 
     public List<SalaDTO> getSalasDisponibles() {
@@ -65,6 +69,16 @@ public class SalasDisponiblesModelo {
     public void notificarObservadores() {
         for (ObservadorUnirASala observador : observadores) {
             observador.actualizar(nombreJugador, contrasenha, salaUnir);
+        }
+    }
+
+    public void anhadirObservadorRegresarPantalla(ObservadorRegresarPantallaAnterior observador) {
+        observadoresRegresar.add(observador);
+    }
+
+    public void notificarObservadoresRegresarPantalla() {
+        for (ObservadorRegresarPantallaAnterior observador : observadoresRegresar) {
+            observador.actualizar();
         }
     }
 }

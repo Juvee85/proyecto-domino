@@ -19,6 +19,10 @@ public class CrearSalaControlador implements Observador {
         this.modelo = modelo;
         this.vista.anhadirObservador(this);
 
+        this.vista.anhadirObservadorRegresar(e ->  {
+            modelo.notificarObservadoresRegresarPantalla();
+            vista.dispose();
+        });
     }
 
     @Override
@@ -34,5 +38,7 @@ public class CrearSalaControlador implements Observador {
         modelo.setNombreJugador(nombreJugador);
 
         modelo.notificar();
+        
+        vista.dispose();
     }
 }

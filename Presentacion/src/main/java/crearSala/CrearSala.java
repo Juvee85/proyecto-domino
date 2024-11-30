@@ -218,6 +218,10 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
     public void removerObservador(Observador observador) {
         this.observadores.remove(observador);
     }
+    
+    public void anhadirObservadorRegresar(ActionListener l) {
+        this.volverBtn.addActionListener(l);
+    }
 
     /**
      * @return the nombreJugador

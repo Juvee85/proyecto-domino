@@ -275,4 +275,8 @@ public class SalasDisponibles extends javax.swing.JFrame {
             notificarObservador();
         }
     }
+    
+    public void anhadirObservadorRegresar(ActionListener l) {
+        this.salirBtn.addActionListener(l);
+    }
 }

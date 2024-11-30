@@ -4,6 +4,7 @@
 package crearSala;
 
 import DTOS.SalaDTO;
+import interfacesObservador.ObservadorRegresarPantallaAnterior;
 import interfacesObservador.salas.ObservadorCrearSala;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,11 @@ public class CrearSalaModelo {
 
     private List<ObservadorCrearSala> observadores;
 
+    private List<ObservadorRegresarPantallaAnterior> observadoresRegresar;
+
     public CrearSalaModelo() {
         observadores = new ArrayList<>();
+        observadoresRegresar = new ArrayList<>();
     }
 
     public void anhadirObservador(ObservadorCrearSala observador) {
@@ -34,7 +38,7 @@ public class CrearSalaModelo {
         sala.setContrasena(contrasena);
         sala.setMaxJugadores(maxJugadores);
         sala.setNombre(nombreSala);
-        
+
         for (ObservadorCrearSala obs : observadores) {
             obs.actualizar(sala, nombreJugador);
         }
@@ -75,5 +79,14 @@ public class CrearSalaModelo {
     public void setObservadores(List<ObservadorCrearSala> observadores) {
         this.observadores = observadores;
     }
-    
+
+    public void anhadirObservadorRegresarPantalla(ObservadorRegresarPantallaAnterior observador) {
+        observadoresRegresar.add(observador);
+    }
+
+    public void notificarObservadoresRegresarPantalla() {
+        for (ObservadorRegresarPantallaAnterior observador : observadoresRegresar) {
+            observador.actualizar();
+        }
+    }
 }

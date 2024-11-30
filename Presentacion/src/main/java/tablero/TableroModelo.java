@@ -14,7 +14,6 @@ import interfacesObservador.ObservadorAnhadirFicha;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import mediador.MediadorPantallas;
 
 /**
  * TableroModelo es responsable de gestionar el estado del juego y los elementos
@@ -367,7 +366,12 @@ public class TableroModelo implements Observable {
     }
 
     public void agregarFicha() {
-        MediadorPantallas.getInstance().notificarObservadores(jugadores.get(0), fichaSeleccionada);
+        for (ObservadorAnhadirFicha observador : observersAnhadir) {
+            observador.actualizar(jugadores.get(0), fichaSeleccionada);
+        }
     }
 
+    public void anhadirObservadorAnhadirFicha(ObservadorAnhadirFicha observador) {
+        observersAnhadir.add(observador);
+    }
 }
