@@ -1,6 +1,7 @@
 package manejadores.fabrica;
 
 import java.net.Socket;
+import manejadores.CrearTableroPartidaSolicitudManejador;
 import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
 
@@ -26,7 +27,11 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto {
      */
     @Override
     public ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
-        //switch (nombreEvento)
+        switch (nombreEvento) {
+            case "CrearTableroPartidaSolicitud" -> {
+                return new CrearTableroPartidaSolicitudManejador(socket, eventoSerializado);
+            }
+        }
         
         return null;
     }

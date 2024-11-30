@@ -58,6 +58,7 @@ public class ServicioTableros extends Thread {
 
     @Override
     public void run() {
+        
         FabricaManejadorEventoAbstracto fabricaManejadorEventos = new FabricaManejadorEvento();
         
         try {
