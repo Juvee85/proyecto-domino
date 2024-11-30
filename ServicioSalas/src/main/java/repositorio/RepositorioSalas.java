@@ -69,16 +69,18 @@ public class RepositorioSalas {
     }
 
     /**
-     * Indica si la partida con la direccion de red dada existe
-     *
-     * @param nombreSala Nombre de la asala a buscar
-     * @return true si existe la partida
+     * Devuelve la sala con el nombre dado si es que existe.
+     * @param nombreSala Nombre de la sala a buscar.
+     * @return Sala si la encuentra, null en caso contrario
      */
-    public boolean existePartida(String nombreSala) {
-        return this.salas.stream()
+    public Sala existeSala(String nombreSala) {
+        return this.salas
+                .stream()
                 .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
-                .count() > 0;
+                .findFirst()
+                .orElse(null);
     }
+    
 
     /**
      * Obtiene todas las salas activas del juego

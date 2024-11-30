@@ -47,7 +47,8 @@ public class ServicioSalas extends Thread {
                 "ObtenerSalasSolicitud",
                 "UnirseSalaSolicitud",
                 "AbandonarSalaSolicitud",
-                "CambiarEstadoJugadorListoSolicitud"
+                "CambiarEstadoJugadorListoSolicitud",
+                "IniciarPartidaSolicitud"
         ));
 
         return contrato;
