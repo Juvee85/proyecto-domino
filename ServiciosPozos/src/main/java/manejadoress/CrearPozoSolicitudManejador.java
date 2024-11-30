@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Pozo;
 import entidades.Pozo.Ficha;
+import entidades.Sala;
 import eventos.CrearPozoRespuestaEvento;
 import eventos.PozoErrorEvento;
 import java.io.DataOutputStream;
@@ -32,19 +33,36 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
     private DataOutputStream respuesta = null;
     
     
-    
+//    
     public CrearPozoSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
-    
-     private CrearPozoRespuestaEvento crearPozo(List<Ficha> fichas) throws RepositorioPozoException {
-
-        return null;
-//        repositorio.agregarFicha(ficha);
+//    
+     private CrearPozoRespuestaEvento crearPozo(Sala sala) throws RepositorioPozoException {
+         return null;
 //
-//        return new CrearPozoRespuestaEvento();
+//    int fichasTotales = repositorio.obtenerJuegoFicha(sala).size();
+//
+//    int jugadoresEnSala = sala.getJugadoresEnSala(); 
+//    int fichasPorJugador = 4; 
+//    int fichasRepartidas = jugadoresEnSala * fichasPorJugador;
+//
+//    int fichasRestantes = fichasTotales - fichasRepartidas;
+//
+//    if (fichasRestantes < 0) {
+//        throw new RepositorioPozoException("No hay suficientes fichas para crear el pozo.");
+//    }
+//
+//    // Crear el pozo en el repositorio
+//    repositorio.crearPozo(sala);
+//
+//    // Retornar el evento con la respuesta
+//    return new CrearPozoRespuestaEvento("Pozo creado exitosamente.",
+//        fichasRestantes
+//    );
     }
+
       
      private void enviaRespuestaError(String mensaje) {
         PozoErrorEvento error = new PozoErrorEvento(mensaje);
@@ -66,36 +84,35 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
      
      
     @Override
-     public void run() {
-        
-        try {
-            respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(CrearPozoSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    
+            public void run() {
+                try {
+                    respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
+                    
+                    JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
+                    JsonNode salaSerializada = jsonNode.get("pozo");
+                    
+                    Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
-           
-            JsonNode salaSerializada = jsonNode.get("pozo");
+                    CrearPozoRespuestaEvento evento = this.crearPozo(sala);
+                    
+                    String eventoJSON = objectMapper.writeValueAsString(evento);
 
-            Pozo pozo = objectMapper.treeToValue(salaSerializada, Pozo.class);
+                    respuesta.writeUTF(eventoJSON);
+                    
+                    respuesta.flush();
 
-            CrearPozoRespuestaEvento evento = this.crearPozo((List<Ficha>) pozo);
-            
-            String eventoJSON = objectMapper.writeValueAsString(evento);
-            
-            respuesta.writeUTF(eventoJSON);
-            respuesta.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                
+                    this.enviaRespuestaError("No se pudo crear el pozo debido a un error en el servidor, por favor intente más tarde...");
+                
+                } catch (RepositorioPozoException ex) {
+                    this.enviaRespuestaError(ex.getMessage());
+                }
+            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            this.enviaRespuestaError("No se puedo crear el pozo debido a un error en el servidor, porfavor intente mas tarde...");
-        } catch (RepositorioPozoException ex) {
-           this.enviaRespuestaError(ex.getMessage());
-        }
-    }
 }
     
     

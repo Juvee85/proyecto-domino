@@ -5,7 +5,7 @@
 package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import entidades.Pozo;
+import entidades.Sala;
 import java.io.Serializable;
 
 /**
@@ -15,35 +15,28 @@ import java.io.Serializable;
 public class CrearPozoRespuestaEvento implements Serializable {
      @JsonProperty("nombre_evento")
     private String nombre;
-    
-    @JsonProperty("descripcion")
-    private String descripcion;
    
-    @JsonProperty("pozo")
-    private Pozo pozo;
+    @JsonProperty("sala")
+    private Sala sala;
     
-    public CrearPozoRespuestaEvento(Pozo pozo) {
-        this.pozo = pozo;
-    } 
+    @JsonProperty("fichas_restantes")
+      private int fichas_restantes;
 
-    /**
-     * Devuelve el pozo
-     * 
-     * @return 
-     */
-    public Pozo getPozoz() {
-        return pozo;
+    
+    public CrearPozoRespuestaEvento(Sala sala, int fichas_restantes) {
+       this.nombre = "CrearTableroPartidaSolicitud";
+        this.sala = sala;
+        this.fichas_restantes = fichas_restantes;
     }
 
-    /**
-     * Asigna el pozo al evento
-     * @param pozo
-     * 
-     */
-    public void setPozo(Pozo pozo) {
-        this.pozo = pozo;
+    public Sala getSala() {
+        return sala;
     }
 
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
+    
     /**
      * @return the nombre
      */
@@ -58,5 +51,13 @@ public class CrearPozoRespuestaEvento implements Serializable {
         this.nombre = nombre;
     }
     
+    
+    public int getFichasRestantes() {
+        return fichas_restantes;
+    }
+
+    public void setFichasRestantes(int fichas_restantes) {
+        this.fichas_restantes = fichas_restantes;
+    }
     
 }
