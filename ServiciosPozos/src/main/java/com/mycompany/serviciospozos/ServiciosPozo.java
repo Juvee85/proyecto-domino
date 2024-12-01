@@ -48,7 +48,7 @@ public class ServiciosPozo extends Thread {
         contrato.setHost("localhost");
         contrato.setNombreServicio("Servicio Pozo");
         contrato.setEventosEscuchables(Arrays.asList(
-                "CrearPozoSolicitud",
+                "CrearPozoPartidaSolicitud",
                 "ActualizarPozoSolicitud",
                 "EliminarPozoSolicitud",
                 "ObtenerPozosSolicitud"
