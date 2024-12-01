@@ -48,7 +48,7 @@ public class ServicioSalas extends Thread {
                 "UnirseSalaSolicitud",
                 "AbandonarSalaSolicitud",
                 "CambiarEstadoJugadorListoSolicitud",
-                "IniciarPartidaSolicitud"
+                "PartidaPreparadaRespuesta"  // NOTE: EL QUE SE ENVIA A LOS JUGADORES CON LA INFO DE LA PARTIDA COMPLETA
         ));
 
         return contrato;

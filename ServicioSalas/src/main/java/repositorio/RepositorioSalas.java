@@ -81,7 +81,6 @@ public class RepositorioSalas {
                 .orElse(null);
     }
     
-
     /**
      * Obtiene todas las salas activas del juego
      *
@@ -114,6 +113,41 @@ public class RepositorioSalas {
         throw new RepositorioSalasException("No se pudo crear la sala debido a un error, es probable que tengas una sala abierta...");
     }
 
+    public Sala actualizarSala(Sala sala) throws RepositorioSalasException {
+        
+        if (sala == null) {
+            throw new RepositorioSalasException("La sala a actualizar no es valida");
+        }
+        
+        if (sala.getContrasena() == null) {
+            throw new RepositorioSalasException("La sala no tiene jugadores");
+        }
+        
+        boolean existe = this.salas.contains(sala.getNombre());
+        if (!existe) {
+            throw new RepositorioSalasException("La sala a actualizar no existe");
+        }
+        
+        Sala encontrada = this.salas.stream()
+                .filter(s -> s.getNombre().equalsIgnoreCase(sala.getNombre()))
+                .findFirst().orElse(null);
+
+        if (encontrada == null) {
+            throw new RepositorioSalasException("La sala que se intenta eliminar no existe...");
+        }
+        
+        int posicion = this.salas.indexOf(encontrada);
+        
+        if (posicion < 0) {
+            System.out.println("### No se encontro la sala");
+            throw new RepositorioSalasException("No se pudo encontrar la sala");
+        }
+        
+        this.salas.set(posicion, sala);
+        
+        return this.salas.get(posicion);
+    }
+    
     /**
      * Elimina la sala del repositorio de salas
      *
