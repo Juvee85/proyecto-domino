@@ -50,10 +50,10 @@ public class CrearTableroPartidaSolicitudManejador extends ManejadorEvento {
      * @throws RepositorioTablerosException si ocurre un error en la creacion
      * del tablero.
      */
-    public CrearTableroPartidaRespuestaEvento crearTablero(Sala sala) throws RepositorioTablerosException {
+    public CrearTableroPartidaRespuestaEvento crearTablero(Sala sala, int fichasRestantes) throws RepositorioTablerosException {
         Tablero tablero = repositorio.crearTablero(sala);
 
-        return new CrearTableroPartidaRespuestaEvento(sala, tablero);
+        return new CrearTableroPartidaRespuestaEvento(sala, tablero, fichasRestantes);
     }
 
     /**
@@ -90,10 +90,11 @@ public class CrearTableroPartidaSolicitudManejador extends ManejadorEvento {
 
             // Acceder a los valores directamente
             JsonNode salaSerializada = jsonNode.get("sala");
+            int fichasRestantes = jsonNode.get("fichas_restantes").asInt();
 
             Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
-            CrearTableroPartidaRespuestaEvento evento = this.crearTablero(sala);
+            CrearTableroPartidaRespuestaEvento evento = this.crearTablero(sala, fichasRestantes);
             String eventoJSON = objectMapper.writeValueAsString(evento);
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();

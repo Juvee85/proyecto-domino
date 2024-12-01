@@ -95,7 +95,7 @@ public class ServiciosPozo extends Thread {
                 System.out.println("Nombre del evento: " + nombreEvento);
 
                 // Obtiene un manejador de evento específico para el tipo de evento recibido
-                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, contratoServicioJSON);
+                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, mensajeJSON);
 
                 if (manejador != null) {
                     manejador.start(); // Inicia el manejador de eventos en un nuevo hilo

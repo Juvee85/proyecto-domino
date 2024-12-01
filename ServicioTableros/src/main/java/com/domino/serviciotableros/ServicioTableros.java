@@ -95,7 +95,7 @@ public class ServicioTableros extends Thread {
 
                 System.out.println("Nombre del evento: " + nombreEvento);
 
-                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, contratoServicioJSON);
+                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(nombreEvento, socket, mensajeJSON);
                 
                 if (manejador != null) {
                     manejador.start();

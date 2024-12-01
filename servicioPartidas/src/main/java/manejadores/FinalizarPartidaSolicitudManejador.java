@@ -4,12 +4,10 @@
  */
 package manejadores;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import eventos.FinalizarPartidaRespuestaEvento;
-import eventos.SalaErrorEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -60,19 +58,19 @@ public class FinalizarPartidaSolicitudManejador extends ManejadorEvento {
      * 
      * @param mensaje Mensaje de error
      */
-    private void enviaRespuestaError(String mensaje) {
-        SalaErrorEvento error = new SalaErrorEvento(mensaje);
-
-        try {
-            String errorSerializado = objectMapper.writeValueAsString(error);
-            respuesta.writeUTF(errorSerializado);
-            respuesta.flush();
-        } catch (JsonProcessingException ex) {
-            System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
-        } catch (IOException ex) {
-            System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
-        }
-    }
+//    private void enviaRespuestaError(String mensaje) {
+//        SalaErrorEvento error = new SalaErrorEvento(mensaje);
+//
+//        try {
+//            String errorSerializado = objectMapper.writeValueAsString(error);
+//            respuesta.writeUTF(errorSerializado);
+//            respuesta.flush();
+//        } catch (JsonProcessingException ex) {
+//            System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
+//        } catch (IOException ex) {
+//            System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
+//        }
+//    }
  
     @Override
     public void run() {
@@ -100,9 +98,9 @@ public class FinalizarPartidaSolicitudManejador extends ManejadorEvento {
 
         } catch (IOException e) {
             e.printStackTrace();
-            this.enviaRespuestaError("No se pudo enviar el mensaje de finalización de partida...");
+//            this.enviaRespuestaError("No se pudo enviar el mensaje de finalización de partida...");
         } catch (RepositorioPartidasException ex) {
-           this.enviaRespuestaError(ex.getMessage());
+//           this.enviaRespuestaError(ex.getMessage());
         }
     }
 }

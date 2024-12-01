@@ -2,6 +2,7 @@ package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Jugador;
+import entidades.Sala;
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,13 +11,13 @@ import java.util.List;
  *
  * @author Sebastian Murrieta Verduzco - 233463
  */
-public class CrearPartidaRespuestaEvento implements Serializable {
+public class CrearPozoPartidaSolicitud implements Serializable {
 
     @JsonProperty("nombre_evento")
     private String nombre;
 
-    @JsonProperty("sala_id")
-    private String salaId;
+    @JsonProperty("sala")
+    private Sala sala;
 
     @JsonProperty("jugadores")
     private List<Jugador> jugadores;
@@ -27,8 +28,8 @@ public class CrearPartidaRespuestaEvento implements Serializable {
     @JsonProperty("mensaje")
     private String mensaje;
 
-    public CrearPartidaRespuestaEvento() {
-        this.nombre = "CrearPartidaRespuesta";
+    public CrearPozoPartidaSolicitud() {
+        this.nombre = "CrearPozoPartidaSolicitud";
     }
 
     public String getNombre() {
@@ -39,12 +40,12 @@ public class CrearPartidaRespuestaEvento implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getSalaId() {
-        return salaId;
+    public Sala getSala() {
+        return sala;
     }
 
-    public void setSalaId(String salaId) {
-        this.salaId = salaId;
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 
     public List<Jugador> getJugadores() {

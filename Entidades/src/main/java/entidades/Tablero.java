@@ -22,18 +22,6 @@ public class Tablero implements Serializable {
             this.fichas = new TrenFichas();
         }
     }
-    
-    
-    /*
-    NOTE: Creo que esto deberia cambiarse.....
-    *
-    public Tablero() {
-        Ficha primeraFicha = null;
-        do {
-            primeraFicha = new Pozo().sacarFicha();
-        } while (!primeraFicha.esMula());
-        this.fichas = new TrenFichas(primeraFicha);
-    }*/
 
     public boolean agregarFichaExtremoDerecho(Ficha ficha) {
         Ficha fichaDerecha = fichas.obtenerFichaExtremoDerecho();

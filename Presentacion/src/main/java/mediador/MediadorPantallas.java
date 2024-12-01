@@ -3,9 +3,7 @@
  */
 package mediador;
 
-import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
-import DTOS.PartidaDTO;
 import DTOS.SalaDTO;
 import crearSala.CrearSala;
 import crearSala.CrearSalaControlador;
@@ -28,6 +26,7 @@ import salaEspera.SalaEsperaModelo;
 import salasDisponibles.SalasDisponibles;
 import salasDisponibles.SalasDisponiblesControlador;
 import salasDisponibles.SalasDisponiblesModelo;
+import tablero.ControladorSeleccionarFicha;
 import tablero.TableroGUI;
 import tablero.TableroModelo;
 
@@ -94,6 +93,19 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
+    public void mostrarPantallaTableroJuego(List<JugadorDTO> jugadoresEnJuego, 
+            JugadorDTO jugadorLocal, ObservadorAnhadirFicha observadorAnhadirFicha, int cantidadFichasRestantes) {
+        TableroModelo modelo = new TableroModelo();
+        modelo.setJugadorLocal(jugadorLocal);
+        modelo.setJugadores(jugadoresEnJuego);
+        modelo.setCantidadFichasRestantes(cantidadFichasRestantes);
+        TableroGUI vista = new TableroGUI(modelo);
+        modelo.anhadirObservador(vista);
+        modelo.anhadirObservadorAnhadirFicha(observadorAnhadirFicha);
+        
+        ControladorSeleccionarFicha controlador = new ControladorSeleccionarFicha(vista, modelo);
+        vista.setVisible(true);
+    }
 
     /**
      * Actualiza la tabla de dos maneras, en caso de que un jugador haya

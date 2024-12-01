@@ -1,11 +1,10 @@
-
 package manejadores;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entidades.Jugador;
-import eventos.CrearPartidaRespuestaEvento;
-import eventos.SalaErrorEvento;
+import entidades.Sala;
+import eventos.CrearPozoPartidaSolicitud;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -19,7 +18,7 @@ import repositorios.excepciones.RepositorioPartidasException;
 /**
  * Maneja la solicitud para crear una nueva partida
  *
- * 
+ *
  *
  * @author Sebastian Murrieta Verduzco - 233463
  */
@@ -47,11 +46,10 @@ public class CrearPartidaSolicitudManejador extends ManejadorEvento {
             JsonNode jsonNode = objectMapper.readTree(eventoSerializado);
 
             // Validar campos requeridos
-            validarCampos(jsonNode);
-
+//            validarCampos(jsonNode);
             // Extraer información de la solicitud
-            String salaId = jsonNode.get("sala_id").asText();
-            JsonNode jugadoresNode = jsonNode.get("jugadores");
+            JsonNode jugadoresNode = jsonNode.get("sala").get("jugadores");
+            Sala sala = objectMapper.treeToValue(jsonNode.get("sala"), Sala.class);
 
             // Crear lista de jugadores
             List<Jugador> jugadores = new ArrayList<>();
@@ -61,26 +59,26 @@ public class CrearPartidaSolicitudManejador extends ManejadorEvento {
             }
 
             // Crear la partida
-            crearPartida(salaId, jugadores, respuesta);
+            crearPartida(sala, jugadores, respuesta);
 
         } catch (IOException | RepositorioPartidasException | IllegalArgumentException e) {
             LOGGER.log(Level.SEVERE, "Error al procesar creación de partida", e);
-            enviarRespuestaError(e.getMessage());
+//            enviarRespuestaError(e.getMessage());
         }
     }
 
+    // TODO: hacer una validación correcta
     /**
      * Valida que los campos necesarios estén presentes en el JSON
      *
      * @param jsonNode Nodo JSON a validar
      * @throws IllegalArgumentException Si falta algún campo requerido
      */
-    private void validarCampos(JsonNode jsonNode) {
-        if (!jsonNode.has("sala_id") || !jsonNode.has("jugadores")) {
-            throw new IllegalArgumentException("Campos requeridos incompletos para crear partida");
-        }
-    }
-
+//    private void validarCampos(JsonNode jsonNode) {
+//        if (!jsonNode.has("sala_id") || !jsonNode.has("jugadores")) {
+//            throw new IllegalArgumentException("Campos requeridos incompletos para crear partida");
+//        }
+//    }
     /**
      * Crea la partida en el repositorio
      *
@@ -90,7 +88,7 @@ public class CrearPartidaSolicitudManejador extends ManejadorEvento {
      * @throws RepositorioPartidasException Si hay un error al crear la partida
      * @throws IOException Si hay un error al enviar la respuesta
      */
-    private void crearPartida(String salaId, List<Jugador> jugadores, DataOutputStream respuesta) 
+    private void crearPartida(Sala sala, List<Jugador> jugadores, DataOutputStream respuesta)
             throws RepositorioPartidasException, IOException {
         // Validar que haya al menos un jugador
         if (jugadores.isEmpty()) {
@@ -99,16 +97,16 @@ public class CrearPartidaSolicitudManejador extends ManejadorEvento {
 
         // Crear la partida con el primer jugador como anfitrión
         Jugador anfitrion = jugadores.get(0);
-        repositorio.crearPartida(salaId, anfitrion);
+        repositorio.crearPartida(sala.getNombre(), anfitrion);
 
         // Agregar el resto de los jugadores
         for (Jugador jugador : jugadores) {
-            repositorio.añadirJugador(salaId, jugador.getNombre());
+            repositorio.añadirJugador(sala.getNombre(), jugador.getNombre());
         }
 
         // Preparar y enviar respuesta de éxito
-        CrearPartidaRespuestaEvento evento = new CrearPartidaRespuestaEvento();
-        evento.setSalaId(salaId);
+        CrearPozoPartidaSolicitud evento = new CrearPozoPartidaSolicitud();
+        evento.setSala(sala);
         evento.setJugadores(jugadores);
         evento.setEstado("completado");
         evento.setMensaje("Partida creada exitosamente");
@@ -117,7 +115,7 @@ public class CrearPartidaSolicitudManejador extends ManejadorEvento {
         respuesta.writeUTF(respuestaJson);
         respuesta.flush();
 
-        LOGGER.info("Partida creada exitosamente para la sala: " + salaId);
+        LOGGER.info("Partida creada exitosamente para la sala: " + sala.getNombre());
     }
 
     /**
@@ -125,15 +123,15 @@ public class CrearPartidaSolicitudManejador extends ManejadorEvento {
      *
      * @param mensaje Mensaje de error a enviar
      */
-    private void enviarRespuestaError(String mensaje) {
-        try (DataOutputStream respuesta = new DataOutputStream(clienteSck.getOutputStream())) {
-            SalaErrorEvento error = new SalaErrorEvento(mensaje);
-            String errorJson = objectMapper.writeValueAsString(error);
-            respuesta.writeUTF(errorJson);
-
-            LOGGER.warning("Error al procesar solicitud de creación de partida: " + mensaje);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error al enviar respuesta de error", e);
-        }
-    }
+//    private void enviarRespuestaError(String mensaje) {
+//        try (DataOutputStream respuesta = new DataOutputStream(clienteSck.getOutputStream())) {
+//            SalaErrorEvento error = new SalaErrorEvento(mensaje);
+//            String errorJson = objectMapper.writeValueAsString(error);
+//            respuesta.writeUTF(errorJson);
+//
+//            LOGGER.warning("Error al procesar solicitud de creación de partida: " + mensaje);
+//        } catch (IOException e) {
+//            LOGGER.log(Level.SEVERE, "Error al enviar respuesta de error", e);
+//        }
+//    }
 }

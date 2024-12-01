@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
-import manejadores.fabrica.FabricaManejadorEvento;
+import manejadores.fabrica.FabricaManejadorPartidas;
 import servicio.ContratoServicio;
 
 /**
@@ -21,6 +21,7 @@ import servicio.ContratoServicio;
  * @author Sebastian Murrieta Verduzco
  */
 public class ServicioPartidas extends Thread {
+
     private static final String BUS_HOSTNAME = "localhost";
     private static final int BUS_PUERTO = 15_001;
     private Socket socket = null;
@@ -38,17 +39,17 @@ public class ServicioPartidas extends Thread {
         contrato.setHost("localhost");
         contrato.setNombreServicio("Servicio Partidas");
         contrato.setEventosEscuchables(Arrays.asList(
-            "ActualizarPuntajeSolicitud",
-            "CrearPartidaSolicitud", 
-            "FinalizarPartidaSolicitud"
+                "ActualizarPuntajeSolicitud",
+                "CrearPartidaSolicitud",
+                "FinalizarPartidaSolicitud"
         ));
         return contrato;
     }
 
     @Override
     public void run() {
-        FabricaManejadorEventoAbstracto fabricaManejadorEventos = new FabricaManejadorEvento();
-        
+        FabricaManejadorEventoAbstracto fabricaManejadorEventos = new FabricaManejadorPartidas();
+
         try {
             socket = new Socket(BUS_HOSTNAME, BUS_PUERTO);
             System.out.println("[*] CONECTADO AL BUS(%s, %d)...".formatted(BUS_HOSTNAME, BUS_PUERTO));
@@ -58,31 +59,30 @@ public class ServicioPartidas extends Thread {
         }
 
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        try (DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream());
-             DataInputStream mensaje = new DataInputStream(socket.getInputStream())) {
-            
+        try (DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream()); DataInputStream mensaje = new DataInputStream(socket.getInputStream())) {
+
             // Enviar contrato de servicio 
             String contratoServicioJSON = mapper.writeValueAsString(getContrato());
             System.out.println("CONTRATO ENVIADO: " + contratoServicioJSON);
             respuesta.writeUTF(contratoServicioJSON);
             respuesta.flush();
-            
+
             // Procesar mensajes entrantes
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     String mensajeJSON = mensaje.readUTF();
                     JsonNode jsonNode = mapper.readTree(mensajeJSON);
-                    
+
                     // Acceder a los valores directamente
                     String nombreEvento = jsonNode.get("nombre_evento").asText();
                     System.out.println("Nombre del evento: " + nombreEvento);
-                    
+
                     ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(
-                        nombreEvento, 
-                        socket, 
-                        contratoServicioJSON
+                            nombreEvento,
+                            socket,
+                            mensajeJSON
                     );
-                    
+
                     if (manejador != null) {
                         manejador.start();
                     }

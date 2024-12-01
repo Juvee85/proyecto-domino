@@ -28,7 +28,7 @@ public class IniciarPartidaRespuestaEvento {
     private int fichasRestantes;
     
     public IniciarPartidaRespuestaEvento(Sala sala, Tablero tablero, int fichasRestantes) {
-        this.nombreEvento = "PartidaPreparadaRespuesta";
+        this.nombreEvento = "IniciarPartidaRespuesta";
         this.sala = sala;
         this.tablero = tablero;
         this.fichasRestantes = fichasRestantes;

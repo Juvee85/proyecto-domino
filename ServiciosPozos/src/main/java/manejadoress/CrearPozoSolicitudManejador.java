@@ -9,16 +9,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Pozo;
-import entidades.Pozo.Ficha;
 import entidades.Sala;
 import eventos.CrearPozoRespuestaEvento;
 import eventos.PozoErrorEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import manejadores.ManejadorEvento;
 import repositorio.excepciones.RepositorioPozoException;
 import repositorios.RepositorioPozos;
@@ -104,7 +100,7 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
 
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
-            JsonNode salaSerializada = jsonNode.get("pozo");
+            JsonNode salaSerializada = jsonNode.get("sala");
 
             Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 

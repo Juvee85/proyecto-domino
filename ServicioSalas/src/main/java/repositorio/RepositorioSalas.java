@@ -3,8 +3,6 @@ package repositorio;
 import entidades.Jugador;
 import entidades.Sala;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import repositorio.excepciones.RepositorioSalasException;
 
@@ -123,7 +121,7 @@ public class RepositorioSalas {
             throw new RepositorioSalasException("La sala no tiene jugadores");
         }
         
-        boolean existe = this.salas.contains(sala.getNombre());
+        boolean existe = this.salas.stream().anyMatch(salaGuardada -> salaGuardada.getNombre().equals(salaGuardada.getNombre()));
         if (!existe) {
             throw new RepositorioSalasException("La sala a actualizar no existe");
         }

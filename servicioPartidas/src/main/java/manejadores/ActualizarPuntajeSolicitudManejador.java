@@ -3,7 +3,6 @@ package manejadores;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eventos.ActualizarPuntajeRespuestaEvento;
-import eventos.SalaErrorEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -11,7 +10,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import repositorios.RepositorioPartidas;
-import repositorios.excepciones.RepositorioPartidasException;
 
 /**
  * Gestiona las solicitudes para actualizar el puntaje de un usuario en una
@@ -61,7 +59,7 @@ public class ActualizarPuntajeSolicitudManejador extends ManejadorEvento {
             enviarRespuestaExito(respuesta, datos);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error al procesar la actualización del puntaje", e);
-            enviarRespuestaError(e.getMessage());
+//            enviarRespuestaError(e.getMessage());
         }
     }
 
@@ -133,20 +131,21 @@ public class ActualizarPuntajeSolicitudManejador extends ManejadorEvento {
                 datos.usuario, datos.salaId, datos.puntaje));
     }
 
+    // TODO: crear mensaje de error
     /**
      * Envía una respuesta de error al cliente.
      *
      * @param mensaje Mensaje de error.
      */
-    private void enviarRespuestaError(String mensaje) {
-        try (DataOutputStream respuesta = new DataOutputStream(clienteSck.getOutputStream())) {
-            SalaErrorEvento error = new SalaErrorEvento(mensaje);
-            respuesta.writeUTF(objectMapper.writeValueAsString(error));
-            LOGGER.warning("Error al procesar la solicitud: " + mensaje);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error al enviar la respuesta de error", e);
-        }
-    }
+//    private void enviarRespuestaError(String mensaje) {
+//        try (DataOutputStream respuesta = new DataOutputStream(clienteSck.getOutputStream())) {
+//            SalaErrorEvento error = new SalaErrorEvento(mensaje);
+//            respuesta.writeUTF(objectMapper.writeValueAsString(error));
+//            LOGGER.warning("Error al procesar la solicitud: " + mensaje);
+//        } catch (IOException e) {
+//            LOGGER.log(Level.SEVERE, "Error al enviar la respuesta de error", e);
+//        }
+//    }
 
     /**
      * Registro que representa los datos necesarios para actualizar el puntaje.

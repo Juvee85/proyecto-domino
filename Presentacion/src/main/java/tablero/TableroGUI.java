@@ -1,10 +1,7 @@
 package tablero;
 
-import DTOS.JugadorDTO;
-import DTOS.PartidaDTO;
 import interfacesObservador.Observador;
 import java.awt.event.KeyListener;
-import java.util.List;
 
 /**
  *
@@ -13,24 +10,19 @@ import java.util.List;
 public class TableroGUI extends javax.swing.JFrame implements Observador {
 
     private PanelManoJugador panelManoJugador;
-    private PartidaDTO partida;
     private TableroModelo modelo;
     private PanelTablero panelTablero;
     private PanelManoJugador mano;
-    private ControladorArrastreFicha controladorArrastre;
-    private ControladorSeleccionarFicha controlador;
 
     /**
      * Creates new form TableroGUI
      *
      * @param partida
      */
-    public TableroGUI(PartidaDTO partida, TableroModelo modelo) {
+    public TableroGUI( TableroModelo modelo) {
         initComponents();
         this.modelo = modelo;
-        this.partida = partida;
 
-        modelo.anhadirObservador(this);
         // Inicializar el panel de la mano del jugador
         panelManoJugador = new PanelManoJugador(modelo);
         manoJugador.add(panelManoJugador);  // Agregar el panel al contenedor manoJugador
@@ -44,8 +36,6 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
         panelTablero.setOpaque(false);
 
         panelManoJugador.requestFocus();
-        controladorArrastre = new ControladorArrastreFicha(panelManoJugador, panelTablero, modelo);
-        controlador = new ControladorSeleccionarFicha(this, modelo);
 
         this.mostrarJugadores();
     }

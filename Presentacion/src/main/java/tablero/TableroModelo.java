@@ -63,12 +63,14 @@ public class TableroModelo implements Observable {
     private FichaDTO fichaSeleccionada;
     private int indiceFichaSeleccionada;
     private List<JugadorDTO> jugadores;
+    private JugadorDTO jugadorLocal;
     // Referencia a la ficha más a la izquierda en el tablero
     private FichaDTO fichaIzquierda;
 
     // Lista de observadores para el patrón de diseño "Observer" (observar cambios en el modelo)
     private List<Observador> observers;
     private List<ObservadorAnhadirFicha> observersAnhadir;
+    private int cantidadFichasRestantes;
 
     /**
      * Constructor de TableroModelo. Inicializa la lista de observadores y deja
@@ -292,6 +294,14 @@ public class TableroModelo implements Observable {
         return dominoStartingY;
     }
 
+    public JugadorDTO getJugadorLocal() {
+        return jugadorLocal;
+    }
+
+    public void setJugadorLocal(JugadorDTO jugadorLocal) {
+        this.jugadorLocal = jugadorLocal;
+    }
+
     // Métodos relacionados con las fichas en juego y los jugadores
     /**
      * Obtiene la lista de fichas actualmente en juego.
@@ -373,5 +383,13 @@ public class TableroModelo implements Observable {
 
     public void anhadirObservadorAnhadirFicha(ObservadorAnhadirFicha observador) {
         observersAnhadir.add(observador);
+    }
+
+    public void setCantidadFichasRestantes(int cantidadFichasRestantes) {
+        this.cantidadFichasRestantes = cantidadFichasRestantes;
+    }
+    
+    public int obtenerCantidadFichasRestantes() {
+        return cantidadFichasRestantes;
     }
 }

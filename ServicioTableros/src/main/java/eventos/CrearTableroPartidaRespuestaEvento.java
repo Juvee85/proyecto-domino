@@ -25,10 +25,14 @@ public class CrearTableroPartidaRespuestaEvento implements Serializable {
     @JsonProperty("tablero")
     private Tablero tablero;
     
-    public CrearTableroPartidaRespuestaEvento(Sala sala, Tablero tablero) {
+    @JsonProperty("fichas_restantes")
+    private int fichasRestantes;
+    
+    public CrearTableroPartidaRespuestaEvento(Sala sala, Tablero tablero, int fichasRestantes) {
         this.nombreEvento = "PartidaPreparadaRespuesta";
         this.sala = sala;
         this.tablero = tablero;
+        this.fichasRestantes = fichasRestantes;
     }
 
     /**
@@ -50,6 +54,14 @@ public class CrearTableroPartidaRespuestaEvento implements Serializable {
      */
     public Tablero getTablero() {
         return tablero;
+    }
+
+    public int obtenerFichasRestantes() {
+        return fichasRestantes;
+    }
+
+    public void setFichas_restantes(int fichasRestantes) {
+        this.fichasRestantes = fichasRestantes;
     }
     
     

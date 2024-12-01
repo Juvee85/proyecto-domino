@@ -1,0 +1,8 @@
+manejadores\fabrica\FabricaManejadorEvento.class
+repositorio\RepositorioTableros.class
+com\domino\serviciotableros\Main.class
+com\domino\serviciotableros\ServicioTableros.class
+repositorio\excepciones\RepositorioTablerosException.class
+manejadores\TablerosErrorEvento.class
+eventos\CrearTableroPartidaRespuestaEvento.class
+manejadores\CrearTableroPartidaSolicitudManejador.class

@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Sala;
 import entidades.Tablero;
-import eventos.CrearPartidaSolicitudEvento;
 import eventos.IniciarPartidaRespuestaEvento;
 import eventos.SalaErrorEvento;
 import java.io.DataOutputStream;
@@ -104,7 +103,7 @@ public class PartidaPreparadaRespuestaManejador extends ManejadorEvento {
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
             // arboles JSON
-            JsonNode salaSerializada = jsonNode.get("pozo");
+            JsonNode salaSerializada = jsonNode.get("sala");
             JsonNode tableroSerializado = jsonNode.get("tablero");
             
             // obtencion de los datos

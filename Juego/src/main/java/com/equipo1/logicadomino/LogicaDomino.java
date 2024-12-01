@@ -1,14 +1,11 @@
 package com.equipo1.logicadomino;
 
 import DTOS.JugadorDTO;
-import DTOS.PartidaDTO;
 import DTOS.SalaDTO;
 import com.equipo1.convertidores.FichaConverter;
 import com.equipo1.convertidores.JugadorConverter;
-import com.equipo1.convertidores.PartidaConverter;
 import com.equipo1.convertidores.SalaConverter;
 import conexion.Conexion;
-import entidades.ConfiguracionJuego;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo.Ficha;
@@ -44,6 +41,7 @@ import observador.ObservadorConexion;
 public class LogicaDomino implements ObservadorConexion {
 
     private Partida partida;
+    private Tablero tablero;
     private Sala sala;
     private Jugador jugador;
     private List<Sala> salasDisponibles;
@@ -82,6 +80,7 @@ public class LogicaDomino implements ObservadorConexion {
                     jugador.setNumero(0);
                     jugador.setAvatar("");
                     jugador.setListo(false);
+                    jugador.esAnfitrion(true);
 
                     System.out.println("### crearSala: %s".formatted(sala));
 
@@ -110,131 +109,88 @@ public class LogicaDomino implements ObservadorConexion {
 
     /**
      *
+     *
+     * public void inicializarJuego() {
+     *
+     * Jugador anfitrion = new Jugador(); anfitrion.setNombre("Alfonso");
+     * anfitrion.setAvatar("DonAlfonsoDestroyer");
+     *
+     * Partida partida = new Partida(anfitrion);
+     *
+     * // se crea la configuracion (solo 3 jugadores y 5 fichas para cada uno)
+     * ConfiguracionJuego configuracion = new ConfiguracionJuego(3, 5);
+     * partida.setConfiguracion(configuracion);
+     *
+     * // se crea otro jugador Jugador jugador2 = new Jugador();
+     * jugador2.setNombre("Pedro"); jugador2.setAvatar("ElPerroShesh14");
+     * boolean agregado = partida.agregarJugador(jugador2);
+     * System.out.println(agregado);
+     *
+     * // se inicia la partida partida.iniciar();
+     *
+     * System.out.println("Fichas jugador 1: "); for (Ficha f :
+     * anfitrion.obtenerFichas()) { System.out.println(f); }
+     *
+     * System.out.println("Fichas jugador 2: "); for (Ficha f :
+     * jugador2.obtenerFichas()) { System.out.println(f); }
+     *
+     * System.out.println("Estado de la partida: " + partida.getEstado());
+     *
+     * Tablero tab = new Tablero();
+     *
+     * // Agrega fichas de prueba Ficha ficha1 =
+     * partida.getPozo().sacarFicha(); Ficha ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
+     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
+     * tab.agregarFichaExtremoDerecho(ficha2);
+     *
+     * partida.setTablero(tab); // Hasta aqui se agregan datos de prueba
+     *
+     * this.partida = partida;
+     *
+     * PartidaDTO dto = new PartidaConverter().convertFromEntity(partida);
+     *
+     * ObservadorAnhadirFicha observador = ((jugador, ficha) -> { try {
+     * anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador), new
+     * FichaConverter().convertFromDTO(ficha)); } catch (IOException ex) {
+     * Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null,
+     * ex); } });
+     *
+     * MediadorPantallas.getInstance().mostrarPantallaJuego(dto, observador); }
      */
-    public void unirASala() {
-        // MediadorPantallas.getInstance().mostrarPantallaUnirASala(observador);
-    }
-
     /**
      *
-     
-    public void inicializarJuego() {
-
-        Jugador anfitrion = new Jugador();
-        anfitrion.setNombre("Alfonso");
-        anfitrion.setAvatar("DonAlfonsoDestroyer");
-
-        Partida partida = new Partida(anfitrion);
-
-        // se crea la configuracion (solo 3 jugadores y 5 fichas para cada uno)
-        ConfiguracionJuego configuracion = new ConfiguracionJuego(3, 5);
-        partida.setConfiguracion(configuracion);
-
-        // se crea otro jugador
-        Jugador jugador2 = new Jugador();
-        jugador2.setNombre("Pedro");
-        jugador2.setAvatar("ElPerroShesh14");
-        boolean agregado = partida.agregarJugador(jugador2);
-        System.out.println(agregado);
-
-        // se inicia la partida
-        partida.iniciar();
-
-        System.out.println("Fichas jugador 1: ");
-        for (Ficha f : anfitrion.obtenerFichas()) {
-            System.out.println(f);
-        }
-
-        System.out.println("Fichas jugador 2: ");
-        for (Ficha f : jugador2.obtenerFichas()) {
-            System.out.println(f);
-        }
-
-        System.out.println("Estado de la partida: " + partida.getEstado());
-
-        Tablero tab = new Tablero();
-
-        // Agrega fichas de prueba
-        Ficha ficha1 = partida.getPozo().sacarFicha();
-        Ficha ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        ficha1 = partida.getPozo().sacarFicha();
-        ficha2 = partida.getPozo().sacarFicha();
-        tab.agregarFichaExtremoIzquierdo(ficha1);
-        tab.agregarFichaExtremoDerecho(ficha2);
-
-        partida.setTablero(tab);
-        // Hasta aqui se agregan datos de prueba
-
-        this.partida = partida;
-
-        PartidaDTO dto = new PartidaConverter().convertFromEntity(partida);
-
-        ObservadorAnhadirFicha observador = ((jugador, ficha) -> {
-            try {
-                anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
-                        new FichaConverter().convertFromDTO(ficha));
-            } catch (IOException ex) {
-                Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        MediadorPantallas.getInstance().mostrarPantallaJuego(dto, observador);
-    }
-
-    **
-     *
-     * @param jugador
-     * @param ficha
-     * @throws IOException
-     *
-    public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
-        Tablero tablero = partida.getTablero();
-
-        if (tablero.agregarFichaExtremoIzquierdo(ficha)
-                || tablero.agregarFichaExtremoDerecho(ficha)) {
-            partida.getJugadores().get(0).sacarFicha(ficha);
-        }
-
-        MediadorPantallas.getInstance().actualizarPantalla(new PartidaConverter().convertFromEntity(partida));
-
-        conexion.enviarEvento(crearEvento(jugador, ficha));
-    }*/
-
+     * @param evento
+     */
     @Override
-    public void actualizar(Map evento) {
+    public void actualizar(Map<String, Object> evento) {
         // TODO: Detectar que evento es y actuar en consecuencia...
         System.out.println(evento.toString());
         System.out.println("HERE");
@@ -466,11 +422,95 @@ public class LogicaDomino implements ObservadorConexion {
                         .stream()
                         .map(j -> convertidor.convertFromEntity(j))
                         .collect(Collectors.toList());
+
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
+
+                if (jugador.esAnfitrion() && sala.getJugadores().stream().allMatch(j -> j.estaListo())) {
+
+                    try {
+                        conexion.enviarEvento(crearEventoIniciarPartidaSolicitud());
+                    } catch (IOException ex) {
+                        Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+            break;
+
+            case "IniciarPartidaRespuesta": {
+                Map<String, Object> salaIniciar = (Map<String, Object>) evento.get("sala");
+                int cantidadFichasRestantes = (int) evento.get("fichas_restantes");
+
+                sala = obtenerSalaDesdeMapa(salaIniciar);
+
+                ObservadorAnhadirFicha observador = ((jugador, ficha) -> {
+                    try {
+                        anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
+                                new FichaConverter().convertFromDTO(ficha));
+                    } catch (IOException ex) {
+                        Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+
+                MediadorPantallas.getInstance().mostrarPantallaTableroJuego(new JugadorConverter().createFromEntities(sala.getJugadores()),
+                        new JugadorConverter().convertFromEntity(jugador),
+                        observador, cantidadFichasRestantes);
             }
             break;
         }
 
+    }
+
+    public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
+
+        if (tablero.agregarFichaExtremoIzquierdo(ficha)
+                || tablero.agregarFichaExtremoDerecho(ficha)) {
+            jugador.sacarFicha(ficha);
+        }
+
+        conexion.enviarEvento(crearEvento(jugador, ficha));
+    }
+
+    private Sala obtenerSalaDesdeMapa(Map<String, Object> mapaSala) {
+        Sala salaConvertida = new Sala();
+        List<Jugador> jugadoresEnSala = new ArrayList<>();
+        salaConvertida.setJugadoresEnSala((int) mapaSala.get("jugadores_en_sala"));
+        salaConvertida.setNombre((String) mapaSala.get("nombre_sala"));
+        salaConvertida.setMaxJugadores((int) mapaSala.get("max_jugadores"));
+
+        List<Map<String, Object>> mapasJugadores = (List<Map<String, Object>>) mapaSala.get("jugadores");
+
+        for (Map<String, Object> mapaJugador : mapasJugadores) {
+            jugadoresEnSala.add(obtenerJugadorDesdeMapa(mapaJugador));
+        }
+
+        salaConvertida.setJugadores(jugadoresEnSala);
+
+        return salaConvertida;
+    }
+
+    private Jugador obtenerJugadorDesdeMapa(Map<String, Object> mapaJugador) {
+        Jugador jugadorConvertido = new Jugador();
+        jugadorConvertido.setNombre((String) mapaJugador.get("nombre"));
+        jugadorConvertido.setAvatar((String) mapaJugador.get("avatar"));
+        jugadorConvertido.setNumero((int) mapaJugador.get("numero_jugador"));
+
+        List<Map<String, Object>> mapasFichas = (List<Map<String, Object>>) mapaJugador.get("fichas");
+        List<Ficha> fichasMano = new ArrayList<>();
+        for (Map<String, Object> mapaFicha : mapasFichas) {
+            fichasMano.add(obtenerFichaDesdeMapa(mapaFicha));
+        }
+
+        jugadorConvertido.asignarFichas(fichasMano);
+
+        return jugadorConvertido;
+    }
+
+    private Ficha obtenerFichaDesdeMapa(Map<String, Object> mapaFicha) {
+        int puntosCabeza = (int) mapaFicha.get("puntos_cabeza");
+        int puntosCola = (int) mapaFicha.get("puntos_cola");
+
+        return new Ficha(puntosCabeza, puntosCola);
     }
 
     public void desplegarPantallaSalaEspera(List<JugadorDTO> listaJugadores) {
@@ -652,6 +692,15 @@ public class LogicaDomino implements ObservadorConexion {
         mapa.put("id_jugador", nombreJugador);
         mapa.put("nombre_sala", this.sala.getNombre());
         mapa.put("listo", estadoListo);
+
+        return mapa;
+    }
+
+    private Map<String, Object> crearEventoIniciarPartidaSolicitud() {
+        HashMap<String, Object> mapa = new HashMap<>();
+
+        mapa.put("nombre_evento", "IniciarPartidaSolicitud");
+        mapa.put("nombre_sala", this.sala.getNombre());
 
         return mapa;
     }
