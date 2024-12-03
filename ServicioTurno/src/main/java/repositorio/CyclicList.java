@@ -13,7 +13,8 @@ import java.util.List;
  * @author diana
  * @param <T>
  */
-public class CyclicList <T> {
+public class CyclicList<T> {
+
     private List<T> list;
     private int index = 0;
 
@@ -24,10 +25,12 @@ public class CyclicList <T> {
         this.list = list;
     }
 
-  /**
-  * Devuelve el valor actual en el ciclo y cambia al siguiente despues de devolver el valor.
-     * @return 
-  */
+    /**
+     * Devuelve el valor actual en el ciclo y cambia al siguiente despues de
+     * devolver el valor.
+     *
+     * @return
+     */
     public T next() {
         T value = list.get(index);
         index = (index + 1) % list.size(); // Incremento cÃ­clico
@@ -35,23 +38,27 @@ public class CyclicList <T> {
     }
 
     /**
-    * Obtiene el valor actual sin pasar al siguiente despues de devolver el mismo.
-    * @return 
-    */
+     * Obtiene el valor actual sin pasar al siguiente despues de devolver el
+     * mismo.
+     *
+     * @return
+     */
     public T current() {
         return list.get(index);
     }
 
-     /**
+    /**
      * Agrega un nuevo elemento a la lista ciclica.
+     *
      * @param value
      */
-     public void add(T value) {
-      if (this.list != null) {
-         this.list.add(value);
+    public void add(T value) {
+        if (this.list != null) {
+            this.list.add(value);
+        }
     }
-   }
 
+    /*
     public static void main(String args[]) {
      CyclicList<String> turnos = new CyclicList<>(new ArrayList<>(Arrays.asList("Jugador 1", "Jugador 2", "Jugador 3")));
 
@@ -70,5 +77,5 @@ public class CyclicList <T> {
 
 
                 }
+     */
 }
-

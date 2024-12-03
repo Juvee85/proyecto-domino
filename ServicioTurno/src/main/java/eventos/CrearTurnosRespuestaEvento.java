@@ -5,6 +5,7 @@
 package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import entidades.Tablero;
 import java.io.Serializable;
 
 /**
@@ -22,15 +23,21 @@ public class CrearTurnosRespuestaEvento implements Serializable {
     @JsonProperty("sala")
     private String sala;
     
+    @JsonProperty("tablero")
+    private Tablero tablero;
+    
     @JsonProperty("turno_actual")
     private String turnoActual;
 
-    
+    public CrearTurnosRespuestaEvento() {
+        
+    }
 
-    public CrearTurnosRespuestaEvento(String descripcion, String sala, String turnoActual) {
+    public CrearTurnosRespuestaEvento(String descripcion, String sala, String turnoActual, Tablero tablero) {
         this.descripcion = descripcion;
         this.sala = sala;
         this.turnoActual = turnoActual;
+        this.tablero = tablero;
     }
  
     /**
@@ -104,6 +111,20 @@ public class CrearTurnosRespuestaEvento implements Serializable {
      public void setTurnoActual(String turnoActual) {
          this.turnoActual = turnoActual;
      }
+
+    /**
+     * @return the tablero
+     */
+    public Tablero getTablero() {
+        return tablero;
+    }
+
+    /**
+     * @param tablero the tablero to set
+     */
+    public void setTablero(Tablero tablero) {
+        this.tablero = tablero;
+    }
 
 
    

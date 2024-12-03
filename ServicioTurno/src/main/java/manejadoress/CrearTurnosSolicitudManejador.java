@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Sala;
+import entidades.Tablero;
 import eventos.CrearTurnosRespuestaEvento;
 import eventos.TurnoErrorEvento;
 import java.io.DataOutputStream;
@@ -41,7 +42,7 @@ public class CrearTurnosSolicitudManejador extends ManejadorEvento{
      * @return Evento de respuesta con éxito, incluyendo el primer jugador.
      * @throws RepositorioTurnoException Si la cola ya existe.
      */
-   private CrearTurnosRespuestaEvento crearTurno(Sala sala) throws RepositorioTurnoException {
+   private CrearTurnosRespuestaEvento crearTurno(Sala sala, Tablero tablero) throws RepositorioTurnoException {
     repositorio.crearTurno(sala);
     CyclicList<String> turnos = repositorio.obtenerTurnos(sala); 
     String turnoActual = turnos.current(); 
@@ -49,7 +50,8 @@ public class CrearTurnosSolicitudManejador extends ManejadorEvento{
     return new CrearTurnosRespuestaEvento(
         sala.getNombre(),
         "Turno creado exitosamente.",
-        turnoActual
+        turnoActual,
+            tablero
     );
    }
     
@@ -76,11 +78,13 @@ public class CrearTurnosSolicitudManejador extends ManejadorEvento{
         try {
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
 
+            // TODO: OBTENER DE MANERA CORRECTA LOS DATOS...
             // Deserializar la sala del evento recibido
             Sala sala = objectMapper.readValue(this.eventoSerializado, Sala.class);
+            Tablero tablero = objectMapper.readValue(this.eventoSerializado, Tablero.class);
 
             // Crear turno y generar evento de respuesta
-            CrearTurnosRespuestaEvento evento = this.crearTurno(sala);
+            CrearTurnosRespuestaEvento evento = this.crearTurno(sala, tablero);
             String eventoJSON = objectMapper.writeValueAsString(evento);
 
             // Enviar respuesta al cliente
