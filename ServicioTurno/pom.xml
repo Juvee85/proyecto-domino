@@ -6,21 +6,18 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>com.domino</groupId>
-            <artifactId>ManejadorEvento</artifactId>
+            <artifactId>Entidades</artifactId>
             <version>1.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.17.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
             <version>2.12.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -28,19 +25,19 @@
         </dependency>
         <dependency>
             <groupId>com.domino</groupId>
-            <artifactId>Entidades</artifactId>
+            <artifactId>InformacionServicio</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>com.domino</groupId>
-            <artifactId>InformacionServicio</artifactId>
+            <artifactId>ManejadorEvento</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>com.mycompany.servicioturno.ServicioTurno</exec.mainClass>
     </properties>
 </project>
