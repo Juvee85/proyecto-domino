@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author diana
  */
-public class CrearTurnoRespuestaEvento implements Serializable {
+public class CrearTurnosRespuestaEvento implements Serializable {
     
     @JsonProperty("nombre_evento")
     private String nombre;
@@ -21,12 +21,18 @@ public class CrearTurnoRespuestaEvento implements Serializable {
 
     @JsonProperty("sala")
     private String sala;
+    
+    @JsonProperty("turno_actual")
+    private String turnoActual;
 
-    public CrearTurnoRespuestaEvento(String sala, String descripcion) {
-        this.sala = sala;
+    
+
+    public CrearTurnosRespuestaEvento(String descripcion, String sala, String turnoActual) {
         this.descripcion = descripcion;
+        this.sala = sala;
+        this.turnoActual = turnoActual;
     }
-
+ 
     /**
      * Devuelve el nombre del evento.
      *
@@ -80,4 +86,26 @@ public class CrearTurnoRespuestaEvento implements Serializable {
     public void setSala(String sala) {
         this.sala = sala;
     }
+
+    /**
+      * Devuelve el jugador que tiene el turno actual.
+      *
+      * @return el nombre del jugador en el turno actual.
+      */
+     public String getTurnoActual() {
+         return turnoActual;
+     }
+
+     /**
+      * Establece el jugador que tiene el turno actual.
+      *
+      * @param turnoActual el nombre del jugador a asignar como turno actual.
+      */
+     public void setTurnoActual(String turnoActual) {
+         this.turnoActual = turnoActual;
+     }
+
+
+   
+   
 }

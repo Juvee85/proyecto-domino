@@ -7,8 +7,8 @@ package manejadores.fabrica;
 import java.net.Socket;
 import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
-import manejadoress.AsignarTurnoSolicitudManejador;
-import manejadoress.CrearTurnoSolicitudManejador;
+import manejadoress.CrearTurnosSolicitudManejador;
+import manejadoress.ObtenerTurnosSolicitudManejador;
 
 /**
  *
@@ -23,9 +23,9 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto{
     public ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
         switch (nombreEvento) {
             case "CrearPozoSolicitud": 
-                return new AsignarTurnoSolicitudManejador(socket, eventoSerializado);
+                return new ObtenerTurnosSolicitudManejador(socket, eventoSerializado);
             case "EliminarPozoSolicitud":
-                return new CrearTurnoSolicitudManejador(socket, eventoSerializado);
+                return new CrearTurnosSolicitudManejador(socket, eventoSerializado);
             
         }
         

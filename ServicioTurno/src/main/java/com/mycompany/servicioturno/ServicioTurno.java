@@ -48,7 +48,7 @@ public class ServicioTurno extends Thread {
         contrato.setHost("localhost");
         contrato.setNombreServicio("Servicio Turno");
         contrato.setEventosEscuchables(Arrays.asList(
-                "AsignarTurnoSolicitud",
+                "ObtenerTurnoSolicitud",
                 "CrearTurnoSolicitud"
         ));
 

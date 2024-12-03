@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author diana
  */
-public class AsignarTurnoRespuestaEvento implements Serializable{
+public class ObtenerTurnosRespuestaEvento implements Serializable{
     
     
     @JsonProperty("nombre_evento")
@@ -23,14 +23,55 @@ public class AsignarTurnoRespuestaEvento implements Serializable{
     @JsonProperty("sala")
     private String sala;
 
-    @JsonProperty("turno")
-    private String turno;
+     @JsonProperty("turno_actual")
+    private String turnoActual;
 
-    public AsignarTurnoRespuestaEvento(String sala, String turno, String descripcion) {
-        this.sala = sala;
-        this.turno = turno;
+    @JsonProperty("turno_siguiente")
+    private String turnoSiguiente;
+
+    public ObtenerTurnosRespuestaEvento(String descripcion, String sala, String turnoActual, String turnoSiguiente) {
         this.descripcion = descripcion;
+        this.sala = sala;
+        this.turnoActual = turnoActual;
+        this.turnoSiguiente = turnoSiguiente;
     }
+
+      /**
+      * Devuelve el jugador que tiene el turno actual.
+      *
+      * @return el nombre del jugador en el turno actual.
+      */
+     public String getTurnoActual() {
+         return turnoActual;
+     }
+
+     /**
+      * Establece el jugador que tiene el turno actual.
+      *
+      * @param turnoActual el nombre del jugador a asignar como turno actual.
+      */
+     public void setTurnoActual(String turnoActual) {
+         this.turnoActual = turnoActual;
+     }
+
+     /**
+      * Devuelve el jugador que tendrá el siguiente turno.
+      *
+      * @return el nombre del jugador en el turno siguiente.
+      */
+     public String getTurnoSiguiente() {
+         return turnoSiguiente;
+     }
+
+     /**
+      * Establece el jugador que tendrá el siguiente turno.
+      *
+      * @param turnoSiguiente el nombre del jugador a asignar como siguiente turno.
+      */
+     public void setTurnoSiguiente(String turnoSiguiente) {
+         this.turnoSiguiente = turnoSiguiente;
+     }
+
 
     /**
      * Devuelve el nombre del evento.
@@ -84,23 +125,5 @@ public class AsignarTurnoRespuestaEvento implements Serializable{
      */
     public void setSala(String sala) {
         this.sala = sala;
-    }
-
-    /**
-     * Devuelve el turno asignado.
-     *
-     * @return turno asignado
-     */
-    public String getTurno() {
-        return turno;
-    }
-
-    /**
-     * Asigna el turno al evento.
-     *
-     * @param turno el turno a asignar
-     */
-    public void setTurno(String turno) {
-        this.turno = turno;
     }
 }

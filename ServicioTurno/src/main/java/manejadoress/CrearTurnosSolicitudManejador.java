@@ -8,42 +8,50 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Sala;
-import eventos.CrearTurnoRespuestaEvento;
+import eventos.CrearTurnosRespuestaEvento;
 import eventos.TurnoErrorEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import manejadores.ManejadorEvento;
-import repositorio.RepositorioTurno;
+import repositorio.CyclicList;
+import repositorio.RepositorioTurnos;
 import repositorios.excepciones.RepositorioTurnoException;
 
 /**
  *
  * @author diana
  */
-public class CrearTurnoSolicitudManejador extends ManejadorEvento{
-    private static final RepositorioTurno repositorio = RepositorioTurno.getInstance();
+public class CrearTurnosSolicitudManejador extends ManejadorEvento{
+    private static final RepositorioTurnos repositorio = RepositorioTurnos.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
     
     
     
-    public CrearTurnoSolicitudManejador(Socket clienteSck, String eventoSerializado) {
+    public CrearTurnosSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
     
     /**
-     * Crea una nueva cola de turnos para la sala especificada.
+     * Crea una nueva cola de turnos para la sala especificada y devuelve el primer jugador.
      *
      * @param sala Sala para la que se crea la cola de turnos.
-     * @return Evento de respuesta con éxito.
+     * @return Evento de respuesta con éxito, incluyendo el primer jugador.
      * @throws RepositorioTurnoException Si la cola ya existe.
      */
-    private CrearTurnoRespuestaEvento crearTurno(Sala sala) throws RepositorioTurnoException {
-        repositorio.crearTurno(sala);
-        return new CrearTurnoRespuestaEvento(sala.getNombre(), "Turno creado exitosamente.");
-    }
+   private CrearTurnosRespuestaEvento crearTurno(Sala sala) throws RepositorioTurnoException {
+    repositorio.crearTurno(sala);
+    CyclicList<String> turnos = repositorio.obtenerTurnos(sala); 
+    String turnoActual = turnos.current(); 
+
+    return new CrearTurnosRespuestaEvento(
+        sala.getNombre(),
+        "Turno creado exitosamente.",
+        turnoActual
+    );
+   }
     
     /**
      * Envía una respuesta de error 
@@ -68,19 +76,23 @@ public class CrearTurnoSolicitudManejador extends ManejadorEvento{
         try {
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
 
+            // Deserializar la sala del evento recibido
             Sala sala = objectMapper.readValue(this.eventoSerializado, Sala.class);
 
-            CrearTurnoRespuestaEvento evento = this.crearTurno(sala);
+            // Crear turno y generar evento de respuesta
+            CrearTurnosRespuestaEvento evento = this.crearTurno(sala);
             String eventoJSON = objectMapper.writeValueAsString(evento);
 
+            // Enviar respuesta al cliente
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
         } catch (IOException e) {
             e.printStackTrace();
-            this.enviaRespuestaError("Error al eliminar el pozo. Error en el servidor.");
+            this.enviaRespuestaError("Error al crear el turno. Error en el servidor.");
         } catch (RepositorioTurnoException ex) {
             this.enviaRespuestaError(ex.getMessage());
         }
     }
-    
 }
+    
+
