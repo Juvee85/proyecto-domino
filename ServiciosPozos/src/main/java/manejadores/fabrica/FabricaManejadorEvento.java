@@ -24,7 +24,7 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto{
     @Override
     public ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
         switch (nombreEvento) {
-            case "CrearPozoSolicitud": 
+            case "CrearPozoPartidaSolicitud": 
                 return new CrearPozoSolicitudManejador(socket, eventoSerializado);
             case "EliminarPozoSolicitud":
                 return new EliminarPozoSolicitudManejador(socket, eventoSerializado);

@@ -18,13 +18,16 @@ public class SalasDisponiblesControlador {
         this.modelo = modelo;
         this.vista = vista;
 
-        vista.anhadirObservador(() -> {
-            obtenerDatos();
-        });
+        this.vista.anhadirObservador(this::obtenerDatos);
 
-        vista.anhadirObservadorUnir((ActionEvent e) -> {
+        this.vista.anhadirObservadorUnir((ActionEvent e) -> {
             modelo.setSalaUnir(vista.obtenerSalaSeleccionada());
             vista.desplegarDialogoUnirSala();
+        });
+
+        this.vista.anhadirObservadorRegresar(e -> {
+            modelo.notificarObservadoresRegresarPantalla();
+            vista.dispose();
         });
     }
 
@@ -32,5 +35,7 @@ public class SalasDisponiblesControlador {
         modelo.setNombreJugador(vista.getNombre());
         modelo.setContrasenha(vista.getContrasenha());
         modelo.notificarObservadores();
+
+        vista.dispose();
     }
 }

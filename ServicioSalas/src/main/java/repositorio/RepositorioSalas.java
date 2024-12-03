@@ -3,8 +3,6 @@ package repositorio;
 import entidades.Jugador;
 import entidades.Sala;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import repositorio.excepciones.RepositorioSalasException;
 
@@ -69,17 +67,18 @@ public class RepositorioSalas {
     }
 
     /**
-     * Indica si la partida con la direccion de red dada existe
-     *
-     * @param nombreSala Nombre de la asala a buscar
-     * @return true si existe la partida
+     * Devuelve la sala con el nombre dado si es que existe.
+     * @param nombreSala Nombre de la sala a buscar.
+     * @return Sala si la encuentra, null en caso contrario
      */
-    public boolean existePartida(String nombreSala) {
-        return this.salas.stream()
+    public Sala existeSala(String nombreSala) {
+        return this.salas
+                .stream()
                 .filter(s -> s.getNombre().equalsIgnoreCase(nombreSala))
-                .count() > 0;
+                .findFirst()
+                .orElse(null);
     }
-
+    
     /**
      * Obtiene todas las salas activas del juego
      *
@@ -112,6 +111,41 @@ public class RepositorioSalas {
         throw new RepositorioSalasException("No se pudo crear la sala debido a un error, es probable que tengas una sala abierta...");
     }
 
+    public Sala actualizarSala(Sala sala) throws RepositorioSalasException {
+        
+        if (sala == null) {
+            throw new RepositorioSalasException("La sala a actualizar no es valida");
+        }
+        
+        if (sala.getContrasena() == null) {
+            throw new RepositorioSalasException("La sala no tiene jugadores");
+        }
+        
+        boolean existe = this.salas.stream().anyMatch(salaGuardada -> salaGuardada.getNombre().equals(salaGuardada.getNombre()));
+        if (!existe) {
+            throw new RepositorioSalasException("La sala a actualizar no existe");
+        }
+        
+        Sala encontrada = this.salas.stream()
+                .filter(s -> s.getNombre().equalsIgnoreCase(sala.getNombre()))
+                .findFirst().orElse(null);
+
+        if (encontrada == null) {
+            throw new RepositorioSalasException("La sala que se intenta eliminar no existe...");
+        }
+        
+        int posicion = this.salas.indexOf(encontrada);
+        
+        if (posicion < 0) {
+            System.out.println("### No se encontro la sala");
+            throw new RepositorioSalasException("No se pudo encontrar la sala");
+        }
+        
+        this.salas.set(posicion, sala);
+        
+        return this.salas.get(posicion);
+    }
+    
     /**
      * Elimina la sala del repositorio de salas
      *

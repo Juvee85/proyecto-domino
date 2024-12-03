@@ -10,8 +10,10 @@ import manejadores.CambiarEstadoListoSolicitudManejador;
 import manejadores.CrearSalaSolicitudManejador;
 import manejadores.EliminarSalaSolicitudManejador;
 import manejadores.FabricaManejadorEventoAbstracto;
+import manejadores.IniciarPartidaSolicitudManejador;
 import manejadores.ManejadorEvento;
 import manejadores.ObtenerSalasSolicitudManejador;
+import manejadores.PartidaPreparadaRespuestaManejador;
 import manejadores.UnirseSalaManejador;
 
 /**
@@ -58,6 +60,12 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto {
             }
             case "CambiarEstadoJugadorListoSolicitud" -> {
                 return new CambiarEstadoListoSolicitudManejador(socket, eventoSerializado);
+            }
+            case "IniciarPartidaSolicitud" -> {
+                return new IniciarPartidaSolicitudManejador(socket, eventoSerializado);
+            }
+            case "PartidaPreparadaRespuesta" -> {
+                return new PartidaPreparadaRespuestaManejador(socket, eventoSerializado);
             }
         }
 

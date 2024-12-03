@@ -101,7 +101,8 @@ public class FiltroEventos {
                         "JugadorUnidoASala",
                         "JugadorAbandonaSala",
                         "JugadorCambioEstadoListo",
-                        "SalaError"
+                        "SalaError",
+                        "IniciarPartidaRespuesta"
                 ));
             }
             break;

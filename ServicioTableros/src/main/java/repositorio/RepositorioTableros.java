@@ -49,12 +49,19 @@ public class RepositorioTableros {
      * @throws RepositorioTablerosException Si no se puede crear el tablero
      */
     public Tablero crearTablero(Sala sala) throws RepositorioTablerosException {
+        if (sala == null) {
+            throw new RepositorioTablerosException("La sala ingresada es null");
+        }
         boolean tableroExiste = this.tableros.containsKey(sala.getNombre());
         if (tableroExiste) {
             throw new RepositorioTablerosException("La sala \"%s\" ya cuenta con un tablero activo en el sistema");
         }
 
-        return this.tableros.put(sala.getNombre(), new Tablero());
+        Tablero tablero = new Tablero();
+        
+        this.tableros.put(sala.getNombre(), tablero);
+        
+        return tablero;
     }
 
     /**

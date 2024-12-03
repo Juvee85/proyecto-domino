@@ -3,9 +3,7 @@
  */
 package mediador;
 
-import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
-import DTOS.PartidaDTO;
 import DTOS.SalaDTO;
 import crearSala.CrearSala;
 import crearSala.CrearSalaControlador;
@@ -15,9 +13,9 @@ import inicio.InicioControlador;
 import inicio.InicioModelo;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
-import interfacesObservador.ObservadorAbrirPantallaUnirASala;
 import interfacesObservador.ObservadorAnhadirFicha;
 import interfacesObservador.ObservadorCambiarEstadoListo;
+import interfacesObservador.ObservadorRegresarPantallaAnterior;
 import interfacesObservador.ObservadorSalirSala;
 import interfacesObservador.ObservadorUnirASala;
 import interfacesObservador.salas.ObservadorCrearSala;
@@ -28,6 +26,7 @@ import salaEspera.SalaEsperaModelo;
 import salasDisponibles.SalasDisponibles;
 import salasDisponibles.SalasDisponiblesControlador;
 import salasDisponibles.SalasDisponiblesModelo;
+import tablero.ControladorSeleccionarFicha;
 import tablero.TableroGUI;
 import tablero.TableroModelo;
 
@@ -38,10 +37,9 @@ import tablero.TableroModelo;
  */
 public class MediadorPantallas {
 
-    private TableroModelo modelo;
+    private TableroModelo modeloTableroJuego;
     private SalaEsperaModelo modeloSalaEspera;
     private static MediadorPantallas instance;
-    private ObservadorAnhadirFicha observador;
 
     private MediadorPantallas() {
     }
@@ -54,28 +52,30 @@ public class MediadorPantallas {
     }
 
     public void mostrarMenuPrincipal(ObservadorAbrirPantallaCrearSala observadorCrearSala,
-            ObservadorAbrirPantallaUnirASala observadorUnirASala, ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles) {
+            ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles) {
         InicioModelo modelo = new InicioModelo();
         modelo.anhadirObservadorCrearSala(observadorCrearSala);
-        modelo.anhadirObservadorUnirASala(observadorUnirASala);
         modelo.anhadirObservadorSalasDisponibles(observadorSalasDisponibles);
         Inicio vista = new Inicio(modelo);
         InicioControlador controlador = new InicioControlador(vista, modelo);
         vista.setVisible(true);
     }
 
-    public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas, ObservadorUnirASala observador) {
+    public void mostrarPantallaSalasDisponibles(List<SalaDTO> salas, ObservadorUnirASala observador,
+            ObservadorRegresarPantallaAnterior observadorRegresar) {
         SalasDisponiblesModelo modelo = new SalasDisponiblesModelo();
         modelo.setSalasDisponibles(salas);
         modelo.anhadirObservador(observador);
+        modelo.anhadirObservadorRegresarPantalla(observadorRegresar);
         SalasDisponibles vista = new SalasDisponibles(modelo);
         SalasDisponiblesControlador controlador = new SalasDisponiblesControlador(modelo, vista);
         vista.setVisible(true);
     }
 
-    public void mostrarMenuPantallaCrearSala(ObservadorCrearSala observador) {
+    public void mostrarMenuPantallaCrearSala(ObservadorCrearSala observador, ObservadorRegresarPantallaAnterior observadorRegresar) {
         CrearSalaModelo modelo = new CrearSalaModelo();
         modelo.anhadirObservador(observador);
+        modelo.anhadirObservadorRegresarPantalla(observadorRegresar);
         CrearSala vista = new CrearSala(modelo);
         CrearSalaControlador controlador = new CrearSalaControlador(vista, modelo);
         vista.setVisible(true);
@@ -84,7 +84,6 @@ public class MediadorPantallas {
     public void mostrarSalaEspera(List<JugadorDTO> jugadores, ObservadorSalirSala observadorSalirSala, ObservadorCambiarEstadoListo observadorCambiarEstado) {
         SalaEsperaModelo modelo = new SalaEsperaModelo();
         modelo.setJugadores(jugadores);
-        //System.out.println("### modelo: %s".formatted(modelo));
         SalaEspera vista = new SalaEspera(modelo);
         modelo.anhadirObservador(vista);
         modelo.anhadirObservadorSalirSala(observadorSalirSala);
@@ -94,43 +93,30 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
-    public void mostrarPantallaJuego(PartidaDTO partida) {
-        modelo = new TableroModelo();
-        FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
-        modelo.setFichaIzquierda(fichaIzquierda);
-        modelo.setFichasEnJuego(partida.getTablero().getFichas());
-        modelo.setJugadores(partida.getJugadores());
-        modelo.setFichaSeleccionada(modelo.getJugadores().get(0).getFichas().get(0));
-        TableroGUI ventana = new TableroGUI(partida, modelo);
-        ventana.setVisible(true);
-    }
-
-    public void actualizarPantalla(PartidaDTO partida) {
-        FichaDTO fichaIzquierda = partida.getTablero().getFichaExtremoIzquierda();
-        modelo.setFichaIzquierda(fichaIzquierda);
-        modelo.setFichasEnJuego(partida.getTablero().getFichas());
-        modelo.setJugadores(partida.getJugadores());
-        modelo.setFichaSeleccionada(modelo.getJugadores().get(0).getFichas().get(0));
-        modelo.notificar();
+    public void mostrarPantallaTableroJuego(List<JugadorDTO> jugadoresEnJuego, 
+            JugadorDTO jugadorLocal, ObservadorAnhadirFicha observadorAnhadirFicha, int cantidadFichasRestantes) {
+        TableroModelo modelo = new TableroModelo();
+        modelo.setJugadorLocal(jugadorLocal);
+        modelo.setJugadores(jugadoresEnJuego);
+        modelo.setCantidadFichasRestantes(cantidadFichasRestantes);
+        TableroGUI vista = new TableroGUI(modelo);
+        modelo.anhadirObservador(vista);
+        modelo.anhadirObservadorAnhadirFicha(observadorAnhadirFicha);
+        
+        ControladorSeleccionarFicha controlador = new ControladorSeleccionarFicha(vista, modelo);
+        vista.setVisible(true);
     }
 
     /**
-     * Actualiza la tabla de dos maneras, en caso de que un jugador haya abandonado la partida,
-     * la lista contendra a todos menos a ese jugador. En caso de que un nuevo jugador se haya unido,
-     * se mostrara en la tabla.
+     * Actualiza la tabla de dos maneras, en caso de que un jugador haya
+     * abandonado la partida, la lista contendra a todos menos a ese jugador. En
+     * caso de que un nuevo jugador se haya unido, se mostrara en la tabla.
+     *
      * @param nuevosjugadores Lista de los jugadores actuales en la sala
      */
     public void actualizarPantallaSalaEspera(List<JugadorDTO> nuevosjugadores) {
         modeloSalaEspera.setJugadores(nuevosjugadores);
         modeloSalaEspera.notificarObservadores();
-    }
-
-    public void notificarObservadores(JugadorDTO jugador, FichaDTO ficha) {
-        observador.actualizar(jugador, ficha);
-    }
-
-    public void anhadirObservador(ObservadorAnhadirFicha observador) {
-        this.observador = observador;
     }
 
 }
