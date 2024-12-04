@@ -9,7 +9,8 @@ import entidades.Tablero;
 import java.io.Serializable;
 
 /**
- *
+ * Evento que se envia cuando se crean los turnos de la partida. El paso
+ * final en el flujo de creacion de partida.
  * @author diana
  */
 public class CrearTurnosRespuestaEvento implements Serializable {
@@ -34,6 +35,7 @@ public class CrearTurnosRespuestaEvento implements Serializable {
     }
 
     public CrearTurnosRespuestaEvento(String descripcion, String sala, String turnoActual, Tablero tablero) {
+        this.nombre = "CrearTurnosRespuestaEvento";
         this.descripcion = descripcion;
         this.sala = sala;
         this.turnoActual = turnoActual;

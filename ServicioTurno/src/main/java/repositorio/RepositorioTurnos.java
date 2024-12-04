@@ -94,15 +94,15 @@ public class RepositorioTurnos {
     
     /**
      * Obtiene el nombre del jugador que sigue de hacer su jugada.
-     * @param sala Informacion de la sala.
+     * @param nombreSala
      * @return
      * @throws RepositorioTurnoException 
      */
-    public String obtenerJugadorSiguienteTurno(Sala sala) throws RepositorioTurnoException {
-        CyclicList<String> turnosSala = this.turnos.get(sala.getNombre());
+    public String obtenerJugadorSiguienteTurno(String nombreSala) throws RepositorioTurnoException {
+        CyclicList<String> turnosSala = this.turnos.get(nombreSala);
 
         if (turnosSala == null) {
-            throw new RepositorioTurnoException("No se encontraron turnos para la sala \"" + sala.getNombre() + "\".");
+            throw new RepositorioTurnoException("No se encontraron turnos para la sala \"" + nombreSala + "\".");
         }
         
         return turnosSala.next();
