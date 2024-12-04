@@ -19,7 +19,7 @@ public class Sala implements Serializable {
     @JsonProperty("jugadores_en_sala")
     private int jugadoresEnSala;
     @JsonProperty("numero_de_fichas_por_jugador")
-    private int numFichasPorJugador;
+    private int numeroFichasPorJugador;
     @JsonProperty("contrasena")
     private String contrasena;
     @JsonProperty("tiene_contrasena")
@@ -107,16 +107,16 @@ public class Sala implements Serializable {
      * Obtiene la cantidad de fichas repartidas a cada jugador
      * @return Cantidad de fichas a repartir a cada jugador
      */
-    public int getNumFichasPorJugador() {
-        return numFichasPorJugador;
+    public int getNumeroFichasPorJugador() {
+        return numeroFichasPorJugador;
     }
 
     /**
      * Asigna la cantidad de fichas a repartir a cada jugador
-     * @param numFichasPorJugador Cantidad de fichas a repartir a cada jugador
+     * @param numeroFichasPorJugador Cantidad de fichas a repartir a cada jugador
      */
-    public void setNumFichasPorJugador(int numFichasPorJugador) {
-        this.numFichasPorJugador = numFichasPorJugador;
+    public void setNumeroFichasPorJugador(int numeroFichasPorJugador) {
+        this.numeroFichasPorJugador = numeroFichasPorJugador;
     }
 
     /**

@@ -52,7 +52,7 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
         System.out.println("### Fichas restantes ANTES de la reparticion: %s".formatted(pozo.fichasRestantes()));
 
         for (int i = 0; i < sala.getJugadores().size(); i++) {
-            sala.getJugadores().get(i).asignarFichas(pozo.obtenerJuegoDeFichas(sala.getNumFichasPorJugador()));
+            sala.getJugadores().get(i).asignarFichas(pozo.obtenerJuegoDeFichas(sala.getNumeroFichasPorJugador()));
             // muestra las fichas
             System.out.println("### Fichas: %s".formatted(sala.getJugadores().get(i).obtenerFichas()));
 

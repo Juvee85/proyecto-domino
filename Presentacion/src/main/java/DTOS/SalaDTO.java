@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTOS;
 
 /**
  * Representa una sala en el juego
+ *
  * @author Saul Neri
  */
 public class SalaDTO {
@@ -13,6 +10,7 @@ public class SalaDTO {
     private String nombre;
     private int maxJugadores;
     private int jugadoresEnSala;
+    private int numeroFichasPorJugador;
     private String host;
     private int puerto;
     private String contrasena;
@@ -78,7 +76,7 @@ public class SalaDTO {
         if (this.contrasena != null) {
             return tieneContrasena;
         }
-        
+
         return false;
     }
 
@@ -116,6 +114,24 @@ public class SalaDTO {
      */
     public void setPuerto(int puerto) {
         this.puerto = puerto;
+    }
+
+    /**
+     * Obtiene el numero de fichas que se reparte a un jugador
+     *
+     * @return Numero de fichas a repartir a jugador
+     */
+    public int getNumeroFichasPorJugador() {
+        return numeroFichasPorJugador;
+    }
+
+    /**
+     * Establece el numero de fichas que se reparte a un jugador
+     *
+     * @param numeroFichasPorJugador Numero de fichas a repartir a jugador
+     */
+    public void setNumeroFichasPorJugador(int numeroFichasPorJugador) {
+        this.numeroFichasPorJugador = numeroFichasPorJugador;
     }
 
     /**

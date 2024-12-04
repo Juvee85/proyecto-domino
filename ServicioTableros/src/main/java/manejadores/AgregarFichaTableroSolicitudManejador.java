@@ -1,5 +1,5 @@
 /*
- * AgregarFichaATableroManejador.java
+ * AgregarFichaTableroSolicitudManejador.java
  */
 package manejadores;
 
@@ -21,15 +21,15 @@ import repositorio.excepciones.RepositorioTablerosException;
 
 /**
  *
- * @author Juventino López García - 00000248547 - 02/12/2024
+ * @author Juventino López García - 00000248547
  */
-public class AgregarFichaATableroManejador extends ManejadorEvento {
+public class AgregarFichaTableroSolicitudManejador extends ManejadorEvento {
 
     private static final RepositorioTableros repositorio = RepositorioTableros.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
 
-    public AgregarFichaATableroManejador(Socket clienteSck, String eventoSerializado) {
+    public AgregarFichaTableroSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
@@ -62,7 +62,7 @@ public class AgregarFichaATableroManejador extends ManejadorEvento {
         try {
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
         } catch (IOException ex) {
-            Logger.getLogger(AgregarFichaATableroManejador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AgregarFichaTableroSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {

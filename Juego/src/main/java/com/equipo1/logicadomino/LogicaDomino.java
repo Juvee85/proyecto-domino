@@ -108,14 +108,13 @@ public class LogicaDomino implements ObservadorConexion {
             Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      *
      * @param evento
      */
     @Override
     public void actualizar(Map<String, Object> evento) {
-        // TODO: Detectar que evento es y actuar en consecuencia...
         System.out.println(evento.toString());
         System.out.println("HERE");
 
@@ -205,7 +204,7 @@ public class LogicaDomino implements ObservadorConexion {
                     jugadorNuevo.setNombre((String) jugadorMap.get("nombre"));
                     jugadorNuevo.setAvatar((String) jugadorMap.get("avatar"));
                     jugadorNuevo.setNumero(0);
-                    
+
                 }
 
                 String nombreJugador = jugadorNuevo.getNombre();
@@ -345,14 +344,13 @@ public class LogicaDomino implements ObservadorConexion {
 
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
 
-                if (jugador.esAnfitrion() && sala.getJugadores().stream().allMatch(j -> j.estaListo())) {
+                if (jugador.esAnfitrion() && sala.getJugadores().size() > 1 && sala.getJugadores().stream().allMatch(j -> j.estaListo())) {
 
                     try {
                         conexion.enviarEvento(crearEventoIniciarPartidaSolicitud());
                     } catch (IOException ex) {
                         Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                 }
             }
             break;
@@ -381,10 +379,10 @@ public class LogicaDomino implements ObservadorConexion {
                     try {
                         String direccion = anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
                                 new FichaConverter().convertFromDTO(ficha));
-                        
-                        MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero), 
+
+                        MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                                 new JugadorConverter().createFromEntities(sala.getJugadores()));
-                        
+
                         conexion.enviarEvento(crearEventoJugarFicha(new FichaConverter().convertFromDTO(ficha), direccion));
                     } catch (IOException ex) {
                         Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
@@ -404,7 +402,7 @@ public class LogicaDomino implements ObservadorConexion {
                 String direccion = (String) evento.get("direccion");
 
                 Jugador jugadorJugada = obtenerJugadorDesdeMapa(mapaJugador);
-                Ficha fichaAgragada = obtenerFichaDesdeMapa(mapaFicha);
+                Ficha fichaAgregada = obtenerFichaDesdeMapa(mapaFicha);
 
                 String nombreJugador = jugadorJugada.getNombre();
                 String nombreSala = (String) mapaSala.get("nombre_sala");
@@ -416,10 +414,10 @@ public class LogicaDomino implements ObservadorConexion {
                     return;
                 }
 
-                anhadirFichaTablero(jugadorJugada, fichaAgragada);
-                
-                MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero), 
-                                new JugadorConverter().createFromEntities(sala.getJugadores()));
+                anhadirFichaTablero(jugadorJugada, fichaAgregada);
+
+                MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
+                        new JugadorConverter().createFromEntities(sala.getJugadores()));
             }
             break;
         }
@@ -608,6 +606,7 @@ public class LogicaDomino implements ObservadorConexion {
 
         mapa.put("nombre_evento", "UnirseSalaSolicitud");
         mapa.put("id_jugador", nombreJugador);
+        mapa.put("contraseña", contrasenha);
         mapa.put("nombre_sala", salaUnir.getNombre());
 
         return mapa;
