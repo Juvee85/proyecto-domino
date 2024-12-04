@@ -27,10 +27,12 @@ public class SalaEsperaControlador implements Observador {
                 this.vista.dispose();
             }
         });
-        
-        this.vista.anhadirObservadorCambiarEstadoListo((ActionEvent e) -> {
-            this.modelo.notificarObservadorCambiarEstadoListo();
-        });
+
+        this.vista.anhadirObservadorCambiarEstadoListo((ActionEvent e)
+                -> this.modelo.notificarObservadorCambiarEstadoListo()
+        );
+
+        this.modelo.anhadirObservadorPartidaIniciada(this.vista::dispose);
     }
 
     @Override

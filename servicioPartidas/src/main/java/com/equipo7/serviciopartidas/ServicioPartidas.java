@@ -69,39 +69,28 @@ public class ServicioPartidas extends Thread {
 
             // Procesar mensajes entrantes
             while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    String mensajeJSON = mensaje.readUTF();
-                    JsonNode jsonNode = mapper.readTree(mensajeJSON);
+                String mensajeJSON = mensaje.readUTF();
+                JsonNode jsonNode = mapper.readTree(mensajeJSON);
 
-                    // Acceder a los valores directamente
-                    String nombreEvento = jsonNode.get("nombre_evento").asText();
-                    System.out.println("Nombre del evento: " + nombreEvento);
+                // Acceder a los valores directamente
+                String nombreEvento = jsonNode.get("nombre_evento").asText();
+                System.out.println("Nombre del evento: " + nombreEvento);
 
-                    ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(
-                            nombreEvento,
-                            socket,
-                            mensajeJSON
-                    );
+                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(
+                        nombreEvento,
+                        socket,
+                        mensajeJSON
+                );
 
-                    if (manejador != null) {
-                        manejador.start();
-                    }
-                } catch (IOException e) {
-                    System.out.println("[ERROR SERVICIO PARTIDAS]: Error procesando mensaje -> " + e.getMessage());
-                    break;
+                if (manejador != null) {
+                    manejador.start();
                 }
+
             }
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO PARTIDAS]: Ocurrió un error -> " + ex.getMessage());
         } finally {
-            // Cerrar socket
-            if (socket != null && !socket.isClosed()) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    System.out.println("[ERROR SERVICIO PARTIDAS]: Error cerrando socket -> " + e.getMessage());
-                }
-            }
         }
+
     }
 }

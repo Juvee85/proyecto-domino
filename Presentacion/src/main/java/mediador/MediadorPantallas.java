@@ -3,8 +3,10 @@
  */
 package mediador;
 
+import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
 import DTOS.SalaDTO;
+import DTOS.TableroDTO;
 import crearSala.CrearSala;
 import crearSala.CrearSalaControlador;
 import crearSala.CrearSalaModelo;
@@ -95,6 +97,7 @@ public class MediadorPantallas {
 
     public void mostrarPantallaTableroJuego(List<JugadorDTO> jugadoresEnJuego, 
             JugadorDTO jugadorLocal, ObservadorAnhadirFicha observadorAnhadirFicha, int cantidadFichasRestantes) {
+        modeloSalaEspera.notificarObservadorPartidaIniciada();
         TableroModelo modelo = new TableroModelo();
         modelo.setJugadorLocal(jugadorLocal);
         modelo.setJugadores(jugadoresEnJuego);
@@ -117,6 +120,15 @@ public class MediadorPantallas {
     public void actualizarPantallaSalaEspera(List<JugadorDTO> nuevosjugadores) {
         modeloSalaEspera.setJugadores(nuevosjugadores);
         modeloSalaEspera.notificarObservadores();
+    }
+    
+    public void actualizarFichaAgregada(TableroDTO tablero, List<JugadorDTO> jugadores) {
+        FichaDTO fichaIzquierda = tablero.getFichaExtremoIzquierda();
+        modeloTableroJuego.setFichaIzquierda(fichaIzquierda);
+        modeloTableroJuego.setFichasEnJuego(tablero.getFichas());
+        modeloTableroJuego.setJugadores(jugadores);
+        modeloTableroJuego.setFichaSeleccionada(modeloTableroJuego.getJugadorLocal().getFichas().get(0));
+        modeloTableroJuego.notificar();
     }
 
 }

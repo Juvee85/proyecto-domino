@@ -1,7 +1,9 @@
 package tablero;
 
+import DTOS.JugadorDTO;
 import interfacesObservador.Observador;
 import java.awt.event.KeyListener;
+import java.util.List;
 
 /**
  *
@@ -19,7 +21,7 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
      *
      * @param partida
      */
-    public TableroGUI( TableroModelo modelo) {
+    public TableroGUI(TableroModelo modelo) {
         initComponents();
         this.modelo = modelo;
 
@@ -41,33 +43,25 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
     }
 
     private void mostrarJugadores() {
-        /*
-        List<JugadorDTO> jugadores = this.partida.getJugadores();
+
+        List<JugadorDTO> jugadores = this.modelo.getJugadores();
 
         for (JugadorDTO j : jugadores) {
-            
-            if (j.esAnfitrion())
+
+            if (j.getNombre().equals(modelo.getJugadorLocal().getNombre())) {
                 this.player1.setEnabled(true);
-            else if (j.getNumero() == 2)
-                this.player2.setEnabled(true);
-            else if (j.getNumero() == 3)
-                this.player3.setEnabled(true);
-            else if (j.getNumero() == 4)
-                this.player4.setEnabled(true);
-             
-        
-        
-            if (j.esAnfitrion()) {
                 this.player1.setVisible(true);
             } else if (j.getNumero() == 2) {
+                this.player2.setEnabled(true);
                 this.player2.setVisible(true);
             } else if (j.getNumero() == 3) {
+                this.player3.setEnabled(true);
                 this.player3.setVisible(true);
             } else if (j.getNumero() == 4) {
+                this.player4.setEnabled(true);
                 this.player4.setVisible(true);
             }
         }
-        */
 
     }
 

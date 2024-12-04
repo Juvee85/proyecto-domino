@@ -15,10 +15,11 @@ import java.util.List;
  */
 public class CrearSalaModelo {
 
-    String nombreSala;
-    String contrasena;
-    int maxJugadores;
-    String nombreJugador;
+    private String nombreSala;
+    private String contrasena;
+    private int maxJugadores;
+    private int numFichasPorJugador;
+    private String nombreJugador;
 
     private List<ObservadorCrearSala> observadores;
 
@@ -66,6 +67,14 @@ public class CrearSalaModelo {
 
     public void setMaxJugadores(int maxJugadores) {
         this.maxJugadores = maxJugadores;
+    }
+
+    public int getNumFichasPorJugador() {
+        return numFichasPorJugador;
+    }
+
+    public void setNumFichasPorJugador(int numFichasPorJugador) {
+        this.numFichasPorJugador = numFichasPorJugador;
     }
 
     public String getNombreJugador() {

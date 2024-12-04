@@ -30,7 +30,7 @@ public class ControladorSeleccionarFicha {
                 int size = modelo.getJugadores().get(0).getFichas().size();
 
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_SPACE -> modelo.agregarFicha();
+                    case KeyEvent.VK_SPACE -> modelo.notificarAgregarFicha();
                     case KeyEvent.VK_LEFT -> modelo.setIndiceFichaSeleccionada((indice > 0) ? --indice : size-1);
                     case KeyEvent.VK_RIGHT -> modelo.setIndiceFichaSeleccionada((indice < size-1) ? ++indice : 0);
 

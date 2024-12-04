@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package manejadoress;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,20 +25,17 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
 
-    private static int CANTIDAD_FICHAS_PRUEBA = 4;
-    
-//    
     public CrearPozoSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
-//    
 
     /**
      * Se crea el pozo y se hace la reparticion de fichas.
+     *
      * @param sala
      * @return
-     * @throws RepositorioPozoException 
+     * @throws RepositorioPozoException
      */
     private CrearPozoRespuestaEvento crearPozo(Sala sala) throws RepositorioPozoException {
 
@@ -50,31 +43,30 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
         if (pozo == null) {
             throw new RepositorioPozoException("No se encontro el pozo asociado a la sala");
         }
-        
+
         if (sala.getJugadores() == null) {
             throw new RepositorioPozoException("La sala no cuenta con jugadores");
         }
-        
+
         // NOTE: debug
         System.out.println("### Fichas restantes ANTES de la reparticion: %s".formatted(pozo.fichasRestantes()));
-        
-        for (int i=0; i < sala.getJugadores().size(); i++) {
-            // TODO: CAMBIAR 4 FICHAS POR UNA CUSTOM DE SALA
-            sala.getJugadores().get(i).asignarFichas(pozo.obtenerJuegoDeFichas(CANTIDAD_FICHAS_PRUEBA));
+
+        for (int i = 0; i < sala.getJugadores().size(); i++) {
+            sala.getJugadores().get(i).asignarFichas(pozo.obtenerJuegoDeFichas(sala.getNumFichasPorJugador()));
             // muestra las fichas
             System.out.println("### Fichas: %s".formatted(sala.getJugadores().get(i).obtenerFichas()));
-                    
+
         }
-        
+
         System.out.println("### Fichas restantes del pozo: %s".formatted(pozo.fichasRestantes()));
-        
+
         // Retornar el evento con la respuesta
         return new CrearPozoRespuestaEvento(sala, pozo.fichasRestantes());
     }
 
     /**
-     * 
-     * @param mensaje 
+     *
+     * @param mensaje
      */
     private void enviaRespuestaError(String mensaje) {
         PozoErrorEvento error = new PozoErrorEvento(mensaje);

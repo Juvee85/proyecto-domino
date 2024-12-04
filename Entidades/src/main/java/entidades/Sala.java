@@ -18,12 +18,8 @@ public class Sala implements Serializable {
     private int maxJugadores;
     @JsonProperty("jugadores_en_sala")
     private int jugadoresEnSala;
-    /*
-    @JsonProperty("host")
-    private String host;
-    @JsonProperty("puerto")
-    private int puerto;
-    */
+    @JsonProperty("numero_de_fichas_por_jugador")
+    private int numFichasPorJugador;
     @JsonProperty("contrasena")
     private String contrasena;
     @JsonProperty("tiene_contrasena")
@@ -90,43 +86,6 @@ public class Sala implements Serializable {
     public boolean tieneContrasena() {
         return tieneContrasena;
     }
-    
-    /**
-     * Obtiene el host de la partida
-     *
-     * @return el host de de la partida
-     
-    public String getHost() {
-        return host;
-    }
-
-    /**
-     * Establece el host de la partida
-     *
-     * @param host el host a establecer.
-     
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * Obtiene el puerto de la sala
-     *
-     * @return el puerto la sala
-     
-    public int getPuerto() {
-        return puerto;
-    }
-
-    /**
-     * Establece el puerto de la sala
-     *
-     * @param puerto el puerto a establecer.
-     
-    public void setPuerto(int puerto) {
-        this.puerto = puerto;
-    }
-    */
 
     /**
      * Obtiene la cantidad maxima de jugadores permitidos en la sala
@@ -142,6 +101,22 @@ public class Sala implements Serializable {
      */
     public void setMaxJugadores(int maxJugadores) {
         this.maxJugadores = maxJugadores;
+    }
+
+    /**
+     * Obtiene la cantidad de fichas repartidas a cada jugador
+     * @return Cantidad de fichas a repartir a cada jugador
+     */
+    public int getNumFichasPorJugador() {
+        return numFichasPorJugador;
+    }
+
+    /**
+     * Asigna la cantidad de fichas a repartir a cada jugador
+     * @param numFichasPorJugador Cantidad de fichas a repartir a cada jugador
+     */
+    public void setNumFichasPorJugador(int numFichasPorJugador) {
+        this.numFichasPorJugador = numFichasPorJugador;
     }
 
     /**

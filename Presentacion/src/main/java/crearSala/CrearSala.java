@@ -59,6 +59,8 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
         volverBtn = new javax.swing.JButton();
         crearBtn = new javax.swing.JButton();
         noJugadoresSalaTxt = new javax.swing.JSpinner();
+        jLabel5 = new javax.swing.JLabel();
+        numFichasPorJugadorSpinner = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -104,6 +106,12 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Fichas por jugador");
+
+        numFichasPorJugadorSpinner.setModel(new javax.swing.SpinnerNumberModel(2, 2, 7, 1));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -122,7 +130,10 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
                             .addComponent(contraSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(noJugadoresSalaTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(numFichasPorJugadorSpinner, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)))))
                 .addContainerGap(469, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -148,7 +159,11 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(noJugadoresSalaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(numFichasPorJugadorSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(crearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(volverBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -191,6 +206,10 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
         return Integer.parseInt(noJugadoresSalaTxt.getValue().toString());
     }
     
+    public int obtenerNumeroFichasPorJugador() {
+        return Integer.parseInt(numFichasPorJugadorSpinner.getValue().toString());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField contraSalaTxt;
     private javax.swing.JButton crearBtn;
@@ -198,9 +217,11 @@ public class CrearSala extends javax.swing.JFrame implements Observable {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     public javax.swing.JSpinner noJugadoresSalaTxt;
     public javax.swing.JTextField nombreSalaTxt;
+    public javax.swing.JSpinner numFichasPorJugadorSpinner;
     private javax.swing.JButton volverBtn;
     // End of variables declaration//GEN-END:variables
 

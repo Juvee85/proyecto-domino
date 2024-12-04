@@ -5,12 +5,14 @@ import DTOS.SalaDTO;
 import com.equipo1.convertidores.FichaConverter;
 import com.equipo1.convertidores.JugadorConverter;
 import com.equipo1.convertidores.SalaConverter;
+import com.equipo1.convertidores.TableroConverter;
 import conexion.Conexion;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo.Ficha;
 import entidades.Sala;
 import entidades.Tablero;
+import entidades.TrenFichas;
 import filtro.FiltroEventos;
 import interfacesObservador.ObservadorAbrirPantallaCrearSala;
 import interfacesObservador.ObservadorAbrirPantallaSalasDisponibles;
@@ -106,85 +108,7 @@ public class LogicaDomino implements ObservadorConexion {
             Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    /**
-     *
-     *
-     * public void inicializarJuego() {
-     *
-     * Jugador anfitrion = new Jugador(); anfitrion.setNombre("Alfonso");
-     * anfitrion.setAvatar("DonAlfonsoDestroyer");
-     *
-     * Partida partida = new Partida(anfitrion);
-     *
-     * // se crea la configuracion (solo 3 jugadores y 5 fichas para cada uno)
-     * ConfiguracionJuego configuracion = new ConfiguracionJuego(3, 5);
-     * partida.setConfiguracion(configuracion);
-     *
-     * // se crea otro jugador Jugador jugador2 = new Jugador();
-     * jugador2.setNombre("Pedro"); jugador2.setAvatar("ElPerroShesh14");
-     * boolean agregado = partida.agregarJugador(jugador2);
-     * System.out.println(agregado);
-     *
-     * // se inicia la partida partida.iniciar();
-     *
-     * System.out.println("Fichas jugador 1: "); for (Ficha f :
-     * anfitrion.obtenerFichas()) { System.out.println(f); }
-     *
-     * System.out.println("Fichas jugador 2: "); for (Ficha f :
-     * jugador2.obtenerFichas()) { System.out.println(f); }
-     *
-     * System.out.println("Estado de la partida: " + partida.getEstado());
-     *
-     * Tablero tab = new Tablero();
-     *
-     * // Agrega fichas de prueba Ficha ficha1 =
-     * partida.getPozo().sacarFicha(); Ficha ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * ficha1 = partida.getPozo().sacarFicha(); ficha2 =
-     * partida.getPozo().sacarFicha(); tab.agregarFichaExtremoIzquierdo(ficha1);
-     * tab.agregarFichaExtremoDerecho(ficha2);
-     *
-     * partida.setTablero(tab); // Hasta aqui se agregan datos de prueba
-     *
-     * this.partida = partida;
-     *
-     * PartidaDTO dto = new PartidaConverter().convertFromEntity(partida);
-     *
-     * ObservadorAnhadirFicha observador = ((jugador, ficha) -> { try {
-     * anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador), new
-     * FichaConverter().convertFromDTO(ficha)); } catch (IOException ex) {
-     * Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null,
-     * ex); } });
-     *
-     * MediadorPantallas.getInstance().mostrarPantallaJuego(dto, observador); }
-     */
+    
     /**
      *
      * @param evento
@@ -281,7 +205,7 @@ public class LogicaDomino implements ObservadorConexion {
                     jugadorNuevo.setNombre((String) jugadorMap.get("nombre"));
                     jugadorNuevo.setAvatar((String) jugadorMap.get("avatar"));
                     jugadorNuevo.setNumero(0);
-                    // Configura los demás campos de la clase Jugador...
+                    
                 }
 
                 String nombreJugador = jugadorNuevo.getNombre();
@@ -385,11 +309,7 @@ public class LogicaDomino implements ObservadorConexion {
                  * Descartar evento en caso de que el cambio se duplique
                  * (que no se reciba el evento que nosotros mismos mandamos)
                  */
-                if (this.jugador != null) {
-                    if (this.jugador.getNombre().equals(nombreJugador)) {
-                        return;
-                    }
-                } else {
+                if (!validarJugadorDiferente(nombreJugador)) {
                     return;
                 }
 
@@ -440,13 +360,32 @@ public class LogicaDomino implements ObservadorConexion {
             case "IniciarPartidaRespuesta": {
                 Map<String, Object> salaIniciar = (Map<String, Object>) evento.get("sala");
                 int cantidadFichasRestantes = (int) evento.get("fichas_restantes");
+                Map<String, Object> mapaTablero = (Map<String, Object>) evento.get("tablero");
 
                 sala = obtenerSalaDesdeMapa(salaIniciar);
+                tablero = obtenerTableroDesdeMapa(mapaTablero);
+
+                Jugador jugadorNuevo = sala.getJugadores()
+                        .stream()
+                        .filter(j -> j.getNombre().equals(jugador.getNombre()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (jugadorNuevo == null) {
+                    return;
+                }
+
+                this.jugador = jugadorNuevo;
 
                 ObservadorAnhadirFicha observador = ((jugador, ficha) -> {
                     try {
-                        anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
+                        String direccion = anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
                                 new FichaConverter().convertFromDTO(ficha));
+                        
+                        MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero), 
+                                new JugadorConverter().createFromEntities(sala.getJugadores()));
+                        
+                        conexion.enviarEvento(crearEventoJugarFicha(new FichaConverter().convertFromDTO(ficha), direccion));
                     } catch (IOException ex) {
                         Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -457,18 +396,75 @@ public class LogicaDomino implements ObservadorConexion {
                         observador, cantidadFichasRestantes);
             }
             break;
+
+            case "FichaAgregadaATablero": {
+                Map<String, Object> mapaJugador = (Map<String, Object>) evento.get("jugador");
+                Map<String, Object> mapaSala = (Map<String, Object>) evento.get("sala");
+                Map<String, Object> mapaFicha = (Map<String, Object>) evento.get("ficha");
+                String direccion = (String) evento.get("direccion");
+
+                Jugador jugadorJugada = obtenerJugadorDesdeMapa(mapaJugador);
+                Ficha fichaAgragada = obtenerFichaDesdeMapa(mapaFicha);
+
+                String nombreJugador = jugadorJugada.getNombre();
+                String nombreSala = (String) mapaSala.get("nombre_sala");
+
+                if (!validarSalaCorrecta(nombreSala)) {
+                    return;
+                }
+                if (!validarJugadorDiferente(nombreJugador)) {
+                    return;
+                }
+
+                anhadirFichaTablero(jugadorJugada, fichaAgragada);
+                
+                MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero), 
+                                new JugadorConverter().createFromEntities(sala.getJugadores()));
+            }
+            break;
         }
 
     }
 
-    public void anhadirFichaTablero(Jugador jugador, Ficha ficha) throws IOException {
+    private boolean validarSalaCorrecta(String nombreSala) {
+        if (this.sala != null) {
+            if (!this.sala.getNombre().equals(nombreSala)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
 
-        if (tablero.agregarFichaExtremoIzquierdo(ficha)
-                || tablero.agregarFichaExtremoDerecho(ficha)) {
+    private boolean validarJugadorDiferente(String nombreJugador) {
+        if (this.jugador != null) {
+            if (this.jugador.getNombre().equals(nombreJugador)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public String anhadirFichaTablero(Jugador jugador, Ficha ficha) {
+        if (tablero.agregarFichaExtremoDerecho(ficha)) {
             jugador.sacarFicha(ficha);
+            return "derecha";
+        } else if (tablero.agregarFichaExtremoIzquierdo(ficha)) {
+            jugador.sacarFicha(ficha);
+            return "izquierda";
         }
 
-        conexion.enviarEvento(crearEvento(jugador, ficha));
+        return null;
+    }
+
+    private Tablero obtenerTableroDesdeMapa(Map<String, Object> mapaTablero) {
+        Tablero tableroConvertido = new Tablero();
+        tableroConvertido.setFichas((TrenFichas) mapaTablero.get("tren_fichas"));
+
+        return tableroConvertido;
     }
 
     private Sala obtenerSalaDesdeMapa(Map<String, Object> mapaSala) {
@@ -638,9 +634,11 @@ public class LogicaDomino implements ObservadorConexion {
      * @param ficha
      * @return
      */
-    private Map<String, Object> crearEvento(Jugador jugador, Ficha ficha) {
+    private Map<String, Object> crearEventoJugarFicha(Ficha ficha, String direccion) {
         HashMap<String, Object> mapa = new HashMap<>();
 
+        mapa.put("nombre_evento", "JugarFichaSolicitud");
+        mapa.put("sala", sala);
         mapa.put("jugador", jugador);
         mapa.put("ficha", ficha);
 
@@ -700,7 +698,7 @@ public class LogicaDomino implements ObservadorConexion {
         HashMap<String, Object> mapa = new HashMap<>();
 
         mapa.put("nombre_evento", "IniciarPartidaSolicitud");
-        mapa.put("nombre_sala", this.sala.getNombre());
+        mapa.put("sala", this.sala);
 
         return mapa;
     }

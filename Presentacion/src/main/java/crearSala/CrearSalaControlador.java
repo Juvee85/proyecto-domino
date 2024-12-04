@@ -19,7 +19,7 @@ public class CrearSalaControlador implements Observador {
         this.modelo = modelo;
         this.vista.anhadirObservador(this);
 
-        this.vista.anhadirObservadorRegresar(e ->  {
+        this.vista.anhadirObservadorRegresar(e -> {
             modelo.notificarObservadoresRegresarPantalla();
             vista.dispose();
         });
@@ -30,15 +30,17 @@ public class CrearSalaControlador implements Observador {
         String nombreSala = this.vista.obtenerNombre();
         String contrasena = this.vista.obtenerContrasenha();
         int maxJugadores = this.vista.obtenerNumeroJugadores();
+        int numFichasPorJugador = this.vista.obtenerNumeroFichasPorJugador();
         String nombreJugador = this.vista.obtenerNombreJugador();
 
         modelo.setNombreSala(nombreSala);
         modelo.setContrasena(contrasena);
         modelo.setMaxJugadores(maxJugadores);
         modelo.setNombreJugador(nombreJugador);
+        modelo.setNumFichasPorJugador(numFichasPorJugador);
 
         modelo.notificar();
-        
+
         vista.dispose();
     }
 }

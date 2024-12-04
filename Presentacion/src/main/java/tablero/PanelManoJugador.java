@@ -23,7 +23,7 @@ public class PanelManoJugador extends JPanel {
     // Constructor que recibe la lista de fichas del jugador
     public PanelManoJugador(TableroModelo modelo) {
         this.modelo = modelo;
-        this.fichasJugador = modelo.getJugadores().get(0).getFichas();
+        this.fichasJugador = modelo.getJugadorLocal().getFichas();
         this.observers = new ArrayList<>();
         setBackground(Color.LIGHT_GRAY); // Color de fondo
     }
@@ -59,7 +59,7 @@ public class PanelManoJugador extends JPanel {
 
     // Método para actualizar las fichas en la mano del jugador
     public void actualizarFichas() {
-        this.fichasJugador = modelo.getJugadores().get(0).getFichas();
+        this.fichasJugador = modelo.getJugadorLocal().getFichas();
         repaint(); // Redibuja el panel
         notificarObservadores();
     }

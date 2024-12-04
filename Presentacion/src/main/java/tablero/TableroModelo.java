@@ -68,8 +68,8 @@ public class TableroModelo implements Observable {
     private FichaDTO fichaIzquierda;
 
     // Lista de observadores para el patrón de diseño "Observer" (observar cambios en el modelo)
-    private List<Observador> observers;
-    private List<ObservadorAnhadirFicha> observersAnhadir;
+    private List<Observador> observadores;
+    private List<ObservadorAnhadirFicha> observadoresAnhadir;
     private int cantidadFichasRestantes;
 
     /**
@@ -77,8 +77,8 @@ public class TableroModelo implements Observable {
      * las demás propiedades con sus valores predeterminados.
      */
     public TableroModelo() {
-        this.observers = new ArrayList<>();
-        this.observersAnhadir = new ArrayList<>();
+        this.observadores = new ArrayList<>();
+        this.observadoresAnhadir = new ArrayList<>();
     }
 
     // Métodos para acceder a los atributos del modelo
@@ -326,14 +326,20 @@ public class TableroModelo implements Observable {
 
     public void setJugadores(List<JugadorDTO> jugadores) {
         this.jugadores = jugadores;
+        if (jugadorLocal != null) {
+            jugadorLocal = jugadores.stream()
+                    .filter(jugador -> jugador.getNombre().equals(jugadorLocal.getNombre()))
+                    .findFirst()
+                    .orElse(jugadorLocal);
+        }
     }
 
     public List<Observador> getObservers() {
-        return observers;
+        return observadores;
     }
 
     public void setObservers(List<Observador> observers) {
-        this.observers = observers;
+        this.observadores = observers;
     }
 
     public void setFichasEnJuego(List<FichaDTO> fichasEnJuego) {
@@ -360,35 +366,35 @@ public class TableroModelo implements Observable {
 
     @Override
     public void notificar() {
-        for (Observador observer : observers) {
-            observer.actualizar();
+        for (Observador observador : observadores) {
+            observador.actualizar();
         }
     }
 
     @Override
     public void anhadirObservador(Observador observador) {
-        observers.add(observador);
+        observadores.add(observador);
     }
 
     @Override
     public void removerObservador(Observador observador) {
-        observers.remove(observador);
+        observadores.remove(observador);
     }
 
-    public void agregarFicha() {
-        for (ObservadorAnhadirFicha observador : observersAnhadir) {
-            observador.actualizar(jugadores.get(0), fichaSeleccionada);
+    public void notificarAgregarFicha() {
+        for (ObservadorAnhadirFicha observador : observadoresAnhadir) {
+            observador.actualizar(jugadorLocal, fichaSeleccionada);
         }
     }
 
     public void anhadirObservadorAnhadirFicha(ObservadorAnhadirFicha observador) {
-        observersAnhadir.add(observador);
+        observadoresAnhadir.add(observador);
     }
 
     public void setCantidadFichasRestantes(int cantidadFichasRestantes) {
         this.cantidadFichasRestantes = cantidadFichasRestantes;
     }
-    
+
     public int obtenerCantidadFichasRestantes() {
         return cantidadFichasRestantes;
     }
