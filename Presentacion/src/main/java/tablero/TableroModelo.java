@@ -73,6 +73,9 @@ public class TableroModelo implements Observable {
     private List<Observador> observadores;
     private List<ObservadorAnhadirFicha> observadoresAnhadir;
     private int cantidadFichasRestantes;
+    
+    private boolean sigueTurnoLocal;
+    private String nombreJugadorTurnoActual;
 
     /**
      * Constructor de TableroModelo. Inicializa la lista de observadores y deja
@@ -415,5 +418,33 @@ public class TableroModelo implements Observable {
 
     public int obtenerCantidadFichasRestantes() {
         return cantidadFichasRestantes;
+    }
+
+    /**
+     * @return the sigueTurnoLocal
+     */
+    public boolean sigueTurnoLocal() {
+        return sigueTurnoLocal;
+    }
+
+    /**
+     * @param sigueTurnoLocal the sigueTurnoLocal to set
+     */
+    public void setSigueTurnoLocal(boolean sigueTurnoLocal) {
+        this.sigueTurnoLocal = sigueTurnoLocal;
+    }
+
+    /**
+     * @return the nombreJugadorTurnoActual
+     */
+    public String getNombreJugadorTurnoActual() {
+        return nombreJugadorTurnoActual;
+    }
+
+    /**
+     * @param nombreJugadorTurnoActual the nombreJugadorTurnoActual to set
+     */
+    public void setNombreJugadorTurnoActual(String nombreJugadorTurnoActual) {
+        this.nombreJugadorTurnoActual = nombreJugadorTurnoActual;
     }
 }

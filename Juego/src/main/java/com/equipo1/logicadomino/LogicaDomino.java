@@ -381,6 +381,8 @@ public class LogicaDomino implements ObservadorConexion {
                 String nombreSala = (String) evento.get("sala");
                 Map<String, Object> mapaFicha = (Map<String, Object>) evento.get("ficha");
 
+                String turnoJugador = (String) evento.get("turno_actual");
+                
                 Jugador jugadorJugada = obtenerJugadorDesdeMapa(mapaJugador);
                 Ficha fichaAgregada = obtenerFichaDesdeMapa(mapaFicha);
 
@@ -392,11 +394,19 @@ public class LogicaDomino implements ObservadorConexion {
                 if (!validarJugadorDiferente(nombreJugador)) {
                     return;
                 }
+                
+                boolean sigueTurnoLocal = turnoJugador.equals(this.jugador.getNombre());
+
+                if (sigueTurnoLocal) {
+                    // habilitar seleccion de ficha...
+                    System.out.println("### TE TOCA!!! %s".formatted(turnoJugador));
+                }
+
 
                 this.tablero = new Tablero(fichaAgregada);
 
                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
-                        new JugadorConverter().createFromEntities(sala.getJugadores()));
+                        new JugadorConverter().createFromEntities(sala.getJugadores()), sigueTurnoLocal, nombreJugador);
             }
             break;
             case "FichaAgregadaATablero": {
@@ -420,8 +430,9 @@ public class LogicaDomino implements ObservadorConexion {
                 
                 System.out.println("### TURNO AHORA !!! %s".formatted(turnoJugador));
                 
-                
-                if (turnoJugador.equals(this.jugador.getNumero())) {
+                boolean sigueTurnoLocal = turnoJugador.equals(this.jugador.getNombre());
+
+                if (sigueTurnoLocal) {
                     // habilitar seleccion de ficha...
                     System.out.println("### TE TOCA!!! %s".formatted(turnoJugador));
                 }
@@ -434,7 +445,7 @@ public class LogicaDomino implements ObservadorConexion {
                 anhadirFichaTablero(jugadorJugada, fichaAgregada, direccion);
 
                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
-                        new JugadorConverter().createFromEntities(sala.getJugadores()));
+                        new JugadorConverter().createFromEntities(sala.getJugadores()), sigueTurnoLocal);
             }
             break;
         }

@@ -29,27 +29,31 @@ public class ControladorSeleccionarFicha {
                 int indice = modelo.getIndiceFichaSeleccionada();
                 int cantidadFicha = modelo.getJugadorLocal().getFichas().size();
 
-                if (modelo.getFichaSeleccionada() == null) {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_SPACE ->
-                            modelo.setFichaSeleccionada(modelo.getFichaEnCursor());
-                        case KeyEvent.VK_LEFT ->
-                            modelo.setIndiceFichaEnCursor((indice > 0) ? --indice : cantidadFicha - 1);
-                        case KeyEvent.VK_RIGHT ->
-                            modelo.setIndiceFichaEnCursor((indice < cantidadFicha - 1) ? ++indice : 0);
-                    }
-                } else {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_SPACE ->{
-                            modelo.notificarAgregarFicha();
-                            modelo.setFichaSeleccionada(null);
+                boolean sigueTurnoLocal = modelo.sigueTurnoLocal();
+
+                if (sigueTurnoLocal) {
+                    if (modelo.getFichaSeleccionada() == null) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_SPACE ->
+                                modelo.setFichaSeleccionada(modelo.getFichaEnCursor());
+                            case KeyEvent.VK_LEFT ->
+                                modelo.setIndiceFichaEnCursor((indice > 0) ? --indice : cantidadFicha - 1);
+                            case KeyEvent.VK_RIGHT ->
+                                modelo.setIndiceFichaEnCursor((indice < cantidadFicha - 1) ? ++indice : 0);
                         }
-                        case KeyEvent.VK_LEFT ->
-                            modelo.setDireccionJugada("Izquierda");
-                        case KeyEvent.VK_RIGHT ->
-                            modelo.setDireccionJugada("Derecha");
-                        case KeyEvent.VK_BACK_SPACE ->
-                            modelo.setFichaSeleccionada(null);
+                    } else {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_SPACE -> {
+                                modelo.notificarAgregarFicha();
+                                modelo.setFichaSeleccionada(null);
+                            }
+                            case KeyEvent.VK_LEFT ->
+                                modelo.setDireccionJugada("Izquierda");
+                            case KeyEvent.VK_RIGHT ->
+                                modelo.setDireccionJugada("Derecha");
+                            case KeyEvent.VK_BACK_SPACE ->
+                                modelo.setFichaSeleccionada(null);
+                        }
                     }
                 }
 

@@ -96,13 +96,15 @@ public class MediadorPantallas {
     }
 
     public void mostrarPantallaTableroJuego(List<JugadorDTO> jugadoresEnJuego,
-            JugadorDTO jugadorLocal, ObservadorAnhadirFicha observadorAnhadirFicha, int cantidadFichasRestantes) {
+            JugadorDTO jugadorLocal, ObservadorAnhadirFicha observadorAnhadirFicha, int cantidadFichasRestantes, boolean turnoActualLocal, String nombreJugador) {
         modeloSalaEspera.notificarObservadorPartidaIniciada();
         TableroModelo modelo = new TableroModelo();
         modeloTableroJuego = modelo;
         modelo.setJugadorLocal(jugadorLocal);
         modelo.setJugadores(jugadoresEnJuego);
         modelo.setCantidadFichasRestantes(cantidadFichasRestantes);
+        modelo.setSigueTurnoLocal(turnoActualLocal);
+        modelo.setNombreJugadorTurnoActual(nombreJugador);
         TableroGUI vista = new TableroGUI(modelo);
         modelo.anhadirObservador(vista);
         modelo.anhadirObservadorAnhadirFicha(observadorAnhadirFicha);
@@ -123,11 +125,13 @@ public class MediadorPantallas {
         modeloSalaEspera.notificarObservadores();
     }
 
-    public void actualizarFichaAgregada(TableroDTO tablero, List<JugadorDTO> jugadores) {
+    public void actualizarFichaAgregada(TableroDTO tablero, List<JugadorDTO> jugadores, boolean sigueTurnoLocal, String nombreJugadorTurnoActual) {
         FichaDTO fichaIzquierda = tablero.getFichaExtremoIzquierda();
+        modeloTableroJuego.setNombreJugadorTurnoActual(nombreJugadorTurnoActual);
         modeloTableroJuego.setFichaIzquierda(fichaIzquierda);
         modeloTableroJuego.setFichasEnJuego(tablero.getFichas());
         modeloTableroJuego.setJugadores(jugadores);
+        modeloTableroJuego.setSigueTurnoLocal(sigueTurnoLocal);
         modeloTableroJuego.setFichaEnCursor(modeloTableroJuego.getJugadorLocal().getFichas().get(0));
         modeloTableroJuego.notificar();
     }
