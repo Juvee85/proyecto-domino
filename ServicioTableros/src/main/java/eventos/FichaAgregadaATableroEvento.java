@@ -6,7 +6,6 @@ package eventos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Jugador;
 import entidades.Pozo.Ficha;
-import entidades.Sala;
 import java.io.Serializable;
 
 /**
@@ -19,7 +18,7 @@ public class FichaAgregadaATableroEvento implements Serializable {
     private String nombreEvento;
 
     @JsonProperty("sala")
-    private Sala sala;
+    private String sala;
 
     @JsonProperty("ficha")
     private Ficha ficha;
@@ -30,8 +29,8 @@ public class FichaAgregadaATableroEvento implements Serializable {
     @JsonProperty("direccion")
     private String direccion;
 
-    public FichaAgregadaATableroEvento(Sala sala, Ficha ficha, Jugador jugador, String direccion) {
-        this.nombreEvento = "FichaAgregadaATablero";
+    public FichaAgregadaATableroEvento(String sala, Ficha ficha, Jugador jugador, String direccion) {
+        this.nombreEvento = "FichaAgregadaTableroRespuesta";
         this.sala = sala;
         this.ficha = ficha;
         this.jugador = jugador;
@@ -44,14 +43,7 @@ public class FichaAgregadaATableroEvento implements Serializable {
     public String getNombreEvento() {
         return nombreEvento;
     }
-
-    /**
-     * @return the sala
-     */
-    public Sala getSala() {
-        return sala;
-    }
-
+    
     /**
      * @return the tablero
      */

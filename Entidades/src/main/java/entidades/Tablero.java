@@ -20,7 +20,7 @@ public class Tablero implements Serializable {
 
     public Tablero(Ficha primeraMula) {
         if (primeraMula.esMula()) {
-            this.fichas = new TrenFichas();
+            this.fichas = new TrenFichas(primeraMula);
         }
     }
 

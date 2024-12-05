@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import javax.swing.JOptionPane;
 import mediador.MediadorPantallas;
 import observador.ObservadorConexion;
@@ -62,7 +63,6 @@ public class LogicaDomino implements ObservadorConexion {
     public void inicio() {
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.INICIO);
 
-        // TODO: ver si es mejor crear conexion al BUS desde el inicio
         ObservadorAbrirPantallaCrearSala observadorCrearSala = this::crearSala;
 
         ObservadorAbrirPantallaSalasDisponibles observadorSalasDisponibles = this::obtenerSalasDisponibles;
@@ -71,7 +71,6 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void crearSala() {
-        // TODO: RESTRINGIR FILTRO "INICIO"
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.CREAR_SALA);
 
         ObservadorCrearSala crearSala
@@ -99,7 +98,6 @@ public class LogicaDomino implements ObservadorConexion {
     }
 
     public void obtenerSalasDisponibles() {
-        // TODO: RESTRINGIR FILTRO SALAS_DISPONIBLES
         filtro.restringirEventosPorEstado(FiltroEventos.Estado.SALAS_DISPONIBLES);
 
         try {
@@ -141,7 +139,6 @@ public class LogicaDomino implements ObservadorConexion {
                     salasEncontradas.add(sala);
                 }
 
-//                List<Sala> salasEncontradas = (List<Sala>) evento.get("salas");
                 if (salasEncontradas.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "No se encontraron salas abiertas en el servidor... Intentelo mas tarde.", "Unirse a Salas", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -152,7 +149,7 @@ public class LogicaDomino implements ObservadorConexion {
                 this.salasDisponibles = salasEncontradas;
 
                 List<SalaDTO> salasDTO = new ArrayList<>();
-                this.salasDisponibles.forEach(sala -> salasDTO.add(convertidorSala.convertFromEntity(sala)));
+                this.salasDisponibles.forEach(salaEncontrada -> salasDTO.add(convertidorSala.convertFromEntity(salaEncontrada)));
 
                 desplegarSalasDisponibles(salasDTO);
             }
@@ -170,8 +167,7 @@ public class LogicaDomino implements ObservadorConexion {
 
                 List<Map<String, Object>> mapasJugadores = (List<Map<String, Object>>) mapaSala.get("jugadores");
                 for (Map<String, Object> mapaJugador : mapasJugadores) {
-                    Jugador jugadorEnSala = new Jugador();
-                    jugadorEnSala.setNombre((String) mapaJugador.get("nombre"));
+                    Jugador jugadorEnSala = obtenerJugadorDesdeMapa(mapaJugador);
                     jugadoresEnSala.add(jugadorEnSala);
                 }
 
@@ -189,11 +185,7 @@ public class LogicaDomino implements ObservadorConexion {
                 String nombreSala = (String) evento.get("nombre_sala");
 
                 // si no hay sala es porque no se esta en esta parte del flujo del programa...
-                if (sala != null) {
-                    if (!sala.getNombre().equals(nombreSala)) {
-                        return;
-                    }
-                } else {
+                if (!validarSalaCorrecta(nombreSala)) {
                     return;
                 }
 
@@ -237,22 +229,12 @@ public class LogicaDomino implements ObservadorConexion {
                 String nombreSala = (String) evento.get("nombre_sala");
                 String nombreJugador = (String) evento.get("id_jugador");
 
-                // si no hay sala es porque no se esta en esta parte del flujo del programa...
-                if (sala != null) {
-                    if (!sala.getNombre().equals(nombreSala)) {
-                        return;
-                    }
-                } else {
+                if (!validarSalaCorrecta(nombreSala)) {
                     return;
                 }
 
                 if (this.jugador == null) {
                     return;
-                }
-
-                // si el anfitrion se va elimina la sala del repositorio...
-                if (this.jugador.getNombre().equals(nombreJugador)) {
-                    //return;
                 }
 
                 System.out.println(nombreJugador);
@@ -296,11 +278,7 @@ public class LogicaDomino implements ObservadorConexion {
                 /*
                  * Descartar evento en caso de no estar en una sala 
                  */
-                if (this.sala != null) {
-                    if (!this.sala.getNombre().equals(nombreSala)) {
-                        return;
-                    }
-                } else {
+                if (!validarSalaCorrecta(nombreSala)) {
                     return;
                 }
 
@@ -356,12 +334,11 @@ public class LogicaDomino implements ObservadorConexion {
             break;
 
             case "IniciarPartidaRespuesta": {
+                filtro.restringirEventosPorEstado(FiltroEventos.Estado.EN_PARTIDA);
                 Map<String, Object> salaIniciar = (Map<String, Object>) evento.get("sala");
                 int cantidadFichasRestantes = (int) evento.get("fichas_restantes");
-                Map<String, Object> mapaTablero = (Map<String, Object>) evento.get("tablero");
 
                 sala = obtenerSalaDesdeMapa(salaIniciar);
-                tablero = obtenerTableroDesdeMapa(mapaTablero);
 
                 Jugador jugadorNuevo = sala.getJugadores()
                         .stream()
@@ -375,10 +352,10 @@ public class LogicaDomino implements ObservadorConexion {
 
                 this.jugador = jugadorNuevo;
 
-                ObservadorAnhadirFicha observador = ((jugador, ficha) -> {
+                ObservadorAnhadirFicha observador = ((jugador, ficha, direccion) -> {
                     try {
-                        String direccion = anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
-                                new FichaConverter().convertFromDTO(ficha));
+                        anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
+                                new FichaConverter().convertFromDTO(ficha), direccion);
 
                         MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                                 new JugadorConverter().createFromEntities(sala.getJugadores()));
@@ -392,20 +369,22 @@ public class LogicaDomino implements ObservadorConexion {
                 MediadorPantallas.getInstance().mostrarPantallaTableroJuego(new JugadorConverter().createFromEntities(sala.getJugadores()),
                         new JugadorConverter().convertFromEntity(jugador),
                         observador, cantidadFichasRestantes);
+
+                tablero = new Tablero(new Ficha(6, 6));
+                MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
+                        new JugadorConverter().createFromEntities(sala.getJugadores()));
             }
             break;
 
-            case "FichaAgregadaATablero": {
+            case "PrimeraFichaAgregada": {
                 Map<String, Object> mapaJugador = (Map<String, Object>) evento.get("jugador");
-                Map<String, Object> mapaSala = (Map<String, Object>) evento.get("sala");
+                String nombreSala = (String) evento.get("sala");
                 Map<String, Object> mapaFicha = (Map<String, Object>) evento.get("ficha");
-                String direccion = (String) evento.get("direccion");
 
                 Jugador jugadorJugada = obtenerJugadorDesdeMapa(mapaJugador);
                 Ficha fichaAgregada = obtenerFichaDesdeMapa(mapaFicha);
 
                 String nombreJugador = jugadorJugada.getNombre();
-                String nombreSala = (String) mapaSala.get("nombre_sala");
 
                 if (!validarSalaCorrecta(nombreSala)) {
                     return;
@@ -414,7 +393,45 @@ public class LogicaDomino implements ObservadorConexion {
                     return;
                 }
 
-                anhadirFichaTablero(jugadorJugada, fichaAgregada);
+                this.tablero = new Tablero(fichaAgregada);
+
+                MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
+                        new JugadorConverter().createFromEntities(sala.getJugadores()));
+            }
+            break;
+            case "FichaAgregadaATablero": {
+                Map<String, Object> mapaJugador = (Map<String, Object>) evento.get("jugador");
+                String nombreSala = (String) evento.get("sala");
+                Map<String, Object> mapaFicha = (Map<String, Object>) evento.get("ficha");
+                String direccion = (String) evento.get("direccion");
+                String turnoJugador = (String) evento.get("turno_actual");
+
+                Jugador jugadorJugada = obtenerJugadorDesdeMapa(mapaJugador);
+                Ficha fichaAgregada = obtenerFichaDesdeMapa(mapaFicha);
+
+                String nombreJugador = jugadorJugada.getNombre();
+
+                if (!validarSalaCorrecta(nombreSala)) {
+                    return;
+                }
+                if (!validarJugadorDiferente(nombreJugador)) {
+                    return;
+                }
+                
+                System.out.println("### TURNO AHORA !!! %s".formatted(turnoJugador));
+                
+                
+                if (turnoJugador.equals(this.jugador.getNumero())) {
+                    // habilitar seleccion de ficha...
+                    System.out.println("### TE TOCA!!! %s".formatted(turnoJugador));
+                }
+
+                System.out.println("### JUGADOR: %s".formatted(jugadorJugada));
+                System.out.println("### DIRECCIONÑ %s".formatted(direccion));
+                System.out.println("### FICHAÑ %s".formatted(fichaAgregada));
+                System.out.println("### NOMBRE SALAÑ %s".formatted(nombreJugador));
+                
+                anhadirFichaTablero(jugadorJugada, fichaAgregada, direccion);
 
                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                         new JugadorConverter().createFromEntities(sala.getJugadores()));
@@ -446,16 +463,19 @@ public class LogicaDomino implements ObservadorConexion {
         return true;
     }
 
-    public String anhadirFichaTablero(Jugador jugador, Ficha ficha) {
-        if (tablero.agregarFichaExtremoDerecho(ficha)) {
+    public void anhadirFichaTablero(Jugador jugador, Ficha ficha, String direccion) {
+        if (direccion.equalsIgnoreCase("Derecha") && tablero.agregarFichaExtremoDerecho(ficha)) {
             jugador.sacarFicha(ficha);
-            return "derecha";
-        } else if (tablero.agregarFichaExtremoIzquierdo(ficha)) {
-            jugador.sacarFicha(ficha);
-            return "izquierda";
+            List<Jugador> jugadores = sala.getJugadores().stream().map(j -> (j.getNombre().equals(jugador.getNombre()) ? jugador : j))
+                    .collect(toList());
+            sala.setJugadores(jugadores);
         }
-
-        return null;
+        if (direccion.equalsIgnoreCase("izquierda") && tablero.agregarFichaExtremoIzquierdo(ficha)) {
+            jugador.sacarFicha(ficha);
+            List<Jugador> jugadores = sala.getJugadores().stream().map(j -> (j.getNombre().equals(jugador.getNombre()) ? jugador : j))
+                    .collect(toList());
+            sala.setJugadores(jugadores);
+        }
     }
 
     private Tablero obtenerTableroDesdeMapa(Map<String, Object> mapaTablero) {
@@ -488,6 +508,8 @@ public class LogicaDomino implements ObservadorConexion {
         jugadorConvertido.setNombre((String) mapaJugador.get("nombre"));
         jugadorConvertido.setAvatar((String) mapaJugador.get("avatar"));
         jugadorConvertido.setNumero((int) mapaJugador.get("numero_jugador"));
+        jugadorConvertido.setListo((boolean) mapaJugador.get("listo"));
+        jugadorConvertido.esAnfitrion((boolean) mapaJugador.get("es_anfitrion"));
 
         List<Map<String, Object>> mapasFichas = (List<Map<String, Object>>) mapaJugador.get("fichas");
         List<Ficha> fichasMano = new ArrayList<>();
@@ -567,6 +589,10 @@ public class LogicaDomino implements ObservadorConexion {
                         .stream()
                         .map(convertidor::convertFromEntity)
                         .collect(Collectors.toList());
+
+                if (jugador.esAnfitrion() && sala.getJugadores().size() > 1 && sala.getJugadores().stream().allMatch(j -> j.estaListo())) {
+                    conexion.enviarEvento(crearEventoIniciarPartidaSolicitud());
+                }
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             } catch (IOException ex) {
                 Logger.getLogger(LogicaDomino.class.getName()).log(Level.SEVERE, null, ex);
@@ -637,9 +663,10 @@ public class LogicaDomino implements ObservadorConexion {
         HashMap<String, Object> mapa = new HashMap<>();
 
         mapa.put("nombre_evento", "JugarFichaSolicitud");
-        mapa.put("sala", sala);
+        mapa.put("sala", sala.getNombre());
         mapa.put("jugador", jugador);
         mapa.put("ficha", ficha);
+        mapa.put("direccion", direccion);
 
         return mapa;
     }

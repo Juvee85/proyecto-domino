@@ -47,7 +47,7 @@ public class ObtenerTurnoFichaJugadaRespuestaEvento implements Serializable {
      * @param turnoActual Turno actual del jugador (quien sigue despues del que puso la ficha)
      */
     public ObtenerTurnoFichaJugadaRespuestaEvento(String nombreSala, Ficha ficha, Jugador jugador, String direccion, String turnoActual) {
-        this.nombre = "ObtenerTurnoFichaJugadaRespuesta";
+        this.nombre = "FichaAgregadaATablero";
         this.nombreSala = nombreSala;
         this.ficha = ficha;
         this.jugador = jugador;

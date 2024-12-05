@@ -34,7 +34,7 @@ public class AgregarFichaTableroSolicitudManejador extends ManejadorEvento {
         this.clienteSck = clienteSck;
     }
 
-    private FichaAgregadaATableroEvento agregarFichaATablero(Sala sala, Ficha ficha, Jugador jugador, String direccion) throws RepositorioTablerosException {
+    private FichaAgregadaATableroEvento agregarFichaATablero(String sala, Ficha ficha, Jugador jugador, String direccion) throws RepositorioTablerosException {
         repositorio.agregarFichaEnTablero(sala, ficha, direccion);
 
         return new FichaAgregadaATableroEvento(sala, ficha, jugador, direccion);
@@ -69,16 +69,16 @@ public class AgregarFichaTableroSolicitudManejador extends ManejadorEvento {
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
             // Acceder a los valores directamente
-            JsonNode salaSerializada = jsonNode.get("sala");
             JsonNode fichaSerializada = jsonNode.get("ficha");
             JsonNode jugadorSerializado = jsonNode.get("jugador");
             String direccion = jsonNode.get("direccion").asText();
-
-            Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
+            
+            String nombreSala = jsonNode.get("sala").asText();
+            
             Ficha ficha = objectMapper.treeToValue(fichaSerializada, Ficha.class);
             Jugador jugador = objectMapper.treeToValue(jugadorSerializado, Jugador.class);
 
-            FichaAgregadaATableroEvento evento = this.agregarFichaATablero(sala, ficha, jugador, direccion);
+            FichaAgregadaATableroEvento evento = this.agregarFichaATablero(nombreSala, ficha, jugador, direccion);
             String eventoJSON = objectMapper.writeValueAsString(evento);
 
             respuesta.writeUTF(eventoJSON);

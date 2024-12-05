@@ -51,18 +51,14 @@ public class PartidaPreparadaRespuestaManejador extends ManejadorEvento {
      * @return Evento de respuesta del manejador.
      * @throws RepositorioSalasException Si ocurre un error en la actualizacion de la sala.
      */
-    public IniciarPartidaRespuestaEvento iniciarPartida(Sala sala, Tablero tablero, int fichasRestantes) throws RepositorioSalasException {
+    public IniciarPartidaRespuestaEvento iniciarPartida(Sala sala, int fichasRestantes, String turnoActual) throws RepositorioSalasException {
         
         Sala salaActualizada = repositorio.actualizarSala(sala);
         if (salaActualizada == null) {
             throw new RepositorioSalasException("No se encontro la sala");
         }
         
-        if (tablero == null) {
-            throw new RepositorioSalasException("No se recibio el tablero");
-        }
-        
-        return new IniciarPartidaRespuestaEvento(sala, tablero, fichasRestantes);
+        return new IniciarPartidaRespuestaEvento(sala, fichasRestantes, turnoActual);
     }
     
     /**
@@ -104,15 +100,15 @@ public class PartidaPreparadaRespuestaManejador extends ManejadorEvento {
 
             // arboles JSON
             JsonNode salaSerializada = jsonNode.get("sala");
-            JsonNode tableroSerializado = jsonNode.get("tablero");
             
             // obtencion de los datos
             int fichasRestantesPozo = jsonNode.get("fichas_restantes").asInt();
             Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
-            Tablero tablero = objectMapper.treeToValue(tableroSerializado, Tablero.class);
             
+            String turnoActual = jsonNode.get("turno_actual").asText();
+                    
             // creacion del evento y serilizacion del mismo.
-            IniciarPartidaRespuestaEvento respuestaEvento = this.iniciarPartida(sala, tablero, fichasRestantesPozo);
+            IniciarPartidaRespuestaEvento respuestaEvento = this.iniciarPartida(sala, fichasRestantesPozo, turnoActual);
             String eventoJSON = objectMapper.writeValueAsString(respuestaEvento);
             System.out.println("[*] Se saco al jugador de la sala...");
             

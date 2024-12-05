@@ -31,7 +31,7 @@ public class FiltroEventos {
         CREAR_SALA,
         SALAS_DISPONIBLES,
         SALA_ESPERA,
-        PARTIDA
+        EN_PARTIDA
     };
 
     /**
@@ -103,6 +103,14 @@ public class FiltroEventos {
                         "JugadorCambioEstadoListo",
                         "SalaError",
                         "IniciarPartidaRespuesta"
+                ));
+            }
+            break;
+            case EN_PARTIDA: {
+                this.permitirSolamenteEventos(Arrays.asList(
+                        "PrimeraFichaAgregada",
+                        "FichaAgregadaATablero",
+                        "TomarFichaPozoRespuesta"
                 ));
             }
             break;

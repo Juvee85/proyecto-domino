@@ -101,7 +101,7 @@ public class PanelManoJugador extends JPanel {
         ((Graphics2D) g).rotate(Math.toRadians(deg));
         ((Graphics2D) g).translate(-pieceCenterX, -pieceCenterY);
 
-        if (ficha.equals(modelo.getFichaSeleccionada())) {
+        if (ficha.equals(modelo.getFichaEnCursor())) {
             g.scale(1.1, 1.1);
         }
 
