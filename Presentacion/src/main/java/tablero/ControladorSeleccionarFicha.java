@@ -40,8 +40,10 @@ public class ControladorSeleccionarFicha {
                     }
                 } else {
                     switch (e.getKeyCode()) {
-                        case KeyEvent.VK_SPACE ->
+                        case KeyEvent.VK_SPACE ->{
                             modelo.notificarAgregarFicha();
+                            modelo.setFichaSeleccionada(null);
+                        }
                         case KeyEvent.VK_LEFT ->
                             modelo.setDireccionJugada("Izquierda");
                         case KeyEvent.VK_RIGHT ->

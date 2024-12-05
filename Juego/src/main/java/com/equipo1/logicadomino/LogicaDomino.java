@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import javax.swing.JOptionPane;
 import mediador.MediadorPantallas;
 import observador.ObservadorConexion;
@@ -365,14 +366,12 @@ public class LogicaDomino implements ObservadorConexion {
                     }
                 });
 
-                
-                
                 MediadorPantallas.getInstance().mostrarPantallaTableroJuego(new JugadorConverter().createFromEntities(sala.getJugadores()),
                         new JugadorConverter().convertFromEntity(jugador),
                         observador, cantidadFichasRestantes);
-                
+
                 tablero = new Tablero(new Ficha(6, 6));
-                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
+                MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                         new JugadorConverter().createFromEntities(sala.getJugadores()));
             }
             break;
@@ -399,7 +398,7 @@ public class LogicaDomino implements ObservadorConexion {
                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                         new JugadorConverter().createFromEntities(sala.getJugadores()));
             }
-               break;
+            break;
             case "FichaAgregadaATablero": {
                 Map<String, Object> mapaJugador = (Map<String, Object>) evento.get("jugador");
                 String nombreSala = (String) evento.get("sala");
@@ -453,9 +452,15 @@ public class LogicaDomino implements ObservadorConexion {
     public void anhadirFichaTablero(Jugador jugador, Ficha ficha, String direccion) {
         if (direccion.equalsIgnoreCase("Derecha") && tablero.agregarFichaExtremoDerecho(ficha)) {
             jugador.sacarFicha(ficha);
+            List<Jugador> jugadores = sala.getJugadores().stream().map(j -> (j.getNombre().equals(jugador.getNombre()) ? jugador : j))
+                    .collect(toList());
+            sala.setJugadores(jugadores);
         }
         if (direccion.equalsIgnoreCase("izquierda") && tablero.agregarFichaExtremoIzquierdo(ficha)) {
             jugador.sacarFicha(ficha);
+            List<Jugador> jugadores = sala.getJugadores().stream().map(j -> (j.getNombre().equals(jugador.getNombre()) ? jugador : j))
+                    .collect(toList());
+            sala.setJugadores(jugadores);
         }
     }
 
