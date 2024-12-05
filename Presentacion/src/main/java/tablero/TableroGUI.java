@@ -83,12 +83,21 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
     private void initComponents() {
 
         player2 = new tablero.PanelRound();
+        imagenJugador4 = new javax.swing.JLabel();
         player3 = new tablero.PanelRound();
+        imagenJugador3 = new javax.swing.JLabel();
         player4 = new tablero.PanelRound();
+        imagenJugador2 = new javax.swing.JLabel();
         player1 = new tablero.PanelRound();
+        imagenJugador1 = new javax.swing.JLabel();
         tableroDomino = new tablero.PanelRound();
         Fondo = new javax.swing.JPanel();
         manoJugador = new tablero.PanelRound();
+        jTextField1 = new javax.swing.JTextField();
+        jugador2NombreTxt = new javax.swing.JTextField();
+        jugador3NombreTxt = new javax.swing.JTextField();
+        jugador4NombreTxt = new javax.swing.JTextField();
+        jugadorLocalNombreTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -102,15 +111,23 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
         player2.setRoundTopLeft(100);
         player2.setRoundTopRight(100);
 
+        imagenJugador4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/avatar/avatarR.png"))); // NOI18N
+
         javax.swing.GroupLayout player2Layout = new javax.swing.GroupLayout(player2);
         player2.setLayout(player2Layout);
         player2Layout.setHorizontalGroup(
             player2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(player2Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(imagenJugador4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         player2Layout.setVerticalGroup(
             player2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(player2Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(imagenJugador4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         getContentPane().add(player2, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 36, -1, -1));
@@ -121,15 +138,23 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
         player3.setRoundTopLeft(100);
         player3.setRoundTopRight(100);
 
+        imagenJugador3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/avatar/avatarV.png"))); // NOI18N
+
         javax.swing.GroupLayout player3Layout = new javax.swing.GroupLayout(player3);
         player3.setLayout(player3Layout);
         player3Layout.setHorizontalGroup(
             player3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(player3Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(imagenJugador3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         player3Layout.setVerticalGroup(
             player3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(player3Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(imagenJugador3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         getContentPane().add(player3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1025, 36, -1, -1));
@@ -140,15 +165,23 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
         player4.setRoundTopLeft(100);
         player4.setRoundTopRight(100);
 
+        imagenJugador2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/avatar/avatarG.png"))); // NOI18N
+
         javax.swing.GroupLayout player4Layout = new javax.swing.GroupLayout(player4);
         player4.setLayout(player4Layout);
         player4Layout.setHorizontalGroup(
             player4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, player4Layout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addComponent(imagenJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
         );
         player4Layout.setVerticalGroup(
             player4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, player4Layout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addComponent(imagenJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
         );
 
         getContentPane().add(player4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1025, 581, -1, -1));
@@ -159,15 +192,23 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
         player1.setRoundTopLeft(100);
         player1.setRoundTopRight(100);
 
+        imagenJugador1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/avatar/avatarB.png"))); // NOI18N
+
         javax.swing.GroupLayout player1Layout = new javax.swing.GroupLayout(player1);
         player1.setLayout(player1Layout);
         player1Layout.setHorizontalGroup(
             player1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(player1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(imagenJugador1)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         player1Layout.setVerticalGroup(
             player1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(player1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(imagenJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         getContentPane().add(player1, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 581, -1, -1));
@@ -210,20 +251,69 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
             .addGap(0, 95, Short.MAX_VALUE)
         );
 
+        jTextField1.setBackground(new java.awt.Color(28, 28, 28));
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.setText("Tu");
+        jTextField1.setBorder(null);
+
+        jugador2NombreTxt.setBackground(new java.awt.Color(28, 28, 28));
+        jugador2NombreTxt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jugador2NombreTxt.setForeground(new java.awt.Color(255, 255, 255));
+        jugador2NombreTxt.setBorder(null);
+
+        jugador3NombreTxt.setBackground(new java.awt.Color(28, 28, 28));
+        jugador3NombreTxt.setBorder(null);
+
+        jugador4NombreTxt.setBackground(new java.awt.Color(28, 28, 28));
+        jugador4NombreTxt.setBorder(null);
+
+        jugadorLocalNombreTxt.setBackground(new java.awt.Color(28, 28, 28));
+        jugadorLocalNombreTxt.setBorder(null);
+
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
         Fondo.setLayout(FondoLayout);
         FondoLayout.setHorizontalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FondoLayout.createSequentialGroup()
-                .addGap(151, 151, 151)
-                .addComponent(manoJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(700, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(FondoLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(FondoLayout.createSequentialGroup()
+                                .addComponent(jugadorLocalNombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(manoJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 676, Short.MAX_VALUE))
+                            .addGroup(FondoLayout.createSequentialGroup()
+                                .addComponent(jugador2NombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jugador3NombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(FondoLayout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jugador4NombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(35, 35, 35))
         );
         FondoLayout.setVerticalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
-                .addContainerGap(619, Short.MAX_VALUE)
-                .addComponent(manoJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(FondoLayout.createSequentialGroup()
+                        .addGap(144, 144, 144)
+                        .addComponent(jugador2NombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(FondoLayout.createSequentialGroup()
+                        .addGap(153, 153, 153)
+                        .addComponent(jugador3NombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 372, Short.MAX_VALUE)
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jugador4NombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(manoJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jugadorLocalNombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
         );
 
@@ -235,6 +325,15 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Fondo;
+    private javax.swing.JLabel imagenJugador1;
+    private javax.swing.JLabel imagenJugador2;
+    private javax.swing.JLabel imagenJugador3;
+    private javax.swing.JLabel imagenJugador4;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jugador2NombreTxt;
+    private javax.swing.JTextField jugador3NombreTxt;
+    private javax.swing.JTextField jugador4NombreTxt;
+    private javax.swing.JTextField jugadorLocalNombreTxt;
     private tablero.PanelRound manoJugador;
     private tablero.PanelRound player1;
     private tablero.PanelRound player2;
