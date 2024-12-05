@@ -24,10 +24,14 @@ public class IniciarPartidaRespuestaEvento {
     @JsonProperty("fichas_restantes")
     private int fichasRestantes;
     
-    public IniciarPartidaRespuestaEvento(Sala sala, int fichasRestantes) {
+    @JsonProperty("turno_actual")
+    private String turnoActual;
+    
+    public IniciarPartidaRespuestaEvento(Sala sala, int fichasRestantes, String turnoActual) {
         this.nombreEvento = "IniciarPartidaRespuesta";
         this.sala = sala;
         this.fichasRestantes = fichasRestantes;
+        this.turnoActual = turnoActual;
     }
 
     /**

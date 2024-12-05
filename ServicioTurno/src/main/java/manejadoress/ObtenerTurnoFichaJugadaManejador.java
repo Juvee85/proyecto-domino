@@ -50,6 +50,8 @@ public class ObtenerTurnoFichaJugadaManejador extends ManejadorEvento {
     private ObtenerTurnoFichaJugadaRespuestaEvento obtenerTurnoFichaJugada(String nombreSala, Ficha ficha, Jugador jugador, String direccion) throws RepositorioTurnoException {
         String turnoActual = repositorio.obtenerJugadorSiguienteTurno(nombreSala);
 
+        System.out.println("### TURNO DE \"%s\" en la sala \"%s\"".formatted(turnoActual, nombreSala));
+        
         return new ObtenerTurnoFichaJugadaRespuestaEvento(
                 nombreSala,
                 ficha,
