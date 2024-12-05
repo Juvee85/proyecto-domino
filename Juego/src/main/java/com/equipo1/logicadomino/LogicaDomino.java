@@ -578,7 +578,6 @@ public class LogicaDomino implements ObservadorConexion {
 
                 if (jugador.esAnfitrion() && sala.getJugadores().size() > 1 && sala.getJugadores().stream().allMatch(j -> j.estaListo())) {
                     conexion.enviarEvento(crearEventoIniciarPartidaSolicitud());
-                    filtro.restringirEventosPorEstado(FiltroEventos.Estado.EN_PARTIDA);
                 }
                 MediadorPantallas.getInstance().actualizarPantallaSalaEspera(nuevaListaJugadores);
             } catch (IOException ex) {
