@@ -404,6 +404,7 @@ public class LogicaDomino implements ObservadorConexion {
                 String nombreSala = (String) evento.get("sala");
                 Map<String, Object> mapaFicha = (Map<String, Object>) evento.get("ficha");
                 String direccion = (String) evento.get("direccion");
+                String turnoJugador = (String) evento.get("turno_actual");
 
                 Jugador jugadorJugada = obtenerJugadorDesdeMapa(mapaJugador);
                 Ficha fichaAgregada = obtenerFichaDesdeMapa(mapaFicha);
@@ -416,7 +417,20 @@ public class LogicaDomino implements ObservadorConexion {
                 if (!validarJugadorDiferente(nombreJugador)) {
                     return;
                 }
+                
+                System.out.println("### TURNO AHORA !!! %s".formatted(turnoJugador));
+                
+                
+                if (turnoJugador.equals(this.jugador.getNumero())) {
+                    // habilitar seleccion de ficha...
+                    System.out.println("### TE TOCA!!! %s".formatted(turnoJugador));
+                }
 
+                System.out.println("### JUGADOR: %s".formatted(jugadorJugada));
+                System.out.println("### DIRECCIONÑ %s".formatted(direccion));
+                System.out.println("### FICHAÑ %s".formatted(fichaAgregada));
+                System.out.println("### NOMBRE SALAÑ %s".formatted(nombreJugador));
+                
                 anhadirFichaTablero(jugadorJugada, fichaAgregada, direccion);
 
                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
