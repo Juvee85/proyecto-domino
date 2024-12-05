@@ -17,9 +17,10 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
     private PanelManoJugador mano;
 
     /**
-     * Creates new form TableroGUI
+     * Constructor de TableroGUI. Inicializa la interfaz y configura los
+     * componentes necesarios.
      *
-     * @param partida
+     * @param modelo El modelo del tablero que contiene la lógica del juego
      */
     public TableroGUI(TableroModelo modelo) {
         initComponents();
@@ -27,7 +28,7 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
 
         // Inicializar el panel de la mano del jugador
         panelManoJugador = new PanelManoJugador(modelo);
-        manoJugador.add(panelManoJugador);  // Agregar el panel al contenedor manoJugador
+        manoJugador.add(panelManoJugador);
         panelManoJugador.setSize(manoJugador.getSize());
         panelManoJugador.setOpaque(false);
 
@@ -38,39 +39,50 @@ public class TableroGUI extends javax.swing.JFrame implements Observador {
         panelTablero.setOpaque(false);
 
         panelManoJugador.requestFocus();
-
         this.mostrarJugadores();
     }
 
+    /**
+     * Muestra los jugadores en la interfaz según su número y estado. Activa y
+     * hace visibles los paneles correspondientes a cada jugador.
+     */
     private void mostrarJugadores() {
-
         List<JugadorDTO> jugadores = this.modelo.getJugadores();
-
         for (JugadorDTO j : jugadores) {
-
             if (j.getNombre().equals(modelo.getJugadorLocal().getNombre())) {
                 this.player1.setEnabled(true);
                 this.player1.setVisible(true);
+                this.jugadorLocalNombreTxt.setText(j.getNombre());
             } else if (j.getNumero() == 2) {
                 this.player2.setEnabled(true);
                 this.player2.setVisible(true);
+                this.jugador2NombreTxt.setText(j.getNombre());
             } else if (j.getNumero() == 3) {
                 this.player3.setEnabled(true);
                 this.player3.setVisible(true);
+                this.jugador3NombreTxt.setText(j.getNombre());
             } else if (j.getNumero() == 4) {
                 this.player4.setEnabled(true);
                 this.player4.setVisible(true);
+                this.jugador4NombreTxt.setText(j.getNombre());
             }
         }
-
     }
 
+    /**
+     * Añade un KeyListener al panel de la mano del jugador.
+     *
+     * @param l El KeyListener a añadir
+     */
     public void anhadirListenerPanelManoJugador(KeyListener l) {
         panelManoJugador.addKeyListener(l);
     }
 
+    /**
+     * Actualiza la visualización de la mano del jugador.
+     */
     public void actualizarManoJugador() {
-        panelManoJugador.actualizarFichas();  // Actualizar fichas en el panel
+        panelManoJugador.actualizarFichas();
     }
 
     /**
