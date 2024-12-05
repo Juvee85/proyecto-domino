@@ -60,10 +60,12 @@ public class TableroModelo implements Observable {
 
     // Lista de fichas que están en juego actualmente
     private List<FichaDTO> fichasEnJuego;
+    private FichaDTO fichaEnCursor;
     private FichaDTO fichaSeleccionada;
     private int indiceFichaSeleccionada;
     private List<JugadorDTO> jugadores;
     private JugadorDTO jugadorLocal;
+    private String direccionJugada;
     // Referencia a la ficha más a la izquierda en el tablero
     private FichaDTO fichaIzquierda;
 
@@ -346,8 +348,24 @@ public class TableroModelo implements Observable {
         this.fichasEnJuego = fichasEnJuego;
     }
 
+    public FichaDTO getFichaEnCursor() {
+        return fichaEnCursor;
+    }
+
+    public void setFichaEnCursor(FichaDTO fichaEnCursor) {
+        this.fichaEnCursor = fichaEnCursor;
+    }
+
     public FichaDTO getFichaSeleccionada() {
         return fichaSeleccionada;
+    }
+
+    public String getDireccionJugada() {
+        return direccionJugada;
+    }
+
+    public void setDireccionJugada(String direccionJugada) {
+        this.direccionJugada = direccionJugada;
     }
 
     public void setFichaSeleccionada(FichaDTO fichaSeleccionada) {
@@ -358,9 +376,9 @@ public class TableroModelo implements Observable {
         return indiceFichaSeleccionada;
     }
 
-    public void setIndiceFichaSeleccionada(int indiceFichaSeleccionada) {
+    public void setIndiceFichaEnCursor(int indiceFichaSeleccionada) {
         this.indiceFichaSeleccionada = indiceFichaSeleccionada;
-        fichaSeleccionada = jugadores.get(0).getFichas().get(indiceFichaSeleccionada);
+        fichaEnCursor = jugadorLocal.getFichas().get(indiceFichaSeleccionada);
         notificar();
     }
 
@@ -383,7 +401,7 @@ public class TableroModelo implements Observable {
 
     public void notificarAgregarFicha() {
         for (ObservadorAnhadirFicha observador : observadoresAnhadir) {
-            observador.actualizar(jugadorLocal, fichaSeleccionada);
+            observador.actualizar(jugadorLocal, fichaSeleccionada, direccionJugada);
         }
     }
 

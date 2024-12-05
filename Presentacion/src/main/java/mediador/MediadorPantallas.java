@@ -127,7 +127,7 @@ public class MediadorPantallas {
         modeloTableroJuego.setFichaIzquierda(fichaIzquierda);
         modeloTableroJuego.setFichasEnJuego(tablero.getFichas());
         modeloTableroJuego.setJugadores(jugadores);
-        modeloTableroJuego.setFichaSeleccionada(modeloTableroJuego.getJugadorLocal().getFichas().get(0));
+        modeloTableroJuego.setFichaEnCursor(modeloTableroJuego.getJugadorLocal().getFichas().get(0));
         modeloTableroJuego.notificar();
     }
 

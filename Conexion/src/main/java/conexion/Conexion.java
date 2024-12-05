@@ -33,7 +33,7 @@ public class Conexion extends Thread implements ObservableConexion {
 
     private List<ObservadorConexion> observadores;
 
-    private Map evento;
+    private Map<String, Object> evento;
 
     private FiltroEventos filtro = FiltroEventos.getInstance();
     

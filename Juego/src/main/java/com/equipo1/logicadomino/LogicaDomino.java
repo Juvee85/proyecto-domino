@@ -375,10 +375,10 @@ public class LogicaDomino implements ObservadorConexion {
 
                 this.jugador = jugadorNuevo;
 
-                ObservadorAnhadirFicha observador = ((jugador, ficha) -> {
+                ObservadorAnhadirFicha observador = ((jugador, ficha, direccion) -> {
                     try {
-                        String direccion = anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
-                                new FichaConverter().convertFromDTO(ficha));
+                        anhadirFichaTablero(new JugadorConverter().convertFromDTO(jugador),
+                                new FichaConverter().convertFromDTO(ficha), direccion);
 
                         MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                                 new JugadorConverter().createFromEntities(sala.getJugadores()));
@@ -414,7 +414,7 @@ public class LogicaDomino implements ObservadorConexion {
                     return;
                 }
 
-                anhadirFichaTablero(jugadorJugada, fichaAgregada);
+                anhadirFichaTablero(jugadorJugada, fichaAgregada, direccion);
 
                 MediadorPantallas.getInstance().actualizarFichaAgregada(new TableroConverter().convertFromEntity(tablero),
                         new JugadorConverter().createFromEntities(sala.getJugadores()));
@@ -446,16 +446,13 @@ public class LogicaDomino implements ObservadorConexion {
         return true;
     }
 
-    public String anhadirFichaTablero(Jugador jugador, Ficha ficha) {
-        if (tablero.agregarFichaExtremoDerecho(ficha)) {
+    public void anhadirFichaTablero(Jugador jugador, Ficha ficha, String direccion) {
+        if (direccion.equalsIgnoreCase("Derecha") && tablero.agregarFichaExtremoDerecho(ficha)) {
             jugador.sacarFicha(ficha);
-            return "derecha";
-        } else if (tablero.agregarFichaExtremoIzquierdo(ficha)) {
-            jugador.sacarFicha(ficha);
-            return "izquierda";
         }
-
-        return null;
+        if (direccion.equalsIgnoreCase("izquierda") && tablero.agregarFichaExtremoIzquierdo(ficha)) {
+            jugador.sacarFicha(ficha);
+        }
     }
 
     private Tablero obtenerTableroDesdeMapa(Map<String, Object> mapaTablero) {
