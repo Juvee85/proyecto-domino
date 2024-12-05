@@ -21,16 +21,12 @@ public class IniciarPartidaRespuestaEvento {
     @JsonProperty("sala")
     private Sala sala;
     
-    @JsonProperty("tablero")
-    private Tablero tablero;
-    
     @JsonProperty("fichas_restantes")
     private int fichasRestantes;
     
-    public IniciarPartidaRespuestaEvento(Sala sala, Tablero tablero, int fichasRestantes) {
+    public IniciarPartidaRespuestaEvento(Sala sala, int fichasRestantes) {
         this.nombreEvento = "IniciarPartidaRespuesta";
         this.sala = sala;
-        this.tablero = tablero;
         this.fichasRestantes = fichasRestantes;
     }
 
@@ -46,13 +42,6 @@ public class IniciarPartidaRespuestaEvento {
      */
     public Sala getSala() {
         return sala;
-    }
-
-    /**
-     * @return the tablero
-     */
-    public Tablero getTablero() {
-        return tablero;
     }
 
     /**

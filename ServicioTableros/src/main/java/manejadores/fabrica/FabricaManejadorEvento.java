@@ -5,6 +5,7 @@ import manejadores.AgregarFichaTableroSolicitudManejador;
 import manejadores.CrearTableroPartidaSolicitudManejador;
 import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
+import manejadores.MulaMayorAgregadaSolicitudManejador;
 
 /**
  * Fabrica concreta para crear manejadores de eventos del servicio tableros
@@ -38,6 +39,10 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto {
             }
             case "JugarFichaSolicitud" -> {
                 return new AgregarFichaTableroSolicitudManejador(socket, eventoSerializado);
+            }
+            
+            case "MulaMayorAgregadaSolicitud" -> {
+                return new MulaMayorAgregadaSolicitudManejador(socket, eventoSerializado);
             }
 
         }

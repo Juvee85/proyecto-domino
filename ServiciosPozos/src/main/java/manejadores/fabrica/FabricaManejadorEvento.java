@@ -11,6 +11,7 @@ import manejadoress.CrearPozoSolicitudManejador;
 import manejadoress.EliminarPozoSolicitudManejador;
 import manejadoress.ObtenerPozoSolicitudManejador;
 import manejadoress.ReiniciarPozoSolicitudManejador;
+import manejadoress.TomarFichaSolicitudManejador;
 
 /**
  *
@@ -32,6 +33,8 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto{
                 return new ObtenerPozoSolicitudManejador(socket, eventoSerializado);
             case "ReiniciarPozoSolicitud": 
                     return new ReiniciarPozoSolicitudManejador(socket, eventoSerializado);
+            case "TomarFichaSolicitud":
+                return new TomarFichaSolicitudManejador(socket, eventoSerializado);
         }
         
         return null;

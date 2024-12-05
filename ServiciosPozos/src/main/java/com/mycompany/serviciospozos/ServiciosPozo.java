@@ -51,7 +51,8 @@ public class ServiciosPozo extends Thread {
                 "CrearPozoPartidaSolicitud",
                 "ActualizarPozoSolicitud",
                 "EliminarPozoSolicitud",
-                "ObtenerPozosSolicitud"
+                "ObtenerPozosSolicitud",
+                "TomarFichaSolicitud"
         ));
 
         return contrato;

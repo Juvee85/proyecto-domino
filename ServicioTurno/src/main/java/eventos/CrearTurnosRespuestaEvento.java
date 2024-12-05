@@ -5,6 +5,7 @@
 package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import entidades.Sala;
 import entidades.Tablero;
 import java.io.Serializable;
 
@@ -18,14 +19,8 @@ public class CrearTurnosRespuestaEvento implements Serializable {
     @JsonProperty("nombre_evento")
     private String nombre;
 
-    @JsonProperty("descripcion")
-    private String descripcion;
-
     @JsonProperty("sala")
-    private String sala;
-    
-    @JsonProperty("tablero")
-    private Tablero tablero;
+    private Sala sala;
     
     @JsonProperty("turno_actual")
     private String turnoActual;
@@ -34,12 +29,10 @@ public class CrearTurnosRespuestaEvento implements Serializable {
         
     }
 
-    public CrearTurnosRespuestaEvento(String descripcion, String sala, String turnoActual, Tablero tablero) {
-        this.nombre = "CrearTurnosRespuestaEvento";
-        this.descripcion = descripcion;
+    public CrearTurnosRespuestaEvento(Sala sala, String turnoActual) {
+        this.nombre = "PartidaPreparadaRespuesta";
         this.sala = sala;
         this.turnoActual = turnoActual;
-        this.tablero = tablero;
     }
  
     /**
@@ -61,42 +54,6 @@ public class CrearTurnosRespuestaEvento implements Serializable {
     }
 
     /**
-     * Devuelve la descripción del evento.
-     *
-     * @return descripción del evento
-     */
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    /**
-     * Asigna la descripción del evento.
-     *
-     * @param descripcion la descripción a asignar
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    /**
-     * Devuelve la sala asociada al evento.
-     *
-     * @return sala asociada
-     */
-    public String getSala() {
-        return sala;
-    }
-
-    /**
-     * Asigna la sala asociada al evento.
-     *
-     * @param sala la sala a asignar
-     */
-    public void setSala(String sala) {
-        this.sala = sala;
-    }
-
-    /**
       * Devuelve el jugador que tiene el turno actual.
       *
       * @return el nombre del jugador en el turno actual.
@@ -113,22 +70,5 @@ public class CrearTurnosRespuestaEvento implements Serializable {
      public void setTurnoActual(String turnoActual) {
          this.turnoActual = turnoActual;
      }
-
-    /**
-     * @return the tablero
-     */
-    public Tablero getTablero() {
-        return tablero;
-    }
-
-    /**
-     * @param tablero the tablero to set
-     */
-    public void setTablero(Tablero tablero) {
-        this.tablero = tablero;
-    }
-
-
-   
    
 }

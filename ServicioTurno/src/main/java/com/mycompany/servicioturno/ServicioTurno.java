@@ -51,7 +51,10 @@ public class ServicioTurno extends Thread {
         contrato.setEventosEscuchables(Arrays.asList(
                 "ObtenerTurnoSolicitud",
                 "CrearTurnoSolicitud",
-                "CrearTableroPartidaRespuesta"
+                "CrearTableroPartidaRespuesta",
+                "FichaAgregadaTableroRespuesta",
+                "MulaMayorAgregadaRespuesta"
+                
         ));
 
         return contrato;

@@ -2,15 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package manejadores;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import entidades.Sala;
-import entidades.Tablero;
-import eventos.CrearTableroPartidaRespuestaEvento;
+import entidades.Jugador;
+import entidades.Pozo;
+import entidades.Pozo.Ficha;
+import eventos.FichaAgregadaATableroEvento;
+import eventos.MulaMayorAgregadaRespuestaEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -23,43 +26,22 @@ import repositorio.excepciones.RepositorioTablerosException;
  *
  * @author Saul Neri
  */
-public class CrearTableroPartidaSolicitudManejador extends ManejadorEvento {
-
+public class MulaMayorAgregadaSolicitudManejador extends ManejadorEvento {
     private static final RepositorioTableros repositorio = RepositorioTableros.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
 
-    /**
-     * Se crea un nuevo manejador para manejar el mensaje de creacion de tablero
-     * para una sala activa
-     *
-     * @param clienteSck
-     * @param eventoSerializado
-     */
-    public CrearTableroPartidaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
-        //this.nombreEvento = nombreEvento;
+    public MulaMayorAgregadaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
+    
+    private MulaMayorAgregadaRespuestaEvento agregarFichaInicialATablero(String sala, Ficha ficha, Jugador jugador) throws RepositorioTablerosException {
+        repositorio.agregarFichaEnTablero(sala, ficha, null);
 
-    /**
-     * Devuelve el evento de respuesta que sera enviado al servicio salas.
-     *
-     * @param sala Objeto sala
-     * @param fichasRestantes
-     * @return Evento de respuesta.
-     * @throws RepositorioTablerosException si ocurre un error en la creacion
-     * del tablero.
-     */
-    public CrearTableroPartidaRespuestaEvento crearTablero(Sala sala, int fichasRestantes) throws RepositorioTablerosException {
-        Tablero tablero = repositorio.crearTablero(sala);
-
-        return new CrearTableroPartidaRespuestaEvento(sala, fichasRestantes);
+        return new MulaMayorAgregadaRespuestaEvento(sala, ficha, jugador);
     }
 
-    /**
-     * Envia el error al consumidor de los servicios (jugador)
-     */
     private void enviaRespuestaError(String mensaje) {
         TablerosErrorEvento error = new TablerosErrorEvento(mensaje);
 
@@ -80,29 +62,32 @@ public class CrearTableroPartidaSolicitudManejador extends ManejadorEvento {
     @Override
     public void run() {
         try {
-            //peticion = new DataInputStream(this.clienteSck.getInputStream());
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
         } catch (IOException ex) {
-            Logger.getLogger(CrearTableroPartidaSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AgregarFichaTableroSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
             // Acceder a los valores directamente
-            JsonNode salaSerializada = jsonNode.get("sala");
-            int fichasRestantes = jsonNode.get("fichas_restantes").asInt();
+            JsonNode fichaSerializada = jsonNode.get("ficha");
+            JsonNode jugadorSerializado = jsonNode.get("jugador");
+            
+            String nombreSala = jsonNode.get("sala").asText();
+            
+            Pozo.Ficha ficha = objectMapper.treeToValue(fichaSerializada, Pozo.Ficha.class);
+            Jugador jugador = objectMapper.treeToValue(jugadorSerializado, Jugador.class);
 
-            Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
-
-            CrearTableroPartidaRespuestaEvento evento = this.crearTablero(sala, fichasRestantes);
+            MulaMayorAgregadaRespuestaEvento evento = this.agregarFichaInicialATablero(nombreSala, ficha, jugador);
             String eventoJSON = objectMapper.writeValueAsString(evento);
+
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
-            this.enviaRespuestaError("### No se puedo crear la sala debido a un error en el servidor, porfavor intente mas tarde...");
+            this.enviaRespuestaError("### No se ha podido agregar la ficha al tablero debido a un error en el servidor, porfavor intente mas tarde...");
         } catch (RepositorioTablerosException ex) {
             this.enviaRespuestaError(ex.getMessage());
         }

@@ -81,24 +81,24 @@ public class RepositorioTableros {
     
     /**
      * Agrega una ficha en alguno de los dos lados del tren de fichas en el tablero
-     * @param sala Informacion de la sala
+     * @param nombreSala Nombre de la sala
      * @param ficha Ficha a poner en el tablero
      * @param direccion Direccion en donde se pondra la ficha en el tren de fichas (Izquierda o Derecha)
      * @throws RepositorioTablerosException Si no se puede agregar la ficha al tablero
      */
-    public void agregarFichaEnTablero(Sala sala, Ficha ficha, String direccion) throws RepositorioTablerosException {
-        Tablero tablero = this.tableros.get(sala.getNombre());
+    public void agregarFichaEnTablero(String nombreSala, Ficha ficha, String direccion) throws RepositorioTablerosException {
+        Tablero tablero = this.tableros.get(nombreSala);
         
         boolean noExiste = tablero == null;
         if (noExiste) {
-            throw new RepositorioTablerosException("No existe un tablero asociado a la sala con el nombre: %s".formatted(sala.getNombre()));
+            throw new RepositorioTablerosException("No existe un tablero asociado a la sala con el nombre: %s".formatted(nombreSala));
         }
          
         if (tablero.estaVacio()) {
             if (ficha.esMula()) {
                 tablero = new Tablero(ficha);
                 // se reemplaza el tablero con uno nuevo y listo para empezar...
-                this.tableros.put(sala.getNombre(), tablero);
+                this.tableros.put(nombreSala, tablero);
                 
                 return;
             }
