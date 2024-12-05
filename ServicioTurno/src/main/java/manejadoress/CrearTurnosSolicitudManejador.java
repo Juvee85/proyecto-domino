@@ -81,7 +81,7 @@ public class CrearTurnosSolicitudManejador extends ManejadorEvento {
             
             // TODO: OBTENER DE MANERA CORRECTA LOS DATOS...
             // Deserializar la sala del evento recibido
-            Sala sala = objectMapper.treeToValue(jsonNode, Sala.class);
+            Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
             // Crear turno y generar evento de respuesta
             CrearTurnosRespuestaEvento evento = this.crearTurno(sala);
