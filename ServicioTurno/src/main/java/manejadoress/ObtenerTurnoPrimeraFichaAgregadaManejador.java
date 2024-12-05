@@ -5,10 +5,14 @@
 package manejadoress;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import entidades.Jugador;
+import entidades.Pozo.Ficha;
 import entidades.Sala;
-import eventos.ObtenerTurnosRespuestaEvento;
+import eventos.ObtenerTurnoFichaJugadaRespuestaEvento;
+import eventos.PrimeraFichaAgregadaRespuestaEvento;
 import eventos.TurnoErrorEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,47 +26,40 @@ import repositorios.excepciones.RepositorioTurnoException;
  *
  * @author diana
  */
-public class ObtenerTurnosSolicitudManejador extends ManejadorEvento {
+public class ObtenerTurnoPrimeraFichaAgregadaManejador extends ManejadorEvento {
+
     private static final RepositorioTurnos repositorio = RepositorioTurnos.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
-    
-    
-    
-    public ObtenerTurnosSolicitudManejador(Socket clienteSck, String eventoSerializado) {
+
+    public ObtenerTurnoPrimeraFichaAgregadaManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
-    
-     /**
-     * Obtiene el turno actual de la sala especificada.
-     *
-     * @param sala Sala de la cual se desea obtener el turno actual.
-     * @return Evento de respuesta con el turno actual.
+
+    /**
+     * Crea el evento con toda la informacion necesaria para que los demas jugadores
+     * actualicen su estado del tablero y turno.
+     * @param nombreSala Nombre de la sala
+     * @param ficha Ficha agregada al tablero
+     * @param jugador Jugador quien agrego la ficha
+     * @param direccion Direccion en que se puso la ficha en el tablero (izquierda, derecha)
+     * @return Evento
+     * @throws RepositorioTurnoException Si ocurre un error, 
+     * por ejemplo si no se encuentra la sala.
      */
-    private ObtenerTurnosRespuestaEvento obtenerTurno(Sala sala) throws RepositorioTurnoException {
-       CyclicList<String> turnos = repositorio.obtenerTurnos(sala);
-    
-    // Obtener el jugador actual
-    String turnoActual = turnos.current();
-    
-    // Obtener el siguiente turno usando next(), que avanza el índice
-    String turnoSiguiente = turnos.next();
-    
-    // Restaurar el índice a su posición original
-    turnos.add(turnoSiguiente); 
-    turnos.next(); 
+    private PrimeraFichaAgregadaRespuestaEvento obtenerTurnoFichaJugada(String nombreSala, Ficha ficha, Jugador jugador) throws RepositorioTurnoException {
+        String turnoActual = repositorio.obtenerJugadorSiguienteTurno(nombreSala);
 
-    return new ObtenerTurnosRespuestaEvento(
-        sala.getNombre(),
-        turnoActual,
-        turnoSiguiente,
-        "Turno obtenido exitosamente."
-    );
+        return new PrimeraFichaAgregadaRespuestaEvento(
+                nombreSala,
+                ficha,
+                jugador,
+                turnoActual
+        );
+    }
 
-}
-
-/**
+    /**
      * Envía una respuesta de error al cliente.
      *
      * @param mensaje Mensaje de error.
@@ -79,17 +76,27 @@ public class ObtenerTurnosSolicitudManejador extends ManejadorEvento {
             System.out.println("ERROR AL ENVIAR LA RESPUESTA DE ERROR: " + ex.getMessage());
         }
     }
-    
+
     @Override
-     public void run() {
+    public void run() {
         try {
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
 
+            JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
+            
             // Deserializar la sala del evento recibido
-            Sala sala = objectMapper.readValue(this.eventoSerializado, Sala.class);
-
+            String nombreSala = jsonNode.get("sala").asText();
+            
+            // ficha agregada al tablero
+            JsonNode fichaSerializada = jsonNode.get("ficha");
+            Ficha ficha = objectMapper.treeToValue(fichaSerializada, Ficha.class);
+           
+            // jugador quien puso la ficha
+            JsonNode jugadorSerializado = jsonNode.get("jugador");
+            Jugador jugador = objectMapper.treeToValue(jugadorSerializado, Jugador.class);
+            
             // Obtener el turno actual y generar el evento de respuesta
-            ObtenerTurnosRespuestaEvento evento = this.obtenerTurno(sala);
+            PrimeraFichaAgregadaRespuestaEvento evento = this.obtenerTurnoFichaJugada(nombreSala, ficha, jugador);
             String eventoJSON = objectMapper.writeValueAsString(evento);
 
             // Enviar respuesta al cliente

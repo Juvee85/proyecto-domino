@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package manejadores;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +30,6 @@ public class CambiarEstadoListoSolicitudManejador extends ManejadorEvento {
      * @param eventoSerializado 
      */
     public CambiarEstadoListoSolicitudManejador(Socket clienteSck, String eventoSerializado) {
-        //this.nombreEvento = nombreEvento;
         this.setName(String.format("Thread [%s]", this.getClass().getSimpleName()));
         
         this.eventoSerializado = eventoSerializado;
@@ -52,7 +46,6 @@ public class CambiarEstadoListoSolicitudManejador extends ManejadorEvento {
      * @return Evento de respuesta que sera enviado a los demas jugadores.
      */
     private CambiarEstadoListoRespuestaEvento cambiarEstadoJugador(String nombreSala, String nombreJugador, boolean estadoListo) throws RepositorioSalasException {
-        // TODO: Realizar validaciones...
         repositorio.cambiarEstadoListoJugador(nombreSala, nombreJugador, estadoListo);
         return new CambiarEstadoListoRespuestaEvento(nombreSala, nombreJugador, estadoListo);
     }
@@ -81,7 +74,6 @@ public class CambiarEstadoListoSolicitudManejador extends ManejadorEvento {
     public void run() {
         
         try {
-            //peticion = new DataInputStream(this.clienteSck.getInputStream());
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
         } catch (IOException ex) {
             Logger.getLogger(CrearSalaSolicitudManejador.class.getName()).log(Level.SEVERE, null, ex);

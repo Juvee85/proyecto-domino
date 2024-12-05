@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.serviciospozos;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,13 +41,14 @@ public class ServiciosPozo extends Thread {
     public static ContratoServicio getContrato(){
          ContratoServicio contrato = new ContratoServicio();
 
-        contrato.setHost("localhost");
+        contrato.setHost(BUS_HOSTNAME);
         contrato.setNombreServicio("Servicio Pozo");
         contrato.setEventosEscuchables(Arrays.asList(
                 "CrearPozoPartidaSolicitud",
                 "ActualizarPozoSolicitud",
                 "EliminarPozoSolicitud",
-                "ObtenerPozosSolicitud"
+                "ObtenerPozosSolicitud",
+                "TomarFichaSolicitud"
         ));
 
         return contrato;
@@ -76,7 +73,7 @@ public class ServiciosPozo extends Thread {
          // Se usa Jackson para manejar los mensajes JSON
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         
-        try{// Flujos para enviar y recibir mensajes con el bus de eventos
+        try {// Flujos para enviar y recibir mensajes con el bus de eventos
             DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream());
             DataInputStream mensaje = new DataInputStream(socket.getInputStream());
 

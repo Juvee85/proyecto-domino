@@ -6,20 +6,21 @@ import java.io.Serializable;
 
 /**
  * Representa el tablero en el juego
+ *
  * @author Equipo 1
  */
 public class Tablero implements Serializable {
 
     @JsonProperty("tren_fichas")
     private TrenFichas fichas = null;
-    
+
     public Tablero() {
         this.fichas = null;
     }
-    
+
     public Tablero(Ficha primeraMula) {
         if (primeraMula.esMula()) {
-            this.fichas = new TrenFichas();
+            this.fichas = new TrenFichas(primeraMula);
         }
     }
 
@@ -62,9 +63,13 @@ public class Tablero implements Serializable {
     public TrenFichas getFichas() {
         return fichas;
     }
-    
+
     public boolean estaVacio() {
         return this.fichas == null;
+    }
+
+    public void setFichas(TrenFichas fichas) {
+        this.fichas = fichas;
     }
 
 }

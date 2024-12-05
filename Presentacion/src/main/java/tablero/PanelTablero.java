@@ -64,7 +64,8 @@ public class PanelTablero extends JPanel {
         int xRightOffset = modelo.getDominoStartingX() - 200;  // Posición inicial X para las fichas del lado derecho
 
         boolean enLadoIzq = true;  // Indica si las fichas deben colocarse en el lado izquierdo
-        for (FichaDTO ficha : fichas) {
+        if (fichas != null)
+            for (FichaDTO ficha : fichas) {
             int deg = 0;  // Grados de rotación de la ficha
             if (ficha.getOrientacion() == Orientacion.HORIZONTAL) {
                 deg = 90;  // Rotar 90 grados si la ficha está en horizontal
@@ -153,10 +154,10 @@ public class PanelTablero extends JPanel {
         int pieceCenterY = y + height / 2;
 
         // Guarda la transformación original antes de rotar
-        AffineTransform oldTransform = ((Graphics2D) g).getTransform();
-        ((Graphics2D) g).translate(pieceCenterX, pieceCenterY);
-        ((Graphics2D) g).rotate(Math.toRadians(deg));
-        ((Graphics2D) g).translate(-pieceCenterX, -pieceCenterY);
+        AffineTransform oldTransform = g.getTransform();
+        g.translate(pieceCenterX, pieceCenterY);
+        g.rotate(Math.toRadians(deg));
+        g.translate(-pieceCenterX, -pieceCenterY);
 
         // Dibuja la ficha (rectángulo con bordes redondeados)
         g.setColor(modelo.getDominoPieceColor());  // Color de la ficha
@@ -175,7 +176,7 @@ public class PanelTablero extends JPanel {
         drawPips(ficha, g, x, y);  // Dibuja los puntos (pips) de la ficha
 
         // Restaura la transformación original
-        ((Graphics2D) g).setTransform(oldTransform);
+        g.setTransform(oldTransform);
     }
 
     /**

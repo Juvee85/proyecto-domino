@@ -27,16 +27,33 @@ public class ControladorSeleccionarFicha {
             @Override
             public void keyPressed(KeyEvent e) {
                 int indice = modelo.getIndiceFichaSeleccionada();
-                int size = modelo.getJugadores().get(0).getFichas().size();
+                int cantidadFicha = modelo.getJugadorLocal().getFichas().size();
 
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_SPACE -> modelo.agregarFicha();
-                    case KeyEvent.VK_LEFT -> modelo.setIndiceFichaSeleccionada((indice > 0) ? --indice : size-1);
-                    case KeyEvent.VK_RIGHT -> modelo.setIndiceFichaSeleccionada((indice < size-1) ? ++indice : 0);
-
+                if (modelo.getFichaSeleccionada() == null) {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_SPACE ->
+                            modelo.setFichaSeleccionada(modelo.getFichaEnCursor());
+                        case KeyEvent.VK_LEFT ->
+                            modelo.setIndiceFichaEnCursor((indice > 0) ? --indice : cantidadFicha - 1);
+                        case KeyEvent.VK_RIGHT ->
+                            modelo.setIndiceFichaEnCursor((indice < cantidadFicha - 1) ? ++indice : 0);
+                    }
+                } else {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_SPACE ->{
+                            modelo.notificarAgregarFicha();
+                            modelo.setFichaSeleccionada(null);
+                        }
+                        case KeyEvent.VK_LEFT ->
+                            modelo.setDireccionJugada("Izquierda");
+                        case KeyEvent.VK_RIGHT ->
+                            modelo.setDireccionJugada("Derecha");
+                        case KeyEvent.VK_BACK_SPACE ->
+                            modelo.setFichaSeleccionada(null);
+                    }
                 }
-            }
 
+            }
         });
     }
 }

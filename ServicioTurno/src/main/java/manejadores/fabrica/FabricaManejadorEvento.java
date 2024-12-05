@@ -8,7 +8,7 @@ import java.net.Socket;
 import manejadores.FabricaManejadorEventoAbstracto;
 import manejadores.ManejadorEvento;
 import manejadoress.CrearTurnosSolicitudManejador;
-import manejadoress.ObtenerTurnosSolicitudManejador;
+import manejadoress.ObtenerTurnoFichaJugadaManejador;
 
 /**
  *
@@ -22,11 +22,12 @@ public class FabricaManejadorEvento implements FabricaManejadorEventoAbstracto{
     @Override
     public ManejadorEvento obtenerManejador(String nombreEvento, Socket socket, String eventoSerializado) {
         switch (nombreEvento) {
-            case "CrearPozoSolicitud": 
-                return new ObtenerTurnosSolicitudManejador(socket, eventoSerializado);
-            case "EliminarPozoSolicitud":
+            case "CrearTableroPartidaRespuesta":
                 return new CrearTurnosSolicitudManejador(socket, eventoSerializado);
-            
+            case "FichaAgregadaTableroRespuesta": 
+                return new ObtenerTurnoFichaJugadaManejador(socket, eventoSerializado);
+            case "MulaMayorAgregadaRespuesta":
+                
         }
         
         return null;

@@ -12,5 +12,5 @@ import DTOS.JugadorDTO;
  */
 public interface ObservadorAnhadirFicha {
 
-    public void actualizar(JugadorDTO jugador, FichaDTO ficha);
+    public void actualizar(JugadorDTO jugador, FichaDTO ficha, String direccion);
 }

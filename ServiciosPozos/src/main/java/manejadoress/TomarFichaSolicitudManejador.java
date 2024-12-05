@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Pozo;
+import entidades.Pozo.Ficha;
 import entidades.Sala;
 import eventos.CrearPozoRespuestaEvento;
 import eventos.PozoErrorEvento;
+import eventos.TomarFichaRespuestaEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -19,13 +21,13 @@ import repositorios.RepositorioPozos;
  *
  * @author diana
  */
-public class CrearPozoSolicitudManejador extends ManejadorEvento {
+public class TomarFichaSolicitudManejador extends ManejadorEvento {
 
     private static final RepositorioPozos repositorio = RepositorioPozos.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
 
-    public CrearPozoSolicitudManejador(Socket clienteSck, String eventoSerializado) {
+    public TomarFichaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
@@ -37,31 +39,15 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
      * @return
      * @throws RepositorioPozoException
      */
-    private CrearPozoRespuestaEvento crearPozo(Sala sala) throws RepositorioPozoException {
-
-        Pozo pozo = repositorio.crearPozo(sala);
-        if (pozo == null) {
-            throw new RepositorioPozoException("No se encontro el pozo asociado a la sala");
-        }
-
-        if (sala.getJugadores() == null) {
-            throw new RepositorioPozoException("La sala no cuenta con jugadores");
-        }
-
-        // NOTE: debug
-        System.out.println("### Fichas restantes ANTES de la reparticion: %s".formatted(pozo.fichasRestantes()));
-
-        for (int i = 0; i < sala.getJugadores().size(); i++) {
-            sala.getJugadores().get(i).asignarFichas(pozo.obtenerJuegoDeFichas(sala.getNumeroFichasPorJugador()));
-            // muestra las fichas
-            System.out.println("### Fichas: %s".formatted(sala.getJugadores().get(i).obtenerFichas()));
-
-        }
-
-        System.out.println("### Fichas restantes del pozo: %s".formatted(pozo.fichasRestantes()));
-
-        // Retornar el evento con la respuesta
-        return new CrearPozoRespuestaEvento(sala, pozo.fichasRestantes());
+    private TomarFichaRespuestaEvento tomarFicha(String nombreSala, String jugador) throws RepositorioPozoException {
+        Sala s = new Sala();
+        s.setNombre(nombreSala);
+        Pozo pozo = repositorio.obtenerPozo(s);
+        
+        Ficha ficha = pozo.sacarFicha();
+        int fichasRestantes = pozo.fichasRestantes();
+        
+        return new TomarFichaRespuestaEvento(nombreSala, ficha, fichasRestantes, jugador);
     }
 
     /**
@@ -92,11 +78,10 @@ public class CrearPozoSolicitudManejador extends ManejadorEvento {
 
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
-            JsonNode salaSerializada = jsonNode.get("sala");
+            String nombreSala = jsonNode.get("sala").asText();
+            String jugador = jsonNode.get("jugador").asText();
 
-            Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
-
-            CrearPozoRespuestaEvento evento = this.crearPozo(sala);
+            TomarFichaRespuestaEvento evento = this.tomarFicha(nombreSala, jugador);
 
             String eventoJSON = objectMapper.writeValueAsString(evento);
 

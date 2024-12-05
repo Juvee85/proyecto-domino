@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package manejadores;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,32 +24,32 @@ import repositorio.excepciones.RepositorioSalasException;
  * @author Saul Neri
  */
 public class IniciarPartidaSolicitudManejador extends ManejadorEvento {
+
     private static final RepositorioSalas repositorio = RepositorioSalas.getInstance();
     private ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private DataOutputStream respuesta = null;
 
     /**
-     * 
+     *
      * @param clienteSck
-     * @param eventoSerializado 
+     * @param eventoSerializado
      */
     public IniciarPartidaSolicitudManejador(Socket clienteSck, String eventoSerializado) {
-        //this.nombreEvento = nombreEvento;
         this.setName(String.format("Thread [%s]", this.getClass().getSimpleName()));
-        
+
         this.eventoSerializado = eventoSerializado;
         this.clienteSck = clienteSck;
     }
-    
-    public CrearPartidaSolicitudEvento iniciarPartida(String nombreSala) throws RepositorioSalasException {
-        Sala sala = repositorio.existeSala(nombreSala);
-        if (sala == null) {
+
+    public CrearPartidaSolicitudEvento iniciarPartida(Sala sala) throws RepositorioSalasException {
+        Sala salaSolicitadaSala = repositorio.existeSala(sala.getNombre());
+        if (salaSolicitadaSala == null) {
             throw new RepositorioSalasException("No se encontro la sala");
         }
-        
+
         return new CrearPartidaSolicitudEvento(sala);
     }
-    
+
     /**
      * Envia el error al consumidor de los servicios (jugador)
      */
@@ -70,10 +69,10 @@ public class IniciarPartidaSolicitudManejador extends ManejadorEvento {
             System.out.println("ERROR AL MANDAR LA RESPUESTA DE ERROR: %s".formatted(ex.getMessage()));
         }
     }
- 
+
     @Override
     public void run() {
-        
+
         try {
             //peticion = new DataInputStream(this.clienteSck.getInputStream());
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
@@ -84,19 +83,19 @@ public class IniciarPartidaSolicitudManejador extends ManejadorEvento {
         try {
             System.out.println("!!!");
             System.out.println(this.eventoSerializado);
-            
+
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
 
             // Acceder a los valores directamente
-            String nombreSala = jsonNode.get("nombre_sala").asText();
+            Sala sala = objectMapper.treeToValue(jsonNode.get("sala"), Sala.class);
             //String nombreJugador = jsonNode.get("id_jugador").asText();
-            
-            CrearPartidaSolicitudEvento respuestaEvento = this.iniciarPartida(nombreSala);
-            
+
+            CrearPartidaSolicitudEvento respuestaEvento = this.iniciarPartida(sala);
+
             String eventoJSON = objectMapper.writeValueAsString(respuestaEvento);
-            
+
             System.out.println("[*] Se saco al jugador de la sala...");
-            
+
             respuesta.writeUTF(eventoJSON);
             respuesta.flush();
 
@@ -104,7 +103,7 @@ public class IniciarPartidaSolicitudManejador extends ManejadorEvento {
             e.printStackTrace();
             this.enviaRespuestaError("No se puedo abandonar la sala debido a un error en el servidor, porfavor intente mas tarde...");
         } catch (RepositorioSalasException ex) {
-           this.enviaRespuestaError(ex.getMessage());
+            this.enviaRespuestaError(ex.getMessage());
         }
     }
 }

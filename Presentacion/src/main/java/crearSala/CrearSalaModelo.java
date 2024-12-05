@@ -11,14 +11,15 @@ import java.util.List;
 
 /**
  *
- * @author Juventino López García - 00000248547 - 07/11/2024
+ * @author Juventino López García - 00000248547
  */
 public class CrearSalaModelo {
 
-    String nombreSala;
-    String contrasena;
-    int maxJugadores;
-    String nombreJugador;
+    private String nombreSala;
+    private String contrasena;
+    private int maxJugadores;
+    private int numeroFichasPorJugador;
+    private String nombreJugador;
 
     private List<ObservadorCrearSala> observadores;
 
@@ -37,6 +38,7 @@ public class CrearSalaModelo {
         SalaDTO sala = new SalaDTO();
         sala.setContrasena(contrasena);
         sala.setMaxJugadores(maxJugadores);
+        sala.setNumeroFichasPorJugador(numeroFichasPorJugador);
         sala.setNombre(nombreSala);
 
         for (ObservadorCrearSala obs : observadores) {
@@ -66,6 +68,14 @@ public class CrearSalaModelo {
 
     public void setMaxJugadores(int maxJugadores) {
         this.maxJugadores = maxJugadores;
+    }
+
+    public int getNumFichasPorJugador() {
+        return numeroFichasPorJugador;
+    }
+
+    public void setNumFichasPorJugador(int numFichasPorJugador) {
+        this.numeroFichasPorJugador = numFichasPorJugador;
     }
 
     public String getNombreJugador() {

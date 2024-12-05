@@ -1,45 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import entidades.Tablero;
+import entidades.Sala;
 import java.io.Serializable;
 
 /**
+ * Evento que se envia cuando se crean los turnos de la partida. El paso final
+ * en el flujo de creacion de partida.
  *
  * @author diana
  */
 public class CrearTurnosRespuestaEvento implements Serializable {
-    
+
     @JsonProperty("nombre_evento")
     private String nombre;
 
-    @JsonProperty("descripcion")
-    private String descripcion;
-
     @JsonProperty("sala")
-    private String sala;
-    
-    @JsonProperty("tablero")
-    private Tablero tablero;
-    
+    private Sala sala;
+
+    @JsonProperty("fichas_restantes")
+    private int fichasRestantes;
+
     @JsonProperty("turno_actual")
     private String turnoActual;
 
     public CrearTurnosRespuestaEvento() {
-        
+
     }
 
-    public CrearTurnosRespuestaEvento(String descripcion, String sala, String turnoActual, Tablero tablero) {
-        this.descripcion = descripcion;
+    public CrearTurnosRespuestaEvento(Sala sala, String turnoActual, int fichasRestantes) {
+        this.nombre = "PartidaPreparadaRespuesta";
         this.sala = sala;
         this.turnoActual = turnoActual;
-        this.tablero = tablero;
+        this.fichasRestantes = fichasRestantes;
     }
- 
+
     /**
      * Devuelve el nombre del evento.
      *
@@ -59,74 +54,37 @@ public class CrearTurnosRespuestaEvento implements Serializable {
     }
 
     /**
-     * Devuelve la descripción del evento.
+     * Devuelve el jugador que tiene el turno actual.
      *
-     * @return descripción del evento
+     * @return el nombre del jugador en el turno actual.
      */
-    public String getDescripcion() {
-        return descripcion;
+    public String getTurnoActual() {
+        return turnoActual;
     }
 
     /**
-     * Asigna la descripción del evento.
+     * Establece el jugador que tiene el turno actual.
      *
-     * @param descripcion la descripción a asignar
+     * @param turnoActual el nombre del jugador a asignar como turno actual.
      */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setTurnoActual(String turnoActual) {
+        this.turnoActual = turnoActual;
     }
 
-    /**
-     * Devuelve la sala asociada al evento.
-     *
-     * @return sala asociada
-     */
-    public String getSala() {
+    public Sala getSala() {
         return sala;
     }
 
-    /**
-     * Asigna la sala asociada al evento.
-     *
-     * @param sala la sala a asignar
-     */
-    public void setSala(String sala) {
+    public void setSala(Sala sala) {
         this.sala = sala;
     }
 
-    /**
-      * Devuelve el jugador que tiene el turno actual.
-      *
-      * @return el nombre del jugador en el turno actual.
-      */
-     public String getTurnoActual() {
-         return turnoActual;
-     }
-
-     /**
-      * Establece el jugador que tiene el turno actual.
-      *
-      * @param turnoActual el nombre del jugador a asignar como turno actual.
-      */
-     public void setTurnoActual(String turnoActual) {
-         this.turnoActual = turnoActual;
-     }
-
-    /**
-     * @return the tablero
-     */
-    public Tablero getTablero() {
-        return tablero;
+    public int getFichasRestantes() {
+        return fichasRestantes;
     }
 
-    /**
-     * @param tablero the tablero to set
-     */
-    public void setTablero(Tablero tablero) {
-        this.tablero = tablero;
+    public void setFichasRestantes(int fichasRestantes) {
+        this.fichasRestantes = fichasRestantes;
     }
 
-
-   
-   
 }

@@ -3,8 +3,10 @@
  */
 package mediador;
 
+import DTOS.FichaDTO;
 import DTOS.JugadorDTO;
 import DTOS.SalaDTO;
+import DTOS.TableroDTO;
 import crearSala.CrearSala;
 import crearSala.CrearSalaControlador;
 import crearSala.CrearSalaModelo;
@@ -93,16 +95,18 @@ public class MediadorPantallas {
         vista.setVisible(true);
     }
 
-    public void mostrarPantallaTableroJuego(List<JugadorDTO> jugadoresEnJuego, 
+    public void mostrarPantallaTableroJuego(List<JugadorDTO> jugadoresEnJuego,
             JugadorDTO jugadorLocal, ObservadorAnhadirFicha observadorAnhadirFicha, int cantidadFichasRestantes) {
+        modeloSalaEspera.notificarObservadorPartidaIniciada();
         TableroModelo modelo = new TableroModelo();
+        modeloTableroJuego = modelo;
         modelo.setJugadorLocal(jugadorLocal);
         modelo.setJugadores(jugadoresEnJuego);
         modelo.setCantidadFichasRestantes(cantidadFichasRestantes);
         TableroGUI vista = new TableroGUI(modelo);
         modelo.anhadirObservador(vista);
         modelo.anhadirObservadorAnhadirFicha(observadorAnhadirFicha);
-        
+
         ControladorSeleccionarFicha controlador = new ControladorSeleccionarFicha(vista, modelo);
         vista.setVisible(true);
     }
@@ -117,6 +121,15 @@ public class MediadorPantallas {
     public void actualizarPantallaSalaEspera(List<JugadorDTO> nuevosjugadores) {
         modeloSalaEspera.setJugadores(nuevosjugadores);
         modeloSalaEspera.notificarObservadores();
+    }
+
+    public void actualizarFichaAgregada(TableroDTO tablero, List<JugadorDTO> jugadores) {
+        FichaDTO fichaIzquierda = tablero.getFichaExtremoIzquierda();
+        modeloTableroJuego.setFichaIzquierda(fichaIzquierda);
+        modeloTableroJuego.setFichasEnJuego(tablero.getFichas());
+        modeloTableroJuego.setJugadores(jugadores);
+        modeloTableroJuego.setFichaEnCursor(modeloTableroJuego.getJugadorLocal().getFichas().get(0));
+        modeloTableroJuego.notificar();
     }
 
 }

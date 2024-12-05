@@ -36,7 +36,7 @@ public class ServicioPartidas extends Thread {
      */
     public static ContratoServicio getContrato() {
         ContratoServicio contrato = new ContratoServicio();
-        contrato.setHost("localhost");
+        contrato.setHost(BUS_HOSTNAME);
         contrato.setNombreServicio("Servicio Partidas");
         contrato.setEventosEscuchables(Arrays.asList(
                 "ActualizarPuntajeSolicitud",
@@ -59,8 +59,10 @@ public class ServicioPartidas extends Thread {
         }
 
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        try (DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream()); DataInputStream mensaje = new DataInputStream(socket.getInputStream())) {
+        try {
 
+            DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream());
+            DataInputStream mensaje = new DataInputStream(socket.getInputStream());
             // Enviar contrato de servicio 
             String contratoServicioJSON = mapper.writeValueAsString(getContrato());
             System.out.println("CONTRATO ENVIADO: " + contratoServicioJSON);
@@ -68,40 +70,27 @@ public class ServicioPartidas extends Thread {
             respuesta.flush();
 
             // Procesar mensajes entrantes
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    String mensajeJSON = mensaje.readUTF();
-                    JsonNode jsonNode = mapper.readTree(mensajeJSON);
+            while (true) {
+                String mensajeJSON = mensaje.readUTF();
+                JsonNode jsonNode = mapper.readTree(mensajeJSON);
 
-                    // Acceder a los valores directamente
-                    String nombreEvento = jsonNode.get("nombre_evento").asText();
-                    System.out.println("Nombre del evento: " + nombreEvento);
+                // Acceder a los valores directamente
+                String nombreEvento = jsonNode.get("nombre_evento").asText();
+                System.out.println("Nombre del evento: " + nombreEvento);
 
-                    ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(
-                            nombreEvento,
-                            socket,
-                            mensajeJSON
-                    );
+                ManejadorEvento manejador = fabricaManejadorEventos.obtenerManejador(
+                        nombreEvento,
+                        socket,
+                        mensajeJSON
+                );
 
-                    if (manejador != null) {
-                        manejador.start();
-                    }
-                } catch (IOException e) {
-                    System.out.println("[ERROR SERVICIO PARTIDAS]: Error procesando mensaje -> " + e.getMessage());
-                    break;
+                if (manejador != null) {
+                    manejador.start();
                 }
+
             }
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO PARTIDAS]: Ocurrió un error -> " + ex.getMessage());
-        } finally {
-            // Cerrar socket
-            if (socket != null && !socket.isClosed()) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    System.out.println("[ERROR SERVICIO PARTIDAS]: Error cerrando socket -> " + e.getMessage());
-                }
-            }
         }
     }
 }
