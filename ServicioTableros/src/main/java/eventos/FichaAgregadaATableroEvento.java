@@ -6,7 +6,6 @@ package eventos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Jugador;
 import entidades.Pozo.Ficha;
-import entidades.Sala;
 import java.io.Serializable;
 
 /**
@@ -44,7 +43,6 @@ public class FichaAgregadaATableroEvento implements Serializable {
     public String getNombreEvento() {
         return nombreEvento;
     }
-
     
     /**
      * @return the tablero

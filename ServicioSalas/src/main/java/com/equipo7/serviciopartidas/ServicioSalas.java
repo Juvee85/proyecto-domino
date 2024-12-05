@@ -39,7 +39,7 @@ public class ServicioSalas extends Thread {
     public static ContratoServicio getContrato() {
         ContratoServicio contrato = new ContratoServicio();
 
-        contrato.setHost("localhost");
+        contrato.setHost(BUS_HOSTNAME);
         contrato.setNombreServicio("Servicio Salas");
         contrato.setEventosEscuchables(Arrays.asList(
                 "CrearSalaSolicitud",

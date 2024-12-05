@@ -9,14 +9,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import entidades.Sala;
-import entidades.Tablero;
 import eventos.CrearTurnosRespuestaEvento;
 import eventos.TurnoErrorEvento;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import manejadores.ManejadorEvento;
-import repositorio.CyclicList;
 import repositorio.RepositorioTurnos;
 import repositorios.excepciones.RepositorioTurnoException;
 
@@ -43,12 +41,13 @@ public class CrearTurnosSolicitudManejador extends ManejadorEvento {
      * @return Evento de respuesta con éxito, incluyendo el primer jugador.
      * @throws RepositorioTurnoException Si la cola ya existe.
      */
-    private CrearTurnosRespuestaEvento crearTurno(Sala sala) throws RepositorioTurnoException {
+    private CrearTurnosRespuestaEvento crearTurno(Sala sala, int fichasRestantes) throws RepositorioTurnoException {
         String turnoJugador = repositorio.crearTurno(sala);
 
         return new CrearTurnosRespuestaEvento(
                 sala,
-                turnoJugador
+                turnoJugador,
+                fichasRestantes
         );
     }
 
@@ -76,15 +75,16 @@ public class CrearTurnosSolicitudManejador extends ManejadorEvento {
             respuesta = new DataOutputStream(this.clienteSck.getOutputStream());
 
             JsonNode jsonNode = objectMapper.readTree(this.eventoSerializado);
-            
+
             JsonNode salaSerializada = jsonNode.get("sala");
-            
-            // TODO: OBTENER DE MANERA CORRECTA LOS DATOS...
+
+            int fichasRestantes = jsonNode.get("fichas_restantes").asInt();
+            // TODO: OBTENER DE MANERA CORRECTA LOS DATOS...  fichas_restantes
             // Deserializar la sala del evento recibido
             Sala sala = objectMapper.treeToValue(salaSerializada, Sala.class);
 
             // Crear turno y generar evento de respuesta
-            CrearTurnosRespuestaEvento evento = this.crearTurno(sala);
+            CrearTurnosRespuestaEvento evento = this.crearTurno(sala, fichasRestantes);
             String eventoJSON = objectMapper.writeValueAsString(evento);
 
             // Enviar respuesta al cliente

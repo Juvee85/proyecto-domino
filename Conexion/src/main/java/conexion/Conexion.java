@@ -21,11 +21,6 @@ import servicio.ContratoServicio;
  */
 public class Conexion extends Thread implements ObservableConexion {
 
-    /**
-     * TODO: PARA EL JUEGO, DEBERIA DE HABER UNA MANERA DE ESPERAR SOLO UN TIPO
-     * DE EVENTO SEGUN SEA EL CASO, SI ES TURNO DE ALGUIEN MAS, ENTONCES EL
-     * EVENTO QUE ESPERAS QUE MANDE EL BUS ES DE cambiarTurno U OTRO SOLAMENTE.
-     */
     private Socket s1 = null;
     private ObjectMapper mapper;
     private DataInputStream reader = null;

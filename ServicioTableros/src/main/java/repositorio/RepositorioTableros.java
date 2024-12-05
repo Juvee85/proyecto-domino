@@ -57,7 +57,7 @@ public class RepositorioTableros {
             throw new RepositorioTablerosException("La sala \"%s\" ya cuenta con un tablero activo en el sistema");
         }
 
-        Tablero tablero = new Tablero();
+        Tablero tablero = new Tablero(new Ficha(6, 6));
         
         this.tableros.put(sala.getNombre(), tablero);
         

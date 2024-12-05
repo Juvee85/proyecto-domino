@@ -114,11 +114,6 @@ public class TrenFichas implements Iterable<Ficha> {
 
     }
 
-    /*
-    public TrenFichas(Ficha primeraMula) {
-        this.nodo = new Nodo(primeraMula);
-    }*/
-
     public TrenFichas(Ficha ficha) {
         nodo = new Nodo(ficha);
     }

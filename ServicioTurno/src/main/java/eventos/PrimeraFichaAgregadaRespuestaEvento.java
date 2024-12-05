@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package eventos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import entidades.Jugador;
-import entidades.Pozo;
 import entidades.Pozo.Ficha;
 
 /**
@@ -15,6 +9,7 @@ import entidades.Pozo.Ficha;
  * @author Saul Neri
  */
 public class PrimeraFichaAgregadaRespuestaEvento {
+
     @JsonProperty("nombre_evento")
     private String nombre;
 
@@ -93,6 +88,13 @@ public class PrimeraFichaAgregadaRespuestaEvento {
     public void setTurnoActual(String turnoActual) {
         this.turnoActual = turnoActual;
     }
-    
-    
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
 }

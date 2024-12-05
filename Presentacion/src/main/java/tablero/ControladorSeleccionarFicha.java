@@ -46,6 +46,8 @@ public class ControladorSeleccionarFicha {
                             modelo.setDireccionJugada("Izquierda");
                         case KeyEvent.VK_RIGHT ->
                             modelo.setDireccionJugada("Derecha");
+                        case KeyEvent.VK_BACK_SPACE ->
+                            modelo.setFichaSeleccionada(null);
                     }
                 }
 

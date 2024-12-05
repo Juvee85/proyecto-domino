@@ -36,7 +36,7 @@ public class ServicioPartidas extends Thread {
      */
     public static ContratoServicio getContrato() {
         ContratoServicio contrato = new ContratoServicio();
-        contrato.setHost("localhost");
+        contrato.setHost(BUS_HOSTNAME);
         contrato.setNombreServicio("Servicio Partidas");
         contrato.setEventosEscuchables(Arrays.asList(
                 "ActualizarPuntajeSolicitud",
@@ -59,8 +59,10 @@ public class ServicioPartidas extends Thread {
         }
 
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        try (DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream()); DataInputStream mensaje = new DataInputStream(socket.getInputStream())) {
+        try {
 
+            DataOutputStream respuesta = new DataOutputStream(socket.getOutputStream());
+            DataInputStream mensaje = new DataInputStream(socket.getInputStream());
             // Enviar contrato de servicio 
             String contratoServicioJSON = mapper.writeValueAsString(getContrato());
             System.out.println("CONTRATO ENVIADO: " + contratoServicioJSON);
@@ -68,7 +70,7 @@ public class ServicioPartidas extends Thread {
             respuesta.flush();
 
             // Procesar mensajes entrantes
-            while (!Thread.currentThread().isInterrupted()) {
+            while (true) {
                 String mensajeJSON = mensaje.readUTF();
                 JsonNode jsonNode = mapper.readTree(mensajeJSON);
 
@@ -89,8 +91,6 @@ public class ServicioPartidas extends Thread {
             }
         } catch (IOException ex) {
             System.out.println("[ERROR SERVICIO PARTIDAS]: Ocurrió un error -> " + ex.getMessage());
-        } finally {
         }
-
     }
 }

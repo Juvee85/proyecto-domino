@@ -51,7 +51,8 @@ public class ServicioTableros extends Thread {
                 //"CrearSalaRespuesta",
                 "EliminarTableroPartidaSolicitud",
                 "AgregarFichaSolicitud",
-                "MulaMayorAgregadaSolicitud"
+                "MulaMayorAgregadaSolicitud",
+                "JugarFichaSolicitud"
         ));
 
         return contrato;
